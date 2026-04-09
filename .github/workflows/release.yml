@@ -22,8 +22,8 @@ jobs:
 
       - name: Boot simulator
         run: |
-          xcrun simctl boot "iPad Air (5th generation)" || true
-          xcrun simctl bootstatus "iPad Air (5th generation)" -b
+          xcrun simctl boot "iPad Air 11-inch (M4)" || true
+          xcrun simctl bootstatus "iPad Air 11-inch (M4)" -b
 
       - name: Run unit tests
         run: |
@@ -31,7 +31,7 @@ jobs:
           xcodebuild test \
             -project MiniMissions.xcodeproj \
             -scheme MiniMissions \
-            -destination 'platform=iOS Simulator,name=iPad Air (5th generation),OS=17.5' \
+            -destination 'platform=iOS Simulator,name=iPad Air 11-inch (M4)' \
             -only-testing:MiniMissionsTests \
             -resultBundlePath TestResults/unit.xcresult
 
@@ -41,7 +41,7 @@ jobs:
           xcodebuild test \
             -project MiniMissions.xcodeproj \
             -scheme MiniMissions \
-            -destination 'platform=iOS Simulator,name=iPad Air (5th generation),OS=17.5' \
+            -destination 'platform=iOS Simulator,name=iPad Air 11-inch (M4)' \
             -only-testing:MiniMissionsUITests \
             -resultBundlePath TestResults/ui.xcresult
 
