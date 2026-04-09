@@ -1,0 +1,251 @@
+/* Finnish Localizable.strings — MorningRoutine */
+
+/* Child Routine — Empty State */
+"routine.emptyState.title" = "Tervetuloa!";
+"routine.emptyState.body" = "Lisää lapset aloittaaksesi päivittäiset rutiinit.";
+"routine.emptyState.openSettings" = "Avaa asetukset";
+"routine.noTasksYet" = "Ei tehtäviä vielä";
+
+/* Parent Home */
+"parent.title" = "Vanhempien asetukset";
+"parent.done" = "Valmis";
+"parent.resetAll" = "Nollaa kaikki";
+
+/* Topics */
+"topics.section" = "Aiheet";
+"topics.addTopic" = "Lisää aihe";
+"topics.newTopic.alert" = "Uusi aihe";
+"topics.newTopic.placeholder" = "Aiheen nimi";
+"topics.rename.alert" = "Nimeä aihe uudelleen";
+"topics.reset.confirm.title" = "Nollaa \"%@\"?";
+"topics.reset.confirm.button" = "Nollaa aihe";
+"topics.reset.confirm.message" = "Kaikki tehtävät aiheessa \"%@\" merkitään tekemättömiksi kaikille lapsille. Tätä ei voi peruuttaa.";
+"topics.delete.confirm.title" = "Poista \"%@\"?";
+"topics.delete.confirm.button" = "Poista aihe";
+"topics.delete.confirm.message" = "Tämä poistaa aiheen ja kaikki siihen liittyvät tehtävät pysyvästi. Tätä ei voi peruuttaa.";
+"topics.resetAll.confirm.title" = "Nollaa kaikki aiheet?";
+"topics.resetAll.confirm.button" = "Nollaa kaikki";
+"topics.resetAll.confirm.message" = "Kaikki tehtävät kaikissa aiheissa merkitään tekemättömiksi kaikille lapsille. Tätä ei voi peruuttaa.";
+
+/* Children */
+"children.section" = "Lapset";
+"children.addChild" = "Lisää lapsi";
+"children.lastChildInfo" = "Vähintään yksi lapsi vaaditaan";
+"children.maxChildrenInfo" = "Enimmäismäärä 6 lasta saavutettu";
+"children.taskCount" = "%d tehtävää (%d aihetta)";
+"children.delete.confirm.title" = "Poista \"%@\"?";
+"children.delete.confirm.button" = "Poista lapsi";
+"children.delete.confirm.message" = "Tämä poistaa %@ ja kaikki heidän tehtävänsä ja suoritushistoriansa pysyvästi. Tätä ei voi peruuttaa.";
+
+/* Child Form */
+"childForm.newTitle" = "Uusi lapsi";
+"childForm.editTitle" = "Muokkaa lasta";
+"childForm.cancel" = "Peruuta";
+"childForm.save" = "Tallenna";
+"childForm.photo.section" = "Kuva";
+"childForm.choosePhoto" = "Valitse kuva";
+"childForm.removePhoto" = "Poista kuva";
+"childForm.name.section" = "Nimi";
+"childForm.name.placeholder" = "Lapsen nimi";
+
+/* Task Bank */
+"taskBank.section" = "Tehtäväpankki";
+"taskBank.addTemplate" = "Uusi pohja";
+"taskBank.empty" = "Ei tehtäväpohjia. Lisää + -painikkeella.";
+"taskBank.delete.confirm.title" = "Poista \"%@\"?";
+"taskBank.delete.confirm.button" = "Poista pohja";
+"taskBank.delete.confirm.assigned" = "Tämä pohja on liitetty %d lapselle %d aiheessa. Poistaminen poistaa sen kaikista liitoksista. Tätä ei voi peruuttaa.";
+"taskBank.delete.confirm.unassigned" = "Tämä pohja ei ole liitetty yhdelleenkään lapselle. Tätä ei voi peruuttaa.";
+
+/* Template Form */
+"templateForm.newTitle" = "Uusi pohja";
+"templateForm.editTitle" = "Muokkaa pohjaa";
+"templateForm.cancel" = "Peruuta";
+"templateForm.save" = "Tallenna";
+"templateForm.name.section" = "Pohjan nimi";
+"templateForm.name.placeholder" = "Pohjan nimi";
+"templateForm.icon.section" = "Tehtävän ikoni";
+"templateForm.chooseIcon" = "Valitse ikoni";
+
+/* Task Editor */
+"taskEditor.title" = "%@:n tehtävät – %@";
+"taskEditor.addFromBank" = "Lisää pankista";
+"taskEditor.empty" = "Ei liitettyjä tehtäviä. Napauta 'Lisää pankista'.";
+"taskEditor.remove" = "Poista";
+"taskEditor.copyFrom" = "Kopioi...";
+
+/* Copy Source Sheet */
+"copySource.title" = "Kopioi lapselta";
+"copySource.confirm" = "Kopioi";
+"copySource.empty" = "Muilla lapsilla ei ole tehtäviä tässä aiheessa.";
+
+/* Bank Selector */
+"bankSelector.title" = "Lisää tehtäviä pankista";
+"bankSelector.cancel" = "Peruuta";
+"bankSelector.addButton" = "Lisää (%d)";
+"bankSelector.addButtonZero" = "Lisää (0)";
+"bankSelector.search.placeholder" = "Etsi pohjia...";
+"bankSelector.assigned" = "LIITETTY";
+"bankSelector.createNew" = "Luo uusi pohja";
+"bankSelector.empty" = "Ei tehtäväpohjia vielä.";
+
+/* Settings */
+"settings.section" = "Asetukset";
+"settings.changePIN" = "Vaihda PIN";
+
+/* PIN */
+"pin.entry.title" = "Vanhempien asetukset";
+"pin.entry.subtitle" = "Syötä PIN";
+"pin.setup.title" = "Luo PIN";
+"pin.setup.subtitle" = "Syötä 4-numeroinen PIN suojataksesi vanhempien asetukset";
+"pin.setupConfirm.title" = "Vahvista PIN";
+"pin.setupConfirm.subtitle" = "Syötä sama PIN uudelleen";
+"pin.changeVerify.title" = "Syötä nykyinen PIN";
+"pin.changeVerify.subtitle" = "Syötä nykyinen PIN";
+"pin.changeNew.title" = "Syötä uusi PIN";
+"pin.changeNew.subtitle" = "Syötä uusi 4-numeroinen PIN";
+"pin.changeConfirm.title" = "Vahvista uusi PIN";
+"pin.changeConfirm.subtitle" = "Vahvista uusi PIN";
+"pin.error.incorrect" = "Väärä PIN (%d/3 yritystä)";
+"pin.error.mismatch" = "PIN-koodit eivät täsmänneet. Yritä uudelleen.";
+"pin.lockout" = "Liian monta yritystä. Yritä uudelleen %@:n kuluttua";
+"pin.lockout.announcement" = "PIN-syöttö lukittu. Yritä uudelleen %d sekunnin kuluttua.";
+"pin.changed.toast" = "PIN vaihdettu onnistuneesti";
+
+/* Celebration */
+"celebration.allDone" = "Kaikki tehty!";
+"celebration.announcement" = "%@ suoritti kaikki tehtävänsä!";
+
+/* Accessibility */
+"accessibility.parentSettings" = "Vanhempien asetukset";
+"accessibility.parentSettings.hint" = "Avaa vanhempien hallinta. Vaatii PIN-koodin.";
+"accessibility.openSettings" = "Avaa asetukset";
+"accessibility.openSettings.hint" = "Avaa vanhempien asetukset lasten lisäämiseksi. Vaatii PIN-koodin.";
+"accessibility.done.hint" = "Valmis — palaa rutiininäkymään";
+
+/* Add/Edit Task Sheet */
+"taskSheet.icon.section" = "Tehtävän ikoni";
+"taskSheet.chooseIcon" = "Valitse ikoni";
+"taskSheet.name.section" = "Tehtävän nimi";
+"taskSheet.name.placeholder" = "Tehtävän nimi";
+"taskSheet.editTitle" = "Muokkaa tehtävää";
+"taskSheet.addTitle" = "Lisää tehtävä";
+
+/* Child Topic Picker */
+"childTopicPicker.title" = "%@:n aiheet";
+"childTopicPicker.taskCount" = "%d tehtävää";
+
+/* Seed */
+"seed.defaultTopicName" = "Aamu";
+
+/* Generic Actions */
+"action.delete" = "Poista";
+
+/* Icon Picker */
+"iconPicker.navigationTitle" = "Valitse ikoni";
+"iconPicker.cancel" = "Peruuta";
+"iconPicker.sourceBuiltIn" = "Sisäänrakennettu";
+"iconPicker.sourcePhotos" = "Omat kuvat";
+"iconPicker.chooseFromPhotos" = "Valitse kuvista";
+"iconPicker.search.placeholder" = "Etsi ikoneja...";
+
+/* PIN Setup */
+"pinSetup.continue" = "Jatka";
+
+/* Accessibility — Icon Picker */
+"accessibility.iconPicker.source" = "Lähde";
+
+/* Accessibility — PIN */
+"accessibility.pin.cancel" = "Peruuta";
+"accessibility.pin.delete" = "Poista";
+"accessibility.pin.key.disabled" = "Näppäin %d, poissa käytöstä";
+"accessibility.pin.key" = "%d";
+"accessibility.pin.dotDisplay" = "PIN-syöttö: %d / 4 numeroa syötetty";
+"accessibility.pin.lockout" = "PIN-syöttö lukittu. Yritä uudelleen %d sekunnin kuluttua.";
+
+/* Accessibility — Child Column */
+"accessibility.childColumn.allDone" = "%@ suoritti kaikki tehtävät! Mahtavaa!";
+"accessibility.childColumn.routine" = "%@:n %@ -rutiini";
+"accessibility.childColumn.routineDefaultTopic" = "aamu";
+"accessibility.childColumn.tasks" = "%@:n tehtävät";
+"accessibility.childColumn.progress" = "%d / %d tehtävää valmis";
+"accessibility.childColumn.avatar" = "%@:n kuva";
+
+/* Accessibility — Child Routine */
+"accessibility.topicTabBar" = "Aihevälilelyt";
+
+/* Accessibility — Task Editor */
+"accessibility.taskEditor.addFromBank" = "Lisää pankista";
+"accessibility.taskEditor.addFromBank.hint" = "Avaa tehtäväpankin valitaksesi tehtäviä tälle lapselle ja aiheelle";
+"accessibility.taskEditor.reorder" = "Järjestä uudelleen: %@";
+"accessibility.taskEditor.remove" = "Poista %@ kohteesta %@:n %@";
+"accessibility.taskEditor.swipeHint" = "Pyyhkäise vasemmalle poistaaksesi tästä lapsen aiheesta.";
+
+/* Accessibility — Task Sheet */
+"accessibility.taskSheet.chooseIcon" = "Valitse ikoni";
+"accessibility.taskSheet.chooseIcon.hint" = "Avaa ikonikuvaston tai kuvavalinnan";
+"accessibility.taskSheet.name" = "Tehtävän nimi";
+"accessibility.taskSheet.name.hint" = "Enintään 30 merkkiä";
+"accessibility.taskSheet.save" = "Tallenna tehtävä";
+
+/* Accessibility — Template Sheet */
+"accessibility.templateSheet.chooseIcon" = "Valitse ikoni";
+"accessibility.templateSheet.name" = "Pohjan nimi";
+"accessibility.templateSheet.save" = "Tallenna pohja";
+
+/* Accessibility — Child Form */
+"accessibility.childForm.name" = "Lapsen nimi";
+"accessibility.childForm.save" = "Tallenna";
+
+/* Accessibility — Bank Selector */
+"accessibility.bankSelector.add" = "Lisää %d pohjaa";
+"accessibility.bankSelector.add.hint" = "Liittää valitut pohjat tälle lapselle ja aiheelle";
+"accessibility.bankSelector.createNew.hint" = "Avaa lomakkeen uuden tehtäväpohjan luomiseksi";
+
+/* Accessibility — Child Topic Picker */
+"accessibility.childTopicPicker.row" = "%@, %d tehtävää";
+"accessibility.childTopicPicker.row.hint" = "Avaa tehtäväeditorin: %@ aiheessa %@";
+
+/* Accessibility — Parent Home — Children */
+"accessibility.children.row" = "%@, %d tehtävää";
+"accessibility.children.row.hint.deletable" = "Avaa aiheen valinnan. Pyyhkäise vasemmalle poistaaksesi.";
+"accessibility.children.row.hint.only" = "Avaa aiheen valinnan. Tämä on ainoa lapsi eikä voi poistaa.";
+"accessibility.children.delete" = "Poista %@";
+"accessibility.children.addChild" = "Lisää lapsi";
+"accessibility.children.addChild.maxReached" = "Lisää lapsi — enimmäismäärä saavutettu";
+"accessibility.children.addChild.hint" = "Avaa lomakkeen uuden lapsen lisäämiseksi";
+"accessibility.children.addChild.maxHint" = "Enintään 6 lasta sallittu";
+"accessibility.children.reorder" = "Järjestä uudelleen: %@";
+"accessibility.children.edit" = "Muokkaa %@";
+"accessibility.children.edit.hint" = "Avaa lomakkeen nimen ja kuvan muokkaamiseksi";
+
+/* Accessibility — Parent Home — Task Bank */
+"accessibility.taskBank.newTemplate" = "Uusi pohja";
+"accessibility.taskBank.newTemplate.hint" = "Luo uuden tehtäväpohjan tehtäväpankkiin";
+"accessibility.taskBank.edit" = "Muokkaa: %@";
+"accessibility.taskBank.edit.hint" = "Avaa lomakkeen pohjan nimen ja ikonin muokkaamiseksi";
+"accessibility.taskBank.row.hint" = "Pyyhkäise vasemmalle poistaaksesi. Napauta muokkaa vaihtaaksesi nimeä tai ikonia.";
+"accessibility.taskBank.delete" = "Poista %@";
+
+/* Accessibility — Parent Home — Topics */
+"accessibility.topics.add" = "Lisää aihe";
+"accessibility.topics.add.hint" = "Luo uuden aihekategorian";
+"accessibility.topics.reorder" = "Järjestä uudelleen: %@";
+"accessibility.topics.reset" = "Nollaa %@";
+"accessibility.topics.rename" = "Nimeä uudelleen: %@";
+"accessibility.topics.delete" = "Poista %@";
+
+/* Paywall (REQ-010) */
+"paywall.title" = "Morning Routine Premium";
+"paywall.subtitle" = "Avaa kaikki ominaisuudet perheellesi";
+"paywall.benefit.topics" = "Rajattomat aiheet";
+"paywall.benefit.oneTime" = "Kertaostos — ei tilausta";
+"paywall.benefit.family" = "Perheenjako sisältyy";
+"paywall.unlock" = "Osta Premium — %@";
+"paywall.unlock.noPrice" = "Osta Premium";
+"paywall.restore" = "Palauta ostos";
+"paywall.notNow" = "Ei nyt";
+"paywall.error.title" = "Ostos epäonnistui";
+"paywall.error.message" = "Jokin meni pieleen. Yritä uudelleen.";
+"paywall.error.ok" = "OK";
+"settings.restorePurchase" = "Palauta ostos";

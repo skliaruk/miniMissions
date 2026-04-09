@@ -1,0 +1,251 @@
+/* Russian Localizable.strings — MorningRoutine */
+
+/* Child Routine — Empty State */
+"routine.emptyState.title" = "Добро пожаловать!";
+"routine.emptyState.body" = "Добавьте детей, чтобы начать вести ежедневные задания.";
+"routine.emptyState.openSettings" = "Открыть настройки";
+"routine.noTasksYet" = "Заданий пока нет";
+
+/* Parent Home */
+"parent.title" = "Настройки родителей";
+"parent.done" = "Готово";
+"parent.resetAll" = "Сбросить всё";
+
+/* Topics */
+"topics.section" = "Темы";
+"topics.addTopic" = "Добавить тему";
+"topics.newTopic.alert" = "Новая тема";
+"topics.newTopic.placeholder" = "Название темы";
+"topics.rename.alert" = "Переименовать тему";
+"topics.reset.confirm.title" = "Сбросить \"%@\"?";
+"topics.reset.confirm.button" = "Сбросить тему";
+"topics.reset.confirm.message" = "Все задания темы \"%@\" будут отмечены как невыполненные для всех детей. Это нельзя отменить.";
+"topics.delete.confirm.title" = "Удалить \"%@\"?";
+"topics.delete.confirm.button" = "Удалить тему";
+"topics.delete.confirm.message" = "Тема и все связанные задания будут удалены навсегда. Это нельзя отменить.";
+"topics.resetAll.confirm.title" = "Сбросить все темы?";
+"topics.resetAll.confirm.button" = "Сбросить всё";
+"topics.resetAll.confirm.message" = "Все задания во всех темах будут отмечены как невыполненные для всех детей. Это нельзя отменить.";
+
+/* Children */
+"children.section" = "Дети";
+"children.addChild" = "Добавить ребёнка";
+"children.lastChildInfo" = "Необходим хотя бы один ребёнок";
+"children.maxChildrenInfo" = "Достигнуто максимальное количество детей — 6";
+"children.taskCount" = "%d заданий (%d тем)";
+"children.delete.confirm.title" = "Удалить \"%@\"?";
+"children.delete.confirm.button" = "Удалить ребёнка";
+"children.delete.confirm.message" = "Это навсегда удалит %@ и все их задания и историю выполнения. Это нельзя отменить.";
+
+/* Child Form */
+"childForm.newTitle" = "Новый ребёнок";
+"childForm.editTitle" = "Редактировать ребёнка";
+"childForm.cancel" = "Отмена";
+"childForm.save" = "Сохранить";
+"childForm.photo.section" = "Фото";
+"childForm.choosePhoto" = "Выбрать фото";
+"childForm.removePhoto" = "Удалить фото";
+"childForm.name.section" = "Имя";
+"childForm.name.placeholder" = "Имя ребёнка";
+
+/* Task Bank */
+"taskBank.section" = "Банк заданий";
+"taskBank.addTemplate" = "Новый шаблон";
+"taskBank.empty" = "Шаблонов заданий нет. Нажмите +, чтобы создать.";
+"taskBank.delete.confirm.title" = "Удалить \"%@\"?";
+"taskBank.delete.confirm.button" = "Удалить шаблон";
+"taskBank.delete.confirm.assigned" = "Этот шаблон назначен %d детям в %d темах. Удаление уберёт его из всех назначений. Это нельзя отменить.";
+"taskBank.delete.confirm.unassigned" = "Этот шаблон не назначен ни одному ребёнку. Это нельзя отменить.";
+
+/* Template Form */
+"templateForm.newTitle" = "Новый шаблон";
+"templateForm.editTitle" = "Редактировать шаблон";
+"templateForm.cancel" = "Отмена";
+"templateForm.save" = "Сохранить";
+"templateForm.name.section" = "Название шаблона";
+"templateForm.name.placeholder" = "Название шаблона";
+"templateForm.icon.section" = "Иконка задания";
+"templateForm.chooseIcon" = "Выбрать иконку";
+
+/* Task Editor */
+"taskEditor.title" = "Задания %@ – %@";
+"taskEditor.addFromBank" = "Добавить из банка";
+"taskEditor.empty" = "Нет назначенных заданий. Нажмите «Добавить из банка».";
+"taskEditor.remove" = "Убрать";
+"taskEditor.copyFrom" = "Копировать из...";
+
+/* Copy Source Sheet */
+"copySource.title" = "Копировать от ребёнка";
+"copySource.confirm" = "Копировать";
+"copySource.empty" = "У других детей нет задач в этой теме.";
+
+/* Bank Selector */
+"bankSelector.title" = "Добавить задания из банка";
+"bankSelector.cancel" = "Отмена";
+"bankSelector.addButton" = "Добавить (%d)";
+"bankSelector.addButtonZero" = "Добавить (0)";
+"bankSelector.search.placeholder" = "Поиск шаблонов...";
+"bankSelector.assigned" = "НАЗНАЧЕНО";
+"bankSelector.createNew" = "Создать новый шаблон";
+"bankSelector.empty" = "Шаблонов заданий пока нет.";
+
+/* Settings */
+"settings.section" = "Настройки";
+"settings.changePIN" = "Изменить PIN";
+
+/* PIN */
+"pin.entry.title" = "Настройки родителей";
+"pin.entry.subtitle" = "Введите PIN";
+"pin.setup.title" = "Создайте PIN";
+"pin.setup.subtitle" = "Введите 4-значный PIN для защиты настроек";
+"pin.setupConfirm.title" = "Подтвердите PIN";
+"pin.setupConfirm.subtitle" = "Введите тот же PIN ещё раз";
+"pin.changeVerify.title" = "Введите текущий PIN";
+"pin.changeVerify.subtitle" = "Введите текущий PIN";
+"pin.changeNew.title" = "Введите новый PIN";
+"pin.changeNew.subtitle" = "Введите новый 4-значный PIN";
+"pin.changeConfirm.title" = "Подтвердите новый PIN";
+"pin.changeConfirm.subtitle" = "Подтвердите новый PIN";
+"pin.error.incorrect" = "Неверный PIN (%d/3 попыток)";
+"pin.error.mismatch" = "PIN-коды не совпали. Попробуйте снова.";
+"pin.lockout" = "Слишком много попыток. Повторите через %@";
+"pin.lockout.announcement" = "Ввод PIN заблокирован. Повторите через %d секунд.";
+"pin.changed.toast" = "PIN успешно изменён";
+
+/* Celebration */
+"celebration.allDone" = "Всё готово!";
+"celebration.announcement" = "%@ выполнил(а) все задания!";
+
+/* Accessibility */
+"accessibility.parentSettings" = "Настройки родителей";
+"accessibility.parentSettings.hint" = "Открывает управление родителей. Требуется PIN.";
+"accessibility.openSettings" = "Открыть настройки";
+"accessibility.openSettings.hint" = "Открывает настройки для добавления детей. Требуется PIN.";
+"accessibility.done.hint" = "Готово — вернуться к экрану заданий";
+
+/* Add/Edit Task Sheet */
+"taskSheet.icon.section" = "Иконка задания";
+"taskSheet.chooseIcon" = "Выбрать иконку";
+"taskSheet.name.section" = "Название задания";
+"taskSheet.name.placeholder" = "Название задания";
+"taskSheet.editTitle" = "Редактировать задание";
+"taskSheet.addTitle" = "Добавить задание";
+
+/* Child Topic Picker */
+"childTopicPicker.title" = "Темы %@";
+"childTopicPicker.taskCount" = "%d заданий";
+
+/* Seed */
+"seed.defaultTopicName" = "Утро";
+
+/* Generic Actions */
+"action.delete" = "Удалить";
+
+/* Icon Picker */
+"iconPicker.navigationTitle" = "Выбрать иконку";
+"iconPicker.cancel" = "Отмена";
+"iconPicker.sourceBuiltIn" = "Встроенные";
+"iconPicker.sourcePhotos" = "Мои фото";
+"iconPicker.chooseFromPhotos" = "Выбрать из фото";
+"iconPicker.search.placeholder" = "Поиск иконок...";
+
+/* PIN Setup */
+"pinSetup.continue" = "Продолжить";
+
+/* Accessibility — Icon Picker */
+"accessibility.iconPicker.source" = "Источник";
+
+/* Accessibility — PIN */
+"accessibility.pin.cancel" = "Отмена";
+"accessibility.pin.delete" = "Удалить";
+"accessibility.pin.key.disabled" = "Клавиша %d, недоступна";
+"accessibility.pin.key" = "%d";
+"accessibility.pin.dotDisplay" = "Ввод PIN: введено %d из 4 цифр";
+"accessibility.pin.lockout" = "Ввод PIN заблокирован. Повторите через %d секунд.";
+
+/* Accessibility — Child Column */
+"accessibility.childColumn.allDone" = "%@ выполнил(а) все задания! Молодец!";
+"accessibility.childColumn.routine" = "Распорядок %@ — %@";
+"accessibility.childColumn.routineDefaultTopic" = "утро";
+"accessibility.childColumn.tasks" = "Задания %@";
+"accessibility.childColumn.progress" = "Выполнено %d из %d заданий";
+"accessibility.childColumn.avatar" = "Аватар %@";
+
+/* Accessibility — Child Routine */
+"accessibility.topicTabBar" = "Вкладки тем";
+
+/* Accessibility — Task Editor */
+"accessibility.taskEditor.addFromBank" = "Добавить из банка";
+"accessibility.taskEditor.addFromBank.hint" = "Открывает банк заданий для добавления шаблонов этому ребёнку и теме";
+"accessibility.taskEditor.reorder" = "Переместить %@";
+"accessibility.taskEditor.remove" = "Убрать %@ из %@ (%@)";
+"accessibility.taskEditor.swipeHint" = "Смахните влево, чтобы убрать из темы ребёнка.";
+
+/* Accessibility — Task Sheet */
+"accessibility.taskSheet.chooseIcon" = "Выбрать иконку";
+"accessibility.taskSheet.chooseIcon.hint" = "Открывает библиотеку иконок или выбор фото";
+"accessibility.taskSheet.name" = "Название задания";
+"accessibility.taskSheet.name.hint" = "Максимум 30 символов";
+"accessibility.taskSheet.save" = "Сохранить задание";
+
+/* Accessibility — Template Sheet */
+"accessibility.templateSheet.chooseIcon" = "Выбрать иконку";
+"accessibility.templateSheet.name" = "Название шаблона";
+"accessibility.templateSheet.save" = "Сохранить шаблон";
+
+/* Accessibility — Child Form */
+"accessibility.childForm.name" = "Имя ребёнка";
+"accessibility.childForm.save" = "Сохранить";
+
+/* Accessibility — Bank Selector */
+"accessibility.bankSelector.add" = "Добавить %d шаблона(ов)";
+"accessibility.bankSelector.add.hint" = "Назначает выбранные шаблоны этому ребёнку и теме";
+"accessibility.bankSelector.createNew.hint" = "Открывает форму для создания нового шаблона";
+
+/* Accessibility — Child Topic Picker */
+"accessibility.childTopicPicker.row" = "%@, %d заданий";
+"accessibility.childTopicPicker.row.hint" = "Открывает редактор заданий для %@ в теме %@";
+
+/* Accessibility — Parent Home — Children */
+"accessibility.children.row" = "%@, %d заданий";
+"accessibility.children.row.hint.deletable" = "Открывает выбор темы. Смахните влево, чтобы удалить.";
+"accessibility.children.row.hint.only" = "Открывает выбор темы. Это единственный ребёнок и его нельзя удалить.";
+"accessibility.children.delete" = "Удалить %@";
+"accessibility.children.addChild" = "Добавить ребёнка";
+"accessibility.children.addChild.maxReached" = "Добавить ребёнка — достигнут максимум";
+"accessibility.children.addChild.hint" = "Открывает форму для добавления ребёнка";
+"accessibility.children.addChild.maxHint" = "Допускается максимум 6 детей";
+"accessibility.children.reorder" = "Переместить %@";
+"accessibility.children.edit" = "Редактировать %@";
+"accessibility.children.edit.hint" = "Открывает форму для изменения имени и фото";
+
+/* Accessibility — Parent Home — Task Bank */
+"accessibility.taskBank.newTemplate" = "Новый шаблон";
+"accessibility.taskBank.newTemplate.hint" = "Создаёт новый шаблон задания в банке";
+"accessibility.taskBank.edit" = "Редактировать %@";
+"accessibility.taskBank.edit.hint" = "Открывает форму для изменения имени и иконки шаблона";
+"accessibility.taskBank.row.hint" = "Смахните влево для удаления. Нажмите редактировать, чтобы изменить имя или иконку.";
+"accessibility.taskBank.delete" = "Удалить %@";
+
+/* Accessibility — Parent Home — Topics */
+"accessibility.topics.add" = "Добавить тему";
+"accessibility.topics.add.hint" = "Создаёт новую категорию тем";
+"accessibility.topics.reorder" = "Переместить %@";
+"accessibility.topics.reset" = "Сбросить %@";
+"accessibility.topics.rename" = "Переименовать %@";
+"accessibility.topics.delete" = "Удалить %@";
+
+/* Paywall (REQ-010) */
+"paywall.title" = "Morning Routine Premium";
+"paywall.subtitle" = "Откройте все возможности для вашей семьи";
+"paywall.benefit.topics" = "Неограниченное количество тем";
+"paywall.benefit.oneTime" = "Разовая покупка — без подписки";
+"paywall.benefit.family" = "Семейный доступ включён";
+"paywall.unlock" = "Купить Premium — %@";
+"paywall.unlock.noPrice" = "Купить Premium";
+"paywall.restore" = "Восстановить покупку";
+"paywall.notNow" = "Не сейчас";
+"paywall.error.title" = "Ошибка покупки";
+"paywall.error.message" = "Что-то пошло не так. Попробуйте снова.";
+"paywall.error.ok" = "ОК";
+"settings.restorePurchase" = "Восстановить покупку";

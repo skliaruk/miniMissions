@@ -1,0 +1,19 @@
+{
+  "identifier": "com.morningroutine.storekit",
+  "nonConsumableProducts": [
+    {
+      "displayPrice": "2.99",
+      "familyShareable": true,
+      "internalID": "com.morningroutine.premium",
+      "localizations": [
+        { "description": "Unlock unlimited topics", "displayName": "Morning Routine Premium", "locale": "en_US" },
+        { "description": "Avaa rajattomat aiheet", "displayName": "Morning Routine Premium", "locale": "fi_FI" },
+        { "description": "Открыть неограниченные темы", "displayName": "Morning Routine Premium", "locale": "ru_RU" }
+      ],
+      "productID": "com.morningroutine.premium",
+      "referenceName": "Premium",
+      "type": "NonConsumable"
+    }
+  ],
+  "version": { "major": 1, "minor": 0 }
+}

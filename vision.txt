@@ -1,0 +1,16 @@
+# Project Vision
+
+Sovellus Ipadille joka hallinnoi lasten päivittäisiä rutiineja.
+Kolme lasta ja jokaisella on tehtäviä eri aihealueissa (esim. aamu, päiväkodin jälkeen, ennen nukkumaanmenoa). Jokainen tehtävä voi merkata tehdyksi.
+
+# Requirements
+REQ-1: Sovelluksen tulee olla Ipadille.
+REQ-2: Sovelluksen tulee hallita lasten päivittäisiä rutiineja aihealueittain.
+REQ-3: Huoltaja voi lisätä ja poistaa lapsia (max 6). Jokaisella lapsella on nimi ja/tai kuva.
+REQ-4: Jokaisella lapsella tulee olla tehtäviä aihealueittain, kuten hampaiden pesu, lukeminen ja pukeminen.
+REQ-5: Jokainen tehtävä tulee voida merkitä tehdyksi.
+REQ-6: Huoltaja voi lisätä ja poistaa aihealueita.
+REQ-7: Aihealueiden välillä navigoidaan tabilla.
+REQ-8: Reset toimii aihealue kerrallaan.
+REQ-9: Tehtäväpankki — globaalit tehtävät jotka voi liittää usealle lapselle. Jaettu tehtävä, oma tila per lapsi.
+REQ-10: Jos lapsia on enemmän kuin mahtuu näytölle, näytetään listauksessa.

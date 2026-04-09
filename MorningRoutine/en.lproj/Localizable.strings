@@ -1,0 +1,251 @@
+/* English Localizable.strings — MorningRoutine */
+
+/* Child Routine — Empty State */
+"routine.emptyState.title" = "Welcome!";
+"routine.emptyState.body" = "Add your children to get started with daily routines.";
+"routine.emptyState.openSettings" = "Open Settings";
+"routine.noTasksYet" = "No tasks yet";
+
+/* Parent Home */
+"parent.title" = "Parent Settings";
+"parent.done" = "Done";
+"parent.resetAll" = "Reset All";
+
+/* Topics */
+"topics.section" = "Topics";
+"topics.addTopic" = "Add Topic";
+"topics.newTopic.alert" = "New Topic";
+"topics.newTopic.placeholder" = "Topic name";
+"topics.rename.alert" = "Rename Topic";
+"topics.reset.confirm.title" = "Reset \"%@\"?";
+"topics.reset.confirm.button" = "Reset Topic";
+"topics.reset.confirm.message" = "All tasks in \"%@\" for all children will be marked as incomplete. This cannot be undone.";
+"topics.delete.confirm.title" = "Delete \"%@\"?";
+"topics.delete.confirm.button" = "Delete Topic";
+"topics.delete.confirm.message" = "This will permanently delete this topic and all associated tasks for all children. This cannot be undone.";
+"topics.resetAll.confirm.title" = "Reset all topics?";
+"topics.resetAll.confirm.button" = "Reset All";
+"topics.resetAll.confirm.message" = "All tasks in all topics for all children will be marked as incomplete. This cannot be undone.";
+
+/* Children */
+"children.section" = "Children";
+"children.addChild" = "Add Child";
+"children.lastChildInfo" = "At least one child is required";
+"children.maxChildrenInfo" = "Maximum of 6 children reached";
+"children.taskCount" = "%d tasks (%d topics)";
+"children.delete.confirm.title" = "Delete \"%@\"?";
+"children.delete.confirm.button" = "Delete Child";
+"children.delete.confirm.message" = "This will permanently remove %@ and all their task assignments and completion history. This cannot be undone.";
+
+/* Child Form */
+"childForm.newTitle" = "New Child";
+"childForm.editTitle" = "Edit Child";
+"childForm.cancel" = "Cancel";
+"childForm.save" = "Save";
+"childForm.photo.section" = "Photo";
+"childForm.choosePhoto" = "Choose Photo";
+"childForm.removePhoto" = "Remove Photo";
+"childForm.name.section" = "Name";
+"childForm.name.placeholder" = "Child's name";
+
+/* Task Bank */
+"taskBank.section" = "Task Bank";
+"taskBank.addTemplate" = "New Template";
+"taskBank.empty" = "No task templates yet. Tap + to create one.";
+"taskBank.delete.confirm.title" = "Delete \"%@\"?";
+"taskBank.delete.confirm.button" = "Delete Template";
+"taskBank.delete.confirm.assigned" = "This template is assigned to %d children across %d topics. Deleting it will remove it from all assignments. This cannot be undone.";
+"taskBank.delete.confirm.unassigned" = "This template is not assigned to any children. This cannot be undone.";
+
+/* Template Form */
+"templateForm.newTitle" = "New Template";
+"templateForm.editTitle" = "Edit Template";
+"templateForm.cancel" = "Cancel";
+"templateForm.save" = "Save";
+"templateForm.name.section" = "Template Name";
+"templateForm.name.placeholder" = "Template name";
+"templateForm.icon.section" = "Task Icon";
+"templateForm.chooseIcon" = "Choose Icon";
+
+/* Task Editor */
+"taskEditor.title" = "%@'s Tasks - %@";
+"taskEditor.addFromBank" = "Add from Bank";
+"taskEditor.empty" = "No tasks assigned. Tap 'Add from Bank' to assign tasks.";
+"taskEditor.remove" = "Remove";
+"taskEditor.copyFrom" = "Copy from...";
+
+/* Copy Source Sheet */
+"copySource.title" = "Copy from Child";
+"copySource.confirm" = "Copy";
+"copySource.empty" = "No other children have tasks in this topic.";
+
+/* Bank Selector */
+"bankSelector.title" = "Add Tasks from Bank";
+"bankSelector.cancel" = "Cancel";
+"bankSelector.addButton" = "Add (%d)";
+"bankSelector.addButtonZero" = "Add (0)";
+"bankSelector.search.placeholder" = "Search templates...";
+"bankSelector.assigned" = "ASSIGNED";
+"bankSelector.createNew" = "Create New Template";
+"bankSelector.empty" = "No task templates yet.";
+
+/* Settings */
+"settings.section" = "Settings";
+"settings.changePIN" = "Change PIN";
+
+/* PIN */
+"pin.entry.title" = "Parent Settings";
+"pin.entry.subtitle" = "Enter your PIN";
+"pin.setup.title" = "Create your PIN";
+"pin.setup.subtitle" = "Enter a 4-digit PIN to protect parent settings";
+"pin.setupConfirm.title" = "Confirm your PIN";
+"pin.setupConfirm.subtitle" = "Enter the same PIN again";
+"pin.changeVerify.title" = "Enter current PIN";
+"pin.changeVerify.subtitle" = "Enter your current PIN";
+"pin.changeNew.title" = "Enter new PIN";
+"pin.changeNew.subtitle" = "Enter a new 4-digit PIN";
+"pin.changeConfirm.title" = "Confirm new PIN";
+"pin.changeConfirm.subtitle" = "Confirm your new PIN";
+"pin.error.incorrect" = "Incorrect PIN (%d/3 attempts)";
+"pin.error.mismatch" = "PINs didn't match. Try again.";
+"pin.lockout" = "Too many attempts. Try again in %@";
+"pin.lockout.announcement" = "PIN entry locked. Try again in %d seconds.";
+"pin.changed.toast" = "PIN changed successfully";
+
+/* Celebration */
+"celebration.allDone" = "All done!";
+"celebration.announcement" = "%@ finished all their tasks!";
+
+/* Accessibility */
+"accessibility.parentSettings" = "Parent Settings";
+"accessibility.parentSettings.hint" = "Opens parent management. Requires PIN.";
+"accessibility.openSettings" = "Open Settings";
+"accessibility.openSettings.hint" = "Opens parent settings to add children. Requires PIN.";
+"accessibility.done.hint" = "Done — return to routine view";
+
+/* Add/Edit Task Sheet */
+"taskSheet.icon.section" = "Task Icon";
+"taskSheet.chooseIcon" = "Choose Icon";
+"taskSheet.name.section" = "Task Name";
+"taskSheet.name.placeholder" = "Task name";
+"taskSheet.editTitle" = "Edit Task";
+"taskSheet.addTitle" = "Add Task";
+
+/* Child Topic Picker */
+"childTopicPicker.title" = "%@'s Topics";
+"childTopicPicker.taskCount" = "%d tasks";
+
+/* Seed */
+"seed.defaultTopicName" = "Morning";
+
+/* Generic Actions */
+"action.delete" = "Delete";
+
+/* Icon Picker */
+"iconPicker.navigationTitle" = "Choose Icon";
+"iconPicker.cancel" = "Cancel";
+"iconPicker.sourceBuiltIn" = "Built-in";
+"iconPicker.sourcePhotos" = "Your Photos";
+"iconPicker.chooseFromPhotos" = "Choose from Photos";
+"iconPicker.search.placeholder" = "Search icons...";
+
+/* PIN Setup */
+"pinSetup.continue" = "Continue";
+
+/* Accessibility — Icon Picker */
+"accessibility.iconPicker.source" = "Source";
+
+/* Accessibility — PIN */
+"accessibility.pin.cancel" = "Cancel";
+"accessibility.pin.delete" = "Delete";
+"accessibility.pin.key.disabled" = "Key %d, disabled";
+"accessibility.pin.key" = "%d";
+"accessibility.pin.dotDisplay" = "PIN entry: %d of 4 digits entered";
+"accessibility.pin.lockout" = "PIN entry locked. Try again in %d seconds.";
+
+/* Accessibility — Child Column */
+"accessibility.childColumn.allDone" = "%@ finished all tasks! Amazing!";
+"accessibility.childColumn.routine" = "%@'s %@ routine";
+"accessibility.childColumn.routineDefaultTopic" = "morning";
+"accessibility.childColumn.tasks" = "%@'s tasks";
+"accessibility.childColumn.progress" = "%d of %d tasks complete";
+"accessibility.childColumn.avatar" = "%@'s avatar";
+
+/* Accessibility — Child Routine */
+"accessibility.topicTabBar" = "Topic tabs";
+
+/* Accessibility — Task Editor */
+"accessibility.taskEditor.addFromBank" = "Add from Bank";
+"accessibility.taskEditor.addFromBank.hint" = "Opens task bank to assign templates to this child and topic";
+"accessibility.taskEditor.reorder" = "Reorder %@";
+"accessibility.taskEditor.remove" = "Remove %@ from %@'s %@";
+"accessibility.taskEditor.swipeHint" = "Swipe left to remove from this child's topic.";
+
+/* Accessibility — Task Sheet */
+"accessibility.taskSheet.chooseIcon" = "Choose icon";
+"accessibility.taskSheet.chooseIcon.hint" = "Opens icon library or photo picker";
+"accessibility.taskSheet.name" = "Task name";
+"accessibility.taskSheet.name.hint" = "Maximum 30 characters";
+"accessibility.taskSheet.save" = "Save task";
+
+/* Accessibility — Template Sheet */
+"accessibility.templateSheet.chooseIcon" = "Choose icon";
+"accessibility.templateSheet.name" = "Template name";
+"accessibility.templateSheet.save" = "Save template";
+
+/* Accessibility — Child Form */
+"accessibility.childForm.name" = "Child's name";
+"accessibility.childForm.save" = "Save";
+
+/* Accessibility — Bank Selector */
+"accessibility.bankSelector.add" = "Add %d templates";
+"accessibility.bankSelector.add.hint" = "Assigns selected templates to this child and topic";
+"accessibility.bankSelector.createNew.hint" = "Opens form to create a new task template";
+
+/* Accessibility — Child Topic Picker */
+"accessibility.childTopicPicker.row" = "%@, %d tasks";
+"accessibility.childTopicPicker.row.hint" = "Opens task editor for %@ in %@";
+
+/* Accessibility — Parent Home — Children */
+"accessibility.children.row" = "%@, %d tasks";
+"accessibility.children.row.hint.deletable" = "Opens topic selection. Swipe left to delete.";
+"accessibility.children.row.hint.only" = "Opens topic selection. This is the only child and cannot be deleted.";
+"accessibility.children.delete" = "Delete %@";
+"accessibility.children.addChild" = "Add Child";
+"accessibility.children.addChild.maxReached" = "Add Child — maximum reached";
+"accessibility.children.addChild.hint" = "Opens form to add a new child";
+"accessibility.children.addChild.maxHint" = "Maximum of 6 children allowed";
+"accessibility.children.reorder" = "Reorder %@";
+"accessibility.children.edit" = "Edit %@";
+"accessibility.children.edit.hint" = "Opens form to edit name and photo";
+
+/* Accessibility — Parent Home — Task Bank */
+"accessibility.taskBank.newTemplate" = "New Template";
+"accessibility.taskBank.newTemplate.hint" = "Creates a new task template in the task bank";
+"accessibility.taskBank.edit" = "Edit %@";
+"accessibility.taskBank.edit.hint" = "Opens form to edit template name and icon";
+"accessibility.taskBank.row.hint" = "Swipe left to delete. Tap edit to change name or icon.";
+"accessibility.taskBank.delete" = "Delete %@";
+
+/* Accessibility — Parent Home — Topics */
+"accessibility.topics.add" = "Add Topic";
+"accessibility.topics.add.hint" = "Creates a new topic category";
+"accessibility.topics.reorder" = "Reorder %@";
+"accessibility.topics.reset" = "Reset %@";
+"accessibility.topics.rename" = "Rename %@";
+"accessibility.topics.delete" = "Delete %@";
+
+/* Paywall (REQ-010) */
+"paywall.title" = "Morning Routine Premium";
+"paywall.subtitle" = "Unlock all features for your family";
+"paywall.benefit.topics" = "Unlimited topics";
+"paywall.benefit.oneTime" = "One-time purchase — no subscription";
+"paywall.benefit.family" = "Family sharing included";
+"paywall.unlock" = "Unlock Premium — %@";
+"paywall.unlock.noPrice" = "Unlock Premium";
+"paywall.restore" = "Restore Purchase";
+"paywall.notNow" = "Not now";
+"paywall.error.title" = "Purchase Failed";
+"paywall.error.message" = "Something went wrong. Please try again.";
+"paywall.error.ok" = "OK";
+"settings.restorePurchase" = "Restore Purchase";

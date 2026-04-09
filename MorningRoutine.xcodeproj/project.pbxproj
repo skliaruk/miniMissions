@@ -1,0 +1,834 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA000001 /* MorningRoutineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000001 /* MorningRoutineApp.swift */; };
+		AA000002 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000002 /* AppEnvironment.swift */; };
+		AA000003 /* ContentRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000003 /* ContentRootView.swift */; };
+		AA000004 /* AccessibilityIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000004 /* AccessibilityIdentifiers.swift */; };
+		AA000005 /* Child.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000005 /* Child.swift */; };
+		AA000006 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000006 /* Task.swift */; };
+		AA000007 /* TaskCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000007 /* TaskCompletion.swift */; };
+		AA000008 /* PINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000008 /* PINService.swift */; };
+		AA000009 /* SeedDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000009 /* SeedDataService.swift */; };
+		AA000010 /* DailyResetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000010 /* DailyResetService.swift */; };
+		AA000011 /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000011 /* DesignTokens.swift */; };
+		AA000012 /* ChildRoutineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000012 /* ChildRoutineView.swift */; };
+		AA000013 /* ChildColumnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000013 /* ChildColumnView.swift */; };
+		AA000014 /* TaskRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000014 /* TaskRowView.swift */; };
+		AA000015 /* StarBurstView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000015 /* StarBurstView.swift */; };
+		AA000016 /* CelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000016 /* CelebrationView.swift */; };
+		AA000017 /* ChildRoutineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000017 /* ChildRoutineViewModel.swift */; };
+		AA000018 /* ParentHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000018 /* ParentHomeView.swift */; };
+		AA000019 /* TaskEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000019 /* TaskEditorView.swift */; };
+		AA000020 /* AddEditTaskSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000020 /* AddEditTaskSheet.swift */; };
+		AA000021 /* IconPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000021 /* IconPickerView.swift */; };
+		AA000022 /* ParentManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000022 /* ParentManagementViewModel.swift */; };
+		AA000023 /* PINSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000023 /* PINSetupView.swift */; };
+		AA000024 /* PINEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000024 /* PINEntryView.swift */; };
+		AA000025 /* PINKeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000025 /* PINKeypadView.swift */; };
+		AA000026 /* PINViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000026 /* PINViewModel.swift */; };
+		AA000027 /* ChangePINView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000027 /* ChangePINView.swift */; };
+		AA000028 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA000028 /* Assets.xcassets */; };
+		AA000030 /* Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000030 /* Topic.swift */; };
+		AA000031 /* ResetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000031 /* ResetService.swift */; };
+		AA000032 /* ChildTopicPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000032 /* ChildTopicPickerView.swift */; };
+		AA000033 /* AddEditChildSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000033 /* AddEditChildSheet.swift */; };
+		AA000034 /* TaskTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000034 /* TaskTemplate.swift */; };
+		AA000035 /* TaskAssignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000035 /* TaskAssignment.swift */; };
+		AA000036 /* AddEditTemplateSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000036 /* AddEditTemplateSheet.swift */; };
+		AA000037 /* BankSelectorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000037 /* BankSelectorSheet.swift */; };
+		AA000050 /* CopyTasksSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000050 /* CopyTasksSheet.swift */; };
+		AA000043 /* StoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000043 /* StoreService.swift */; };
+		AA000044 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000044 /* PaywallView.swift */; };
+		AA000040 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = VG000001 /* Localizable.strings */; };
+		AA000045 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = FA000045 /* Products.storekit */; };
+		AB000001 /* PINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB000001 /* PINServiceTests.swift */; };
+		AB000002 /* SeedDataServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB000002 /* SeedDataServiceTests.swift */; };
+		AC000002 /* AppLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC000002 /* AppLauncher.swift */; };
+		AC000003 /* PINHashHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC000003 /* PINHashHelper.swift */; };
+		AC000004 /* RoutineViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC000004 /* RoutineViewUITests.swift */; };
+		AC000005 /* ParentalGateUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC000005 /* ParentalGateUITests.swift */; };
+		AC000006 /* ParentManagementUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC000006 /* ParentManagementUITests.swift */; };
+		AC000007 /* AccessibilityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC000007 /* AccessibilityUITests.swift */; };
+		AC000008 /* TopicCategoriesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC000008 /* TopicCategoriesUITests.swift */; };
+		AC000009 /* AccessibilityIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC000009 /* AccessibilityIdentifiers.swift */; };
+		AC000010 /* TaskBankUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC000010 /* TaskBankUITests.swift */; };
+		AC000011 /* DynamicChildrenUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC000011 /* DynamicChildrenUITests.swift */; };
+		AC000012 /* DailyResetUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC000012 /* DailyResetUITests.swift */; };
+		AC000013 /* CopyTasksUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC000013 /* CopyTasksUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		891E067C2F764CC5003C7192 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = PP000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = TG000001;
+			remoteInfo = MorningRoutine;
+		};
+		891E067D2F764CC5003C7192 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = PP000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = TG000001;
+			remoteInfo = MorningRoutine;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		FA000001 /* MorningRoutineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MorningRoutineApp.swift; sourceTree = "<group>"; };
+		FA000002 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		FA000003 /* ContentRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentRootView.swift; sourceTree = "<group>"; };
+		FA000004 /* AccessibilityIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityIdentifiers.swift; sourceTree = "<group>"; };
+		FA000005 /* Child.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Child.swift; sourceTree = "<group>"; };
+		FA000006 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		FA000007 /* TaskCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCompletion.swift; sourceTree = "<group>"; };
+		FA000008 /* PINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINService.swift; sourceTree = "<group>"; };
+		FA000009 /* SeedDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedDataService.swift; sourceTree = "<group>"; };
+		FA000010 /* DailyResetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyResetService.swift; sourceTree = "<group>"; };
+		FA000011 /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
+		FA000012 /* ChildRoutineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRoutineView.swift; sourceTree = "<group>"; };
+		FA000013 /* ChildColumnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildColumnView.swift; sourceTree = "<group>"; };
+		FA000014 /* TaskRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRowView.swift; sourceTree = "<group>"; };
+		FA000015 /* StarBurstView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarBurstView.swift; sourceTree = "<group>"; };
+		FA000016 /* CelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationView.swift; sourceTree = "<group>"; };
+		FA000017 /* ChildRoutineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildRoutineViewModel.swift; sourceTree = "<group>"; };
+		FA000018 /* ParentHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentHomeView.swift; sourceTree = "<group>"; };
+		FA000019 /* TaskEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorView.swift; sourceTree = "<group>"; };
+		FA000020 /* AddEditTaskSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditTaskSheet.swift; sourceTree = "<group>"; };
+		FA000021 /* IconPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconPickerView.swift; sourceTree = "<group>"; };
+		FA000022 /* ParentManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentManagementViewModel.swift; sourceTree = "<group>"; };
+		FA000023 /* PINSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINSetupView.swift; sourceTree = "<group>"; };
+		FA000024 /* PINEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINEntryView.swift; sourceTree = "<group>"; };
+		FA000025 /* PINKeypadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINKeypadView.swift; sourceTree = "<group>"; };
+		FA000026 /* PINViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINViewModel.swift; sourceTree = "<group>"; };
+		FA000027 /* ChangePINView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePINView.swift; sourceTree = "<group>"; };
+		FA000028 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FA000029 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FA000030 /* Topic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Topic.swift; sourceTree = "<group>"; };
+		FA000031 /* ResetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetService.swift; sourceTree = "<group>"; };
+		FA000032 /* ChildTopicPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildTopicPickerView.swift; sourceTree = "<group>"; };
+		FA000033 /* AddEditChildSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditChildSheet.swift; sourceTree = "<group>"; };
+		FA000034 /* TaskTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTemplate.swift; sourceTree = "<group>"; };
+		FA000035 /* TaskAssignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskAssignment.swift; sourceTree = "<group>"; };
+		FA000036 /* AddEditTemplateSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditTemplateSheet.swift; sourceTree = "<group>"; };
+		FA000037 /* BankSelectorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankSelectorSheet.swift; sourceTree = "<group>"; };
+		FA000050 /* CopyTasksSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyTasksSheet.swift; sourceTree = "<group>"; };
+		FA000043 /* StoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreService.swift; sourceTree = "<group>"; };
+		FA000044 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		FA000045 /* Products.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
+		FA000040 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FA000041 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FA000042 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FB000001 /* PINServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINServiceTests.swift; sourceTree = "<group>"; };
+		FB000002 /* SeedDataServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedDataServiceTests.swift; sourceTree = "<group>"; };
+		FC000002 /* AppLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLauncher.swift; sourceTree = "<group>"; };
+		FC000003 /* PINHashHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINHashHelper.swift; sourceTree = "<group>"; };
+		FC000004 /* RoutineViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineViewUITests.swift; sourceTree = "<group>"; };
+		FC000005 /* ParentalGateUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentalGateUITests.swift; sourceTree = "<group>"; };
+		FC000006 /* ParentManagementUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentManagementUITests.swift; sourceTree = "<group>"; };
+		FC000007 /* AccessibilityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityUITests.swift; sourceTree = "<group>"; };
+		FC000008 /* TopicCategoriesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopicCategoriesUITests.swift; sourceTree = "<group>"; };
+		FC000009 /* AccessibilityIdentifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityIdentifiers.swift; sourceTree = "<group>"; };
+		FC000010 /* TaskBankUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskBankUITests.swift; sourceTree = "<group>"; };
+		FC000011 /* DynamicChildrenUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicChildrenUITests.swift; sourceTree = "<group>"; };
+		FC000012 /* DailyResetUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyResetUITests.swift; sourceTree = "<group>"; };
+		FC000013 /* CopyTasksUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyTasksUITests.swift; sourceTree = "<group>"; };
+		FP000001 /* MorningRoutine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MorningRoutine.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FP000002 /* MorningRoutineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MorningRoutineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FP000003 /* MorningRoutineUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MorningRoutineUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BP000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		GR000000 = {
+			isa = PBXGroup;
+			children = (
+				GR000001 /* MorningRoutine */,
+				GR000010 /* MorningRoutineTests */,
+				GR000020 /* MorningRoutineUITests */,
+				GR000099 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		GR000001 /* MorningRoutine */ = {
+			isa = PBXGroup;
+			children = (
+				GR000002 /* App */,
+				GR000003 /* Features */,
+				GR000004 /* Models */,
+				GR000005 /* Services */,
+				GR000006 /* Resources */,
+				VG000001 /* Localizable.strings */,
+				FA000004 /* AccessibilityIdentifiers.swift */,
+			);
+			path = MorningRoutine;
+			sourceTree = "<group>";
+		};
+		GR000002 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				FA000001 /* MorningRoutineApp.swift */,
+				FA000002 /* AppEnvironment.swift */,
+				FA000003 /* ContentRootView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		GR000003 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				GR000003A /* ChildRoutine */,
+				GR000003B /* ParentManagement */,
+				GR000003C /* PINGate */,
+				GR000003D /* Paywall */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		GR000003D /* Paywall */ = {
+			isa = PBXGroup;
+			children = (
+				FA000044 /* PaywallView.swift */,
+			);
+			path = Paywall;
+			sourceTree = "<group>";
+		};
+		GR000003A /* ChildRoutine */ = {
+			isa = PBXGroup;
+			children = (
+				FA000012 /* ChildRoutineView.swift */,
+				FA000013 /* ChildColumnView.swift */,
+				FA000014 /* TaskRowView.swift */,
+				FA000015 /* StarBurstView.swift */,
+				FA000016 /* CelebrationView.swift */,
+				FA000017 /* ChildRoutineViewModel.swift */,
+			);
+			path = ChildRoutine;
+			sourceTree = "<group>";
+		};
+		GR000003B /* ParentManagement */ = {
+			isa = PBXGroup;
+			children = (
+				FA000018 /* ParentHomeView.swift */,
+				FA000019 /* TaskEditorView.swift */,
+				FA000020 /* AddEditTaskSheet.swift */,
+				FA000033 /* AddEditChildSheet.swift */,
+				FA000021 /* IconPickerView.swift */,
+				FA000022 /* ParentManagementViewModel.swift */,
+				FA000032 /* ChildTopicPickerView.swift */,
+				FA000036 /* AddEditTemplateSheet.swift */,
+				FA000037 /* BankSelectorSheet.swift */,
+				FA000050 /* CopyTasksSheet.swift */,
+			);
+			path = ParentManagement;
+			sourceTree = "<group>";
+		};
+		GR000003C /* PINGate */ = {
+			isa = PBXGroup;
+			children = (
+				FA000023 /* PINSetupView.swift */,
+				FA000024 /* PINEntryView.swift */,
+				FA000025 /* PINKeypadView.swift */,
+				FA000026 /* PINViewModel.swift */,
+				FA000027 /* ChangePINView.swift */,
+			);
+			path = PINGate;
+			sourceTree = "<group>";
+		};
+		GR000004 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FA000005 /* Child.swift */,
+				FA000006 /* Task.swift */,
+				FA000007 /* TaskCompletion.swift */,
+				FA000030 /* Topic.swift */,
+				FA000034 /* TaskTemplate.swift */,
+				FA000035 /* TaskAssignment.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		GR000005 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				FA000008 /* PINService.swift */,
+				FA000009 /* SeedDataService.swift */,
+				FA000010 /* DailyResetService.swift */,
+				FA000031 /* ResetService.swift */,
+				FA000043 /* StoreService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		GR000006 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FA000011 /* DesignTokens.swift */,
+				FA000028 /* Assets.xcassets */,
+				FA000029 /* Info.plist */,
+				FA000045 /* Products.storekit */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		GR000010 /* MorningRoutineTests */ = {
+			isa = PBXGroup;
+			children = (
+				FB000001 /* PINServiceTests.swift */,
+				FB000002 /* SeedDataServiceTests.swift */,
+			);
+			path = MorningRoutineTests;
+			sourceTree = "<group>";
+		};
+		GR000020 /* MorningRoutineUITests */ = {
+			isa = PBXGroup;
+			children = (
+				GR000021 /* Helpers */,
+				FC000004 /* RoutineViewUITests.swift */,
+				FC000005 /* ParentalGateUITests.swift */,
+				FC000006 /* ParentManagementUITests.swift */,
+				FC000007 /* AccessibilityUITests.swift */,
+				FC000008 /* TopicCategoriesUITests.swift */,
+				FC000010 /* TaskBankUITests.swift */,
+				FC000011 /* DynamicChildrenUITests.swift */,
+				FC000012 /* DailyResetUITests.swift */,
+				FC000013 /* CopyTasksUITests.swift */,
+			);
+			path = MorningRoutineUITests;
+			sourceTree = "<group>";
+		};
+		GR000021 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				FC000002 /* AppLauncher.swift */,
+				FC000003 /* PINHashHelper.swift */,
+				FC000009 /* AccessibilityIdentifiers.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		GR000099 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FP000001 /* MorningRoutine.app */,
+				FP000002 /* MorningRoutineTests.xctest */,
+				FP000003 /* MorningRoutineUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		TG000001 /* MorningRoutine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC000001 /* Build configuration list for PBXNativeTarget "MorningRoutine" */;
+			buildPhases = (
+				BP000001 /* Sources */,
+				BP000002 /* Resources */,
+				BP000003 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MorningRoutine;
+			productName = MorningRoutine;
+			productReference = FP000001 /* MorningRoutine.app */;
+			productType = "com.apple.product-type.application";
+		};
+		TG000002 /* MorningRoutineTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC000002 /* Build configuration list for PBXNativeTarget "MorningRoutineTests" */;
+			buildPhases = (
+				BP000004 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				TD000001 /* PBXTargetDependency */,
+			);
+			name = MorningRoutineTests;
+			productName = MorningRoutineTests;
+			productReference = FP000002 /* MorningRoutineTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		TG000003 /* MorningRoutineUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC000003 /* Build configuration list for PBXNativeTarget "MorningRoutineUITests" */;
+			buildPhases = (
+				BP000005 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				TD000002 /* PBXTargetDependency */,
+			);
+			name = MorningRoutineUITests;
+			productName = MorningRoutineUITests;
+			productReference = FP000003 /* MorningRoutineUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		PP000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					TG000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					TG000002 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = TG000001;
+					};
+					TG000003 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = TG000001;
+					};
+				};
+			};
+			buildConfigurationList = BC000000 /* Build configuration list for PBXProject "MorningRoutine" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				fi,
+				ru,
+			);
+			mainGroup = GR000000;
+			productRefGroup = GR000099 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				TG000001 /* MorningRoutine */,
+				TG000002 /* MorningRoutineTests */,
+				TG000003 /* MorningRoutineUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BP000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000028 /* Assets.xcassets in Resources */,
+				AA000040 /* Localizable.strings in Resources */,
+				AA000045 /* Products.storekit in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BP000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001 /* MorningRoutineApp.swift in Sources */,
+				AA000002 /* AppEnvironment.swift in Sources */,
+				AA000003 /* ContentRootView.swift in Sources */,
+				AA000004 /* AccessibilityIdentifiers.swift in Sources */,
+				AA000005 /* Child.swift in Sources */,
+				AA000006 /* Task.swift in Sources */,
+				AA000007 /* TaskCompletion.swift in Sources */,
+				AA000008 /* PINService.swift in Sources */,
+				AA000009 /* SeedDataService.swift in Sources */,
+				AA000010 /* DailyResetService.swift in Sources */,
+				AA000011 /* DesignTokens.swift in Sources */,
+				AA000012 /* ChildRoutineView.swift in Sources */,
+				AA000013 /* ChildColumnView.swift in Sources */,
+				AA000014 /* TaskRowView.swift in Sources */,
+				AA000015 /* StarBurstView.swift in Sources */,
+				AA000016 /* CelebrationView.swift in Sources */,
+				AA000017 /* ChildRoutineViewModel.swift in Sources */,
+				AA000018 /* ParentHomeView.swift in Sources */,
+				AA000019 /* TaskEditorView.swift in Sources */,
+				AA000020 /* AddEditTaskSheet.swift in Sources */,
+				AA000033 /* AddEditChildSheet.swift in Sources */,
+				AA000021 /* IconPickerView.swift in Sources */,
+				AA000022 /* ParentManagementViewModel.swift in Sources */,
+				AA000023 /* PINSetupView.swift in Sources */,
+				AA000024 /* PINEntryView.swift in Sources */,
+				AA000025 /* PINKeypadView.swift in Sources */,
+				AA000026 /* PINViewModel.swift in Sources */,
+				AA000027 /* ChangePINView.swift in Sources */,
+				AA000030 /* Topic.swift in Sources */,
+				AA000031 /* ResetService.swift in Sources */,
+				AA000032 /* ChildTopicPickerView.swift in Sources */,
+				AA000034 /* TaskTemplate.swift in Sources */,
+				AA000035 /* TaskAssignment.swift in Sources */,
+				AA000036 /* AddEditTemplateSheet.swift in Sources */,
+				AA000037 /* BankSelectorSheet.swift in Sources */,
+				AA000050 /* CopyTasksSheet.swift in Sources */,
+				AA000043 /* StoreService.swift in Sources */,
+				AA000044 /* PaywallView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BP000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AB000001 /* PINServiceTests.swift in Sources */,
+				AB000002 /* SeedDataServiceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BP000005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC000009 /* AccessibilityIdentifiers.swift in Sources */,
+				AC000002 /* AppLauncher.swift in Sources */,
+				AC000003 /* PINHashHelper.swift in Sources */,
+				AC000004 /* RoutineViewUITests.swift in Sources */,
+				AC000005 /* ParentalGateUITests.swift in Sources */,
+				AC000006 /* ParentManagementUITests.swift in Sources */,
+				AC000007 /* AccessibilityUITests.swift in Sources */,
+				AC000008 /* TopicCategoriesUITests.swift in Sources */,
+				AC000010 /* TaskBankUITests.swift in Sources */,
+				AC000011 /* DynamicChildrenUITests.swift in Sources */,
+				AC000012 /* DailyResetUITests.swift in Sources */,
+				AC000013 /* CopyTasksUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		TD000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = TG000001 /* MorningRoutine */;
+			targetProxy = 891E067C2F764CC5003C7192 /* PBXContainerItemProxy */;
+		};
+		TD000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = TG000001 /* MorningRoutine */;
+			targetProxy = 891E067D2F764CC5003C7192 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		VG000001 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FA000040 /* en */,
+				FA000041 /* fi */,
+				FA000042 /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		XC000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_CYCLE = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		XC000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_CYCLE = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		XC000010 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PDG55XDJMV;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = MorningRoutine/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fi.morningroutine.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "ipados ipadsimulator iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		XC000011 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PDG55XDJMV;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = MorningRoutine/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fi.morningroutine.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "ipados ipadsimulator iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+		XC000020 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.morningroutine.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "ipados ipadsimulator iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.9;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MorningRoutine.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MorningRoutine";
+			};
+			name = Debug;
+		};
+		XC000021 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.morningroutine.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "ipados ipadsimulator iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.9;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MorningRoutine.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MorningRoutine";
+			};
+			name = Release;
+		};
+		XC000030 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.morningroutine.app.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "ipados ipadsimulator iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.9;
+				TEST_TARGET_NAME = MorningRoutine;
+			};
+			name = Debug;
+		};
+		XC000031 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.morningroutine.app.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "ipados ipadsimulator iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.9;
+				TEST_TARGET_NAME = MorningRoutine;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BC000000 /* Build configuration list for PBXProject "MorningRoutine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				XC000001 /* Debug */,
+				XC000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BC000001 /* Build configuration list for PBXNativeTarget "MorningRoutine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				XC000010 /* Debug */,
+				XC000011 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BC000002 /* Build configuration list for PBXNativeTarget "MorningRoutineTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				XC000020 /* Debug */,
+				XC000021 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BC000003 /* Build configuration list for PBXNativeTarget "MorningRoutineUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				XC000030 /* Debug */,
+				XC000031 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = PP000001 /* Project object */;
+}
