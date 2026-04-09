@@ -3,7 +3,7 @@
 
 import XCTest
 import SwiftData
-@testable import MorningRoutine
+@testable import MiniMissions
 
 @MainActor
 final class SeedDataServiceTests: XCTestCase {

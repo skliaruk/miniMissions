@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "TG000001"
-               BuildableName = "MorningRoutine.app"
-               BlueprintName = "MorningRoutine"
-               ReferencedContainer = "container:MorningRoutine.xcodeproj">
+               BuildableName = "MiniMissions.app"
+               BlueprintName = "MiniMissions"
+               ReferencedContainer = "container:MiniMissions.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "TG000002"
-               BuildableName = "MorningRoutineTests.xctest"
-               BlueprintName = "MorningRoutineTests"
-               ReferencedContainer = "container:MorningRoutine.xcodeproj">
+               BuildableName = "MiniMissionsTests.xctest"
+               BlueprintName = "MiniMissionsTests"
+               ReferencedContainer = "container:MiniMissions.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "TG000003"
-               BuildableName = "MorningRoutineUITests.xctest"
-               BlueprintName = "MorningRoutineUITests"
-               ReferencedContainer = "container:MorningRoutine.xcodeproj">
+               BuildableName = "MiniMissionsUITests.xctest"
+               BlueprintName = "MiniMissionsUITests"
+               ReferencedContainer = "container:MiniMissions.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -65,9 +65,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "TG000001"
-            BuildableName = "MorningRoutine.app"
-            BlueprintName = "MorningRoutine"
-            ReferencedContainer = "container:MorningRoutine.xcodeproj">
+            BuildableName = "MiniMissions.app"
+            BlueprintName = "MiniMissions"
+            ReferencedContainer = "container:MiniMissions.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -82,9 +82,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "TG000001"
-            BuildableName = "MorningRoutine.app"
-            BlueprintName = "MorningRoutine"
-            ReferencedContainer = "container:MorningRoutine.xcodeproj">
+            BuildableName = "MiniMissions.app"
+            BlueprintName = "MiniMissions"
+            ReferencedContainer = "container:MiniMissions.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

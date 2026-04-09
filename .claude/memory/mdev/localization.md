@@ -2,7 +2,7 @@
 
 ## Implementation
 - Three languages: English (en), Finnish (fi), Russian (ru)
-- Localizable.strings files in `MorningRoutine/Resources/{en,fi,ru}.lproj/`
+- Localizable.strings files in `MiniMissions/Resources/{en,fi,ru}.lproj/`
 - PBXVariantGroup `VG000001` added to pbxproj with file refs FA000040/41/42
 - Build file AA000040 in Resources build phase
 - knownRegions updated: en, fi, ru, Base

@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Build & Test
+    runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.2.app/Contents/Developer
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Boot simulator
+        run: |
+          xcrun simctl boot "iPad Air (5th generation)" || true
+          xcrun simctl bootstatus "iPad Air (5th generation)" -b
+
+      - name: Run unit tests
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project MiniMissions.xcodeproj \
+            -scheme MiniMissions \
+            -destination 'platform=iOS Simulator,name=iPad Air (5th generation),OS=17.5' \
+            -only-testing:MiniMissionsTests \
+            -resultBundlePath TestResults/unit.xcresult
+
+      - name: Run UI tests
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project MiniMissions.xcodeproj \
+            -scheme MiniMissions \
+            -destination 'platform=iOS Simulator,name=iPad Air (5th generation),OS=17.5' \
+            -only-testing:MiniMissionsUITests \
+            -resultBundlePath TestResults/ui.xcresult
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults/

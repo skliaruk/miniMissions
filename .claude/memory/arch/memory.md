@@ -79,3 +79,21 @@ iPad-only (iPadOS 17+) morning routine app for children aged 2–6 and their par
 ### Open Questions
 - SwiftData migration V2->V3 with entity removal: may need two-step approach. MDEV to test and decide.
 - #Predicate with nested relationship traversal remains a concern (relationship traversal preferred over #Predicate)
+
+## Session: 2026-04-09 — CI/CD Pipeline (REQ-009)
+
+### Decisions Made
+7. **ADR-007**: CI/CD pipeline using GitHub Actions with raw xcodebuild commands and Xcode automatic signing via App Store Connect API key.
+   - CI platform: GitHub Actions (pipeline-as-code, native GitHub visibility, full customisability)
+   - Code signing: Xcode automatic signing with ASC API key (zero dependencies, no certificate repo, Apple-managed rotation)
+   - Build tooling: raw xcodebuild (consistent with zero-dependency philosophy from ADR-001)
+   - Two workflows: `ci.yml` (test on push/PR) and `release.yml` (archive + TestFlight upload on push to main)
+   - Three GitHub Secrets: APP_STORE_CONNECT_API_KEY, API_KEY_ID, API_ISSUER_ID
+   - ExportOptions.plist checked into repo (app-store method, automatic signing, team PDG55XDJMV)
+   - macOS-15 runner, Xcode 16.x pinned
+   - altool for TestFlight upload (with note about future deprecation)
+
+### Key Design Choices
+- No Fastlane, no Ruby dependencies — all native Apple tooling
+- Xcode automatic signing eliminates need to store certificates/profiles as CI secrets
+- Separate test workflow (ci.yml) from release workflow (release.yml) for clarity and to allow PRs to run tests without triggering releases

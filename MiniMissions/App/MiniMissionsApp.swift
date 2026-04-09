@@ -1,4 +1,4 @@
-// MorningRoutineApp.swift
+// MiniMissionsApp.swift
 // App entry point. Sets up ModelContainer, seeds data, injects AppEnvironment.
 // See ADR-004 for testability design, ADR-005 for topic categories schema.
 
@@ -6,7 +6,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct MorningRoutineApp: App {
+struct MiniMissionsApp: App {
     @Environment(\.scenePhase) private var scenePhase
     private let environment: AppEnvironment
     private let modelContainer: ModelContainer

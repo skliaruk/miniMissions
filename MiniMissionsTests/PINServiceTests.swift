@@ -3,7 +3,7 @@
 
 import XCTest
 import CryptoKit
-@testable import MorningRoutine
+@testable import MiniMissions
 
 final class PINServiceTests: XCTestCase {
 

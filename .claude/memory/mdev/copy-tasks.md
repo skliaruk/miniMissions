@@ -3,10 +3,10 @@
 ## Implementation (2026-04-09)
 
 ### Files created/modified
-- `MorningRoutine/Features/ParentManagement/CopyTasksSheet.swift` — NEW: Sheet listing other children with tasks in the same topic. Uses @Query for all children, selection + confirm pattern.
-- `MorningRoutine/Features/ParentManagement/TaskEditorView.swift` — MODIFIED: Added `@Query allChildrenForCopy`, computed `otherChildrenWithTasks`, "Kopioi" toolbar button (leading placement), and `.sheet` for CopyTasksSheet.
+- `MiniMissions/Features/ParentManagement/CopyTasksSheet.swift` — NEW: Sheet listing other children with tasks in the same topic. Uses @Query for all children, selection + confirm pattern.
+- `MiniMissions/Features/ParentManagement/TaskEditorView.swift` — MODIFIED: Added `@Query allChildrenForCopy`, computed `otherChildrenWithTasks`, "Kopioi" toolbar button (leading placement), and `.sheet` for CopyTasksSheet.
 - All 3 Localizable.strings — Added `taskEditor.copyFrom`, `copySource.title`, `copySource.confirm`, `copySource.empty` keys.
-- `MorningRoutine.xcodeproj/project.pbxproj` — Added CopyTasksSheet.swift with UUIDs FA000050/AA000050.
+- `MiniMissions.xcodeproj/project.pbxproj` — Added CopyTasksSheet.swift with UUIDs FA000050/AA000050.
 
 ### Architecture notes
 - Copy button visibility is conditional: only shown when `otherChildrenWithTasks` is non-empty.

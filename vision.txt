@@ -1,5 +1,7 @@
 # Project Vision
 
+**App name: MiniMissions**
+
 Sovellus Ipadille joka hallinnoi lasten päivittäisiä rutiineja.
 Kolme lasta ja jokaisella on tehtäviä eri aihealueissa (esim. aamu, päiväkodin jälkeen, ennen nukkumaanmenoa). Jokainen tehtävä voi merkata tehdyksi.
 

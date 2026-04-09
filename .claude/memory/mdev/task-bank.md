@@ -3,8 +3,8 @@
 ## Date: 2026-04-03
 
 ## New Models Created
-- `MorningRoutine/Models/TaskTemplate.swift` — Global task definition (name + icon)
-- `MorningRoutine/Models/TaskAssignment.swift` — Links template to child+topic with sortOrder
+- `MiniMissions/Models/TaskTemplate.swift` — Global task definition (name + icon)
+- `MiniMissions/Models/TaskAssignment.swift` — Links template to child+topic with sortOrder
 
 ## Models Updated
 - `TaskCompletion.swift` — task is now optional, added optional assignment relationship

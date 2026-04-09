@@ -10,17 +10,17 @@
 - `SeedDataService` seeds default "Aamu" topic with sortOrder 0
 
 ## Key Files Created/Modified
-- Created: `MorningRoutine/Models/Topic.swift`
-- Created: `MorningRoutine/Services/ResetService.swift`
-- Created: `MorningRoutine/Features/ParentManagement/ChildTopicPickerView.swift`
-- Modified: `MorningRoutine/Models/Task.swift` (added topic relationship)
-- Modified: `MorningRoutine/App/MorningRoutineApp.swift` (Topic in schema)
-- Modified: `MorningRoutine/Services/SeedDataService.swift` (seeds Aamu topic)
-- Modified: `MorningRoutine/Features/ChildRoutine/ChildRoutineView.swift` (topic tab bar)
-- Modified: `MorningRoutine/Features/ChildRoutine/ChildColumnView.swift` (filter by topic)
-- Modified: `MorningRoutine/Features/ParentManagement/ParentHomeView.swift` (topic CRUD, reset, navigation)
-- Modified: `MorningRoutine/Features/ParentManagement/TaskEditorView.swift` (scoped to child+topic)
-- Modified: `MorningRoutine/Features/ParentManagement/AddEditTaskSheet.swift` (topic param)
+- Created: `MiniMissions/Models/Topic.swift`
+- Created: `MiniMissions/Services/ResetService.swift`
+- Created: `MiniMissions/Features/ParentManagement/ChildTopicPickerView.swift`
+- Modified: `MiniMissions/Models/Task.swift` (added topic relationship)
+- Modified: `MiniMissions/App/MiniMissionsApp.swift` (Topic in schema)
+- Modified: `MiniMissions/Services/SeedDataService.swift` (seeds Aamu topic)
+- Modified: `MiniMissions/Features/ChildRoutine/ChildRoutineView.swift` (topic tab bar)
+- Modified: `MiniMissions/Features/ChildRoutine/ChildColumnView.swift` (filter by topic)
+- Modified: `MiniMissions/Features/ParentManagement/ParentHomeView.swift` (topic CRUD, reset, navigation)
+- Modified: `MiniMissions/Features/ParentManagement/TaskEditorView.swift` (scoped to child+topic)
+- Modified: `MiniMissions/Features/ParentManagement/AddEditTaskSheet.swift` (topic param)
 
 ## UI Pattern Notes
 - Topic tab bar: HStack of pill-shaped Buttons inside ScrollView, inside card container

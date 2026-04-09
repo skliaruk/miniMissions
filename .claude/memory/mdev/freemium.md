@@ -1,14 +1,14 @@
 # REQ-010 Freemium Implementation Notes
 
 ## Files Created
-- `MorningRoutine/Services/StoreService.swift` — StoreKit 2 singleton, `@Observable`, handles purchase/restore
-- `MorningRoutine/Features/Paywall/PaywallView.swift` — Paywall sheet with benefits, purchase, restore
-- `MorningRoutine/Resources/Products.storekit` — StoreKit configuration for testing
+- `MiniMissions/Services/StoreService.swift` — StoreKit 2 singleton, `@Observable`, handles purchase/restore
+- `MiniMissions/Features/Paywall/PaywallView.swift` — Paywall sheet with benefits, purchase, restore
+- `MiniMissions/Resources/Products.storekit` — StoreKit configuration for testing
 
 ## Files Modified
-- `MorningRoutine/Features/ParentManagement/ParentHomeView.swift` — Added paywall gate on "+Add Topic" when topics.count >= 1 and not premium; added restore purchase in settings
+- `MiniMissions/Features/ParentManagement/ParentHomeView.swift` — Added paywall gate on "+Add Topic" when topics.count >= 1 and not premium; added restore purchase in settings
 - All three Localizable.strings (en/fi/ru) — Added paywall.* and settings.restorePurchase keys
-- `MorningRoutine.xcodeproj/project.pbxproj` — Added new files to project
+- `MiniMissions.xcodeproj/project.pbxproj` — Added new files to project
 
 ## Key Patterns
 - `Swift.Task` must be used instead of `Task` because the project has a SwiftData model named `Task` that shadows it

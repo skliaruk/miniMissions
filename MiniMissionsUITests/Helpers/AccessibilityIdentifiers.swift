@@ -1,6 +1,6 @@
 // AccessibilityIdentifiers.swift
 // Centralised accessibility identifier constants for XCUITest queries.
-// This file is included in BOTH the app target and the MorningRoutineUITests target.
+// This file is included in BOTH the app target and the MiniMissionsUITests target.
 // Source of truth: ADR-004 §4 Accessibility Identifier Strategy + DSGN-002 + DSGN-003.
 //
 // Never use raw strings in tests — always reference constants from this file.
@@ -237,78 +237,71 @@ enum AX {
 
     // MARK: - Topic Tab Bar (REQ-006, DSGN-004)
 
-    /// Identifiers for the child-facing topic tab bar and topic management in parent view.
+    /// Identifiers for the child-facing topic tab bar.
     enum TopicTab {
-        /// The tab bar container element at the top of the routine view.
+        /// The container element for the topic tab bar.
         static let tabBar = "topicTabBar"
 
-        /// A topic tab button identified by the topic name (PascalCase, spaces removed).
+        /// A topic tab button, identified by topic name.
         static func tab(_ topicName: String) -> String { "topicTab_\(topicName)" }
     }
 
-    /// Topic management identifiers within Parent Management (REQ-006, DSGN-004).
-    enum TopicManagement {
-        /// The "+ Add Topic" button in the Topics section header.
-        static let addTopicButton = "addTopicButton"
+    // MARK: - Topic Management (REQ-006, DSGN-004)
 
-        /// A topic row in the Topics section, identified by topic name.
+    /// Identifiers for topic CRUD and reset in the parent management view.
+    enum TopicManagement {
+        /// "Add Topic" button in the Topics section header.
+        static let addTopicButton = "parentMgmt_addTopicButton"
+
+        /// Text field in the Add Topic alert dialog.
+        static let addTopicNameField = "parentMgmt_addTopicNameField"
+
+        /// Confirm button in the Add Topic alert dialog.
+        static let addTopicConfirmButton = "parentMgmt_addTopicConfirmButton"
+
+        /// A topic row in the parent management Topics section, identified by topic name.
         static func topicRow(_ topicName: String) -> String { "topicRow_\(topicName)" }
 
-        /// Reorder drag handle on a topic row, identified by topic name.
-        static func topicReorderHandle(_ topicName: String) -> String { "topicReorderHandle_\(topicName)" }
-
-        /// Per-topic reset button, identified by topic name.
-        static func topicResetButton(_ topicName: String) -> String { "topicResetButton_\(topicName)" }
-
-        /// Edit (rename) button on a topic row, identified by topic name.
+        /// Edit/rename button for a topic row, identified by topic name.
         static func topicEditButton(_ topicName: String) -> String { "topicEditButton_\(topicName)" }
 
-        /// Swipe-to-delete action on a topic row, identified by topic name.
+        /// Text field in the Rename Topic alert dialog.
+        static let renameTopicNameField = "parentMgmt_renameTopicNameField"
+
+        /// Confirm/Save button in the Rename Topic alert dialog.
+        static let renameTopicConfirmButton = "parentMgmt_renameTopicConfirmButton"
+
+        /// Delete swipe action for a topic row, identified by topic name.
         static func topicDeleteAction(_ topicName: String) -> String { "topicDeleteAction_\(topicName)" }
 
-        /// "Reset All" button in the parent management navigation bar.
-        static let resetAllButton = "resetAllButton"
+        /// Destructive confirm button in the Delete Topic confirmation dialog.
+        static let deleteTopicConfirmButton = "parentMgmt_deleteTopicConfirmButton"
 
-        // MARK: Dialog identifiers
+        /// Reorder drag handle for a topic row, identified by topic name.
+        static func topicReorderHandle(_ topicName: String) -> String { "topicReorderHandle_\(topicName)" }
 
-        /// Confirm button in the Add Topic alert.
-        static let addTopicConfirmButton = "addTopicConfirmButton"
+        /// Per-topic reset button on a topic row, identified by topic name.
+        static func topicResetButton(_ topicName: String) -> String { "topicResetButton_\(topicName)" }
 
-        /// Cancel button in the Add Topic alert.
-        static let addTopicCancelButton = "addTopicCancelButton"
-
-        /// Text field in the Add Topic alert.
-        static let addTopicNameField = "addTopicNameField"
-
-        /// Confirm (Save) button in the Rename Topic alert.
-        static let renameTopicConfirmButton = "renameTopicConfirmButton"
-
-        /// Cancel button in the Rename Topic alert.
-        static let renameTopicCancelButton = "renameTopicCancelButton"
-
-        /// Text field in the Rename Topic alert.
-        static let renameTopicNameField = "renameTopicNameField"
-
-        /// Confirm button in the Delete Topic confirmation dialog.
-        static let deleteTopicConfirmButton = "deleteTopicConfirmButton"
-
-        /// Cancel button in the Delete Topic confirmation dialog.
-        static let deleteTopicCancelButton = "deleteTopicCancelButton"
-
-        /// Confirm button in the Per-Topic Reset confirmation dialog, identified by topic name.
+        /// Confirm button in the per-topic reset confirmation dialog, identified by topic name.
         static func resetTopicConfirmButton(_ topicName: String) -> String { "resetTopicConfirmButton_\(topicName)" }
 
-        /// Cancel button in the Per-Topic Reset confirmation dialog, identified by topic name.
+        /// Cancel button in the per-topic reset confirmation dialog, identified by topic name.
         static func resetTopicCancelButton(_ topicName: String) -> String { "resetTopicCancelButton_\(topicName)" }
 
+        /// "Reset All" button in the parent management view.
+        static let resetAllButton = "parentMgmt_resetAllButton"
+
         /// Confirm button in the Reset All confirmation dialog.
-        static let resetAllConfirmButton = "resetAllConfirmButton"
+        static let resetAllConfirmButton = "parentMgmt_resetAllConfirmButton"
 
         /// Cancel button in the Reset All confirmation dialog.
-        static let resetAllCancelButton = "resetAllCancelButton"
+        static let resetAllCancelButton = "parentMgmt_resetAllCancelButton"
 
-        /// A child-topic row in the Child Topic Picker screen, identified by child name and topic name.
-        static func childTopicRow(child: String, topic: String) -> String { "childTopicRow_\(child)_\(topic)" }
+        /// A topic row in the child topic picker, identified by child name and topic name.
+        static func childTopicRow(child: String, topic: String) -> String {
+            "childTopicRow_\(child)_\(topic)"
+        }
     }
 
     // MARK: - Child Management (REQ-007, DSGN-005)
@@ -449,20 +442,6 @@ enum AX {
 
         /// "Create New Template" shortcut button at the bottom of the Bank Selector.
         static let bankSelectorCreateNewButton = "bankSelectorCreateNewButton"
-
-        // MARK: Copy Tasks from Another Child
-
-        /// "Kopioi" (Copy) toolbar button in the task editor — opens the copy-from-child sheet.
-        static let copyFromButton = "taskEditor.copyFromButton"
-
-        /// A child row in the copy-source picker sheet, identified by child name.
-        static func copySourceChildRow(_ name: String) -> String { "copySource.childRow.\(name)" }
-
-        /// Confirm button in the copy-source picker sheet.
-        static let copySourceConfirmButton = "copySource.confirmButton"
-
-        /// Cancel button in the copy-source picker sheet.
-        static let copySourceCancelButton = "copySource.cancelButton"
     }
 
     // MARK: - Seed data child names (from ADR-003 SeedDataService.fixedChildren)
