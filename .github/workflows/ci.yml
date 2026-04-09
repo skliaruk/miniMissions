@@ -23,10 +23,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Boot simulator
+      - name: Select iPad simulator
         run: |
-          xcrun simctl boot "iPad Air 11-inch (M4)" || true
-          xcrun simctl bootstatus "iPad Air 11-inch (M4)" -b
+          SIM=$(xcrun simctl list devices available -j | python3 -c "
+          import json, sys
+          data = json.load(sys.stdin)
+          for runtime, devices in data['devices'].items():
+              if 'iOS' in runtime or 'iPadOS' in runtime:
+                  for d in devices:
+                      if 'iPad' in d['name'] and d.get('isAvailable', False):
+                          print(d['name'])
+                          sys.exit(0)
+          sys.exit(1)
+          ")
+          echo "Found simulator: $SIM"
+          echo "SIMULATOR=$SIM" >> $GITHUB_ENV
 
       - name: Run unit tests
         run: |
@@ -34,7 +45,7 @@ jobs:
           xcodebuild test \
             -project MiniMissions.xcodeproj \
             -scheme MiniMissions \
-            -destination 'platform=iOS Simulator,name=iPad Air 11-inch (M4)' \
+            -destination "platform=iOS Simulator,name=$SIMULATOR" \
             -only-testing:MiniMissionsTests \
             -resultBundlePath TestResults/unit.xcresult
 
@@ -44,7 +55,7 @@ jobs:
           xcodebuild test \
             -project MiniMissions.xcodeproj \
             -scheme MiniMissions \
-            -destination 'platform=iOS Simulator,name=iPad Air 11-inch (M4)' \
+            -destination "platform=iOS Simulator,name=$SIMULATOR" \
             -only-testing:MiniMissionsUITests \
             -resultBundlePath TestResults/ui.xcresult
 
