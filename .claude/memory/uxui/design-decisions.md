@@ -13,6 +13,7 @@
 - DSGN-004: Topic Tab Navigation & Topic Management (Draft, 2026-03-30)
 - DSGN-005: Dynamic Children UI (Draft, 2026-03-30)
 - DSGN-006: Task Bank UI (Draft, 2026-03-30)
+- DSGN-007: App Icon & Logo (Draft, 2026-04-09)
 
 ## Key DSGN-004 Decisions
 - Topic tab bar placed at top of routine view, above child columns, within a card container
@@ -68,6 +69,15 @@
 - resetDayButton -> resetAllButton
 - resetDayConfirmButton -> resetAllConfirmButton
 - resetDayCancelButton -> resetAllCancelButton
+
+## Key DSGN-007 Decisions
+- App icon: star (brand yellow) with checkmark (brand purple) on purple gradient background
+- Candidate B (shield/badge) rejected — skews authoritarian, visually cluttered in squircle container
+- Checkmark color is brand purple (#7B4FD4) not white, for 3:1 contrast against yellow star
+- No text in icon; "MiniMissions" only as CFBundleDisplayName
+- Single 1024x1024 asset, iOS handles all size variants
+- No separate dark mode icon asset needed (purple background survives iOS 18 tinting well)
+- Star glow effect omitted at sizes below 180pt
 
 ## Open Design Issues
 - None currently

@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- Squircle clip path (Apple superellipse approximation) -->
+    <clipPath id="squircle">
+      <rect width="1024" height="1024" rx="229" ry="229"/>
+    </clipPath>
+
+    <!-- Background gradient -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7B4FD4"/>
+      <stop offset="100%" stop-color="#9B6FF4"/>
+    </linearGradient>
+
+    <!-- Star glow filter -->
+    <filter id="starGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="35" result="blur"/>
+      <feColorMatrix in="blur" type="matrix"
+        values="1 0 0 0 0
+                0 0.79 0 0 0
+                0 0 0.16 0 0
+                0 0 0 0.25 0" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Drop shadow for star -->
+    <filter id="starShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- Clipped content -->
+  <g clip-path="url(#squircle)">
+    <!-- Background -->
+    <rect width="1024" height="1024" fill="url(#bgGrad)"/>
+
+    <!-- Star with glow and shadow -->
+    <g filter="url(#starGlow)">
+      <g filter="url(#starShadow)">
+        <!-- 5-pointed star, centered at 512,512, outer radius 290, inner radius 111 -->
+        <!-- Points calculated: top tip at 90deg up, alternating outer/inner -->
+        <!-- Outer points (r=290): angles -90, -18, 54, 126, 198 degrees -->
+        <!-- Inner points (r=111): angles -54, 18, 90, 162, 234 degrees -->
+        <polygon
+          points="
+            512,222
+            581,417
+            788,422
+            624,548
+            682,747
+            512,630
+            342,747
+            400,548
+            236,422
+            443,417
+          "
+          fill="#FFCA28"
+          stroke="#F9A825"
+          stroke-width="3"
+          stroke-linejoin="round"
+        />
+      </g>
+    </g>
+
+    <!-- Checkmark inside star, brand purple -->
+    <!-- Checkmark: short leg goes down-right, long leg goes down-left to up-right -->
+    <polyline
+      points="440,505 500,575 610,445"
+      fill="none"
+      stroke="#7B4FD4"
+      stroke-width="42"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </g>
+</svg>
