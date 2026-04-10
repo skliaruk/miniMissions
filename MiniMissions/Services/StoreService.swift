@@ -9,7 +9,11 @@ import Observation
 final class StoreService {
     static let shared = StoreService()
 
+    #if DEBUG
+    private(set) var isPremium: Bool = true
+    #else
     private(set) var isPremium: Bool = false
+    #endif
     private(set) var product: Product? = nil
 
     static let productID = "com.morningroutine.premium"

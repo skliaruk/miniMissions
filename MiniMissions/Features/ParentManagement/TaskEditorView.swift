@@ -90,15 +90,12 @@ struct TaskEditorView: View {
                     Button {
                         showCopySheet = true
                     } label: {
-                        HStack(spacing: 4) {
-                            Image(systemName: "doc.on.doc")
-                                .font(.system(size: 16))
-                            Text("taskEditor.copyFrom")
-                                .font(.parentHeadline)
-                        }
-                        .foregroundColor(.brandPurple)
+                        Image(systemName: "doc.on.doc")
+                            .font(.system(size: 16))
+                            .foregroundColor(.brandPurple)
                     }
                     .accessibilityIdentifier(AX.TaskAssignment.copyFromButton)
+                    .accessibilityLabel(String(localized: "taskEditor.copyFrom"))
                 }
             }
         }
