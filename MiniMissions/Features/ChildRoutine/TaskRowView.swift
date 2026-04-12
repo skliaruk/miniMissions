@@ -53,17 +53,21 @@ struct TaskRowView: View {
                 showStarBurst = true
             } label: {
                 rowContent
+                    .frame(maxWidth: .infinity, minHeight: 72)
+                    .background(isDone ? Color.backgroundTaskComplete : Color.backgroundTaskIncomplete)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .frame(minHeight: 72)
-            .background(isDone ? Color.backgroundTaskComplete : Color.backgroundTaskIncomplete)
-            // Index-based identifier (ADR-004) on the button.
             .accessibilityIdentifier(AX.ChildRoutine.taskButton(childIndex, taskIndex))
             .accessibilityLabel(taskName)
             .accessibilityValue(isDone ? "done" : "not done")
             .accessibilityHint(isDone ? "" : "Tap to mark as done")
+            .overlay(
+                Color.clear
+                    .accessibilityIdentifier(AX.ChildRoutine.taskByName(child: childName, task: taskNamePascal))
+            )
 
-            // Star burst / static star shown after task completion (accessibility-hidden decoration).
+            // Star burst shown after task completion.
             if isDone && showStarBurst {
                 StarBurstView(
                     childIndex: childIndex,
@@ -78,26 +82,6 @@ struct TaskRowView: View {
                     }
                 }
             }
-
-            // Name-based identifier (DSGN-002) — full-area overlay button.
-            // Intercepts user taps; tests query this as app.buttons[taskByName] or app.otherElements[taskByName].
-            Button {
-                guard !isDone else { return }
-                let impact = UIImpactFeedbackGenerator(style: .medium)
-                impact.impactOccurred()
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                    viewModel.completeAssignment(assignment, completions: completions, context: modelContext)
-                }
-                showStarBurst = true
-            } label: {
-                Color.clear
-                    .frame(maxWidth: .infinity, minHeight: 72)
-            }
-            .buttonStyle(.plain)
-            .accessibilityIdentifier(AX.ChildRoutine.taskByName(child: childName, task: taskNamePascal))
-            .accessibilityLabel(taskName)
-            .accessibilityValue(isDone ? "done" : "not done")
-            .accessibilityHint(isDone ? "" : "Tap to mark as done")
         }
         // Row-level identifier (ADR-004 taskRow) on the ZStack container.
         // Used by AccessibilityUITests to verify row touch targets.
