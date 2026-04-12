@@ -1,5 +1,7 @@
 // SeedDataServiceTests.swift
 // Unit tests for SeedDataService seeding logic.
+// Updated to match REQ-007: SeedDataService no longer seeds children or tasks,
+// only the default "Aamu" topic.
 
 import XCTest
 import SwiftData
@@ -12,7 +14,7 @@ final class SeedDataServiceTests: XCTestCase {
     private var container: ModelContainer!
 
     override func setUpWithError() throws {
-        let schema = Schema([Child.self, Task.self, TaskCompletion.self, Topic.self])
+        let schema = Schema([Child.self, Task.self, TaskCompletion.self, Topic.self, TaskTemplate.self, TaskAssignment.self])
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
         container = try ModelContainer(for: schema, configurations: [config])
         modelContext = container.mainContext
@@ -23,69 +25,24 @@ final class SeedDataServiceTests: XCTestCase {
         container = nil
     }
 
-    func testSeedIfNeededCreatesThreeChildren() throws {
-        SeedDataService.seedIfNeeded(context: modelContext)
-
-        let descriptor = FetchDescriptor<Child>(sortBy: [SortDescriptor(\.sortOrder)])
-        let children = try modelContext.fetch(descriptor)
-
-        XCTAssertEqual(children.count, 3, "SeedDataService must create exactly 3 children")
-    }
-
-    func testSeedIfNeededCreatesCorrectChildNames() throws {
-        SeedDataService.seedIfNeeded(context: modelContext)
-
-        let descriptor = FetchDescriptor<Child>(sortBy: [SortDescriptor(\.sortOrder)])
-        let children = try modelContext.fetch(descriptor)
-
-        let names = children.map { $0.name }
-        XCTAssertEqual(names[0], "Сара", "First child must be named 'Сара'")
-        XCTAssertEqual(names[1], "Самуил", "Second child must be named 'Самуил'")
-        XCTAssertEqual(names[2], "Бен", "Third child must be named 'Бен'")
-    }
-
-    func testSeedIfNeededCreatesCorrectSortOrders() throws {
-        SeedDataService.seedIfNeeded(context: modelContext)
-
-        let descriptor = FetchDescriptor<Child>(sortBy: [SortDescriptor(\.sortOrder)])
-        let children = try modelContext.fetch(descriptor)
-
-        XCTAssertEqual(children[0].sortOrder, 0)
-        XCTAssertEqual(children[1].sortOrder, 1)
-        XCTAssertEqual(children[2].sortOrder, 2)
-    }
-
-    func testSeedIfNeededIsIdempotent() throws {
-        SeedDataService.seedIfNeeded(context: modelContext)
+    func testSeedIfNeededCreatesNoChildren() throws {
+        // REQ-007: SeedDataService no longer seeds children.
         SeedDataService.seedIfNeeded(context: modelContext)
 
         let descriptor = FetchDescriptor<Child>()
         let children = try modelContext.fetch(descriptor)
 
-        XCTAssertEqual(children.count, 3, "Seeding twice must not create duplicate children")
+        XCTAssertEqual(children.count, 0, "SeedDataService must not create any children (REQ-007)")
     }
 
-    func testSeedIfNeededCreatesDefaultTasks() throws {
+    func testSeedIfNeededCreatesNoTasks() throws {
+        // REQ-007: SeedDataService no longer seeds tasks.
         SeedDataService.seedIfNeeded(context: modelContext)
 
         let descriptor = FetchDescriptor<Task>()
         let tasks = try modelContext.fetch(descriptor)
 
-        XCTAssertGreaterThan(tasks.count, 0, "SeedDataService must create default tasks for children")
-    }
-
-    func testSeedIfNeededEachChildHasTasks() throws {
-        SeedDataService.seedIfNeeded(context: modelContext)
-
-        let descriptor = FetchDescriptor<Child>()
-        let children = try modelContext.fetch(descriptor)
-
-        for child in children {
-            XCTAssertGreaterThan(
-                child.tasks.count, 0,
-                "Each seeded child must have at least one task. '\(child.name)' has \(child.tasks.count)"
-            )
-        }
+        XCTAssertEqual(tasks.count, 0, "SeedDataService must not create any tasks (REQ-007)")
     }
 
     func testSeedIfNeededCreatesDefaultTopic() throws {
@@ -95,24 +52,40 @@ final class SeedDataServiceTests: XCTestCase {
         let topics = try modelContext.fetch(descriptor)
 
         XCTAssertEqual(topics.count, 1, "SeedDataService must create exactly 1 default topic")
-        XCTAssertEqual(topics.first?.name, "Aamu", "Default topic must be named 'Aamu'")
+        XCTAssertEqual(topics.first?.name, SeedDataService.defaultTopicName, "Default topic must be named correctly")
     }
 
-    func testSeedIfNeededAssignsAllTasksToDefaultTopic() throws {
+    func testSeedIfNeededIsIdempotent() throws {
+        SeedDataService.seedIfNeeded(context: modelContext)
         SeedDataService.seedIfNeeded(context: modelContext)
 
-        let descriptor = FetchDescriptor<Task>()
-        let tasks = try modelContext.fetch(descriptor)
         let topicDescriptor = FetchDescriptor<Topic>()
         let topics = try modelContext.fetch(topicDescriptor)
 
-        guard let defaultTopic = topics.first else {
-            XCTFail("Default topic must exist")
-            return
-        }
+        XCTAssertEqual(topics.count, 1, "Seeding twice must not create duplicate topics")
+    }
 
-        for task in tasks {
-            XCTAssertEqual(task.topic.id, defaultTopic.id, "All seeded tasks must be assigned to the default 'Aamu' topic")
-        }
+    func testSeedIfNeededDoesNotSeedWhenTopicsExist() throws {
+        // If a topic already exists, seeding must not add another.
+        let existingTopic = Topic(name: "Ilta", sortOrder: 0)
+        modelContext.insert(existingTopic)
+        try modelContext.save()
+
+        SeedDataService.seedIfNeeded(context: modelContext)
+
+        let descriptor = FetchDescriptor<Topic>()
+        let topics = try modelContext.fetch(descriptor)
+
+        XCTAssertEqual(topics.count, 1, "SeedDataService must not seed when topics already exist")
+        XCTAssertEqual(topics.first?.name, "Ilta", "Existing topic must be preserved")
+    }
+
+    func testSeedIfNeededDefaultTopicHasSortOrderZero() throws {
+        SeedDataService.seedIfNeeded(context: modelContext)
+
+        let descriptor = FetchDescriptor<Topic>()
+        let topics = try modelContext.fetch(descriptor)
+
+        XCTAssertEqual(topics.first?.sortOrder, 0, "Default topic must have sortOrder 0")
     }
 }

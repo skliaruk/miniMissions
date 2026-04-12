@@ -14,6 +14,7 @@ struct AppEnvironment {
     var reduceMotion: Bool = false
     var fixedDate: Date? = nil
     var resetDateYesterday: Bool = false
+    var clearKeychain: Bool = false
 
     static let live = AppEnvironment()
 
@@ -30,6 +31,9 @@ struct AppEnvironment {
         }
         if args.contains("--resetDateYesterday") {
             env.resetDateYesterday = true
+        }
+        if args.contains("--clear-keychain") {
+            env.clearKeychain = true
         }
         if let pinIndex = args.firstIndex(of: "--preset-pin-hash"),
            args.indices.contains(pinIndex + 1) {

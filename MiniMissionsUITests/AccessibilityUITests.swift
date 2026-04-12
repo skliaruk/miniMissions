@@ -13,9 +13,12 @@ final class AccessibilityUITests: XCTestCase {
 
     var app: XCUIApplication!
 
+    // Test child names -- no children are seeded, so tests create their own.
+    private let testChildren = ["Mia", "Leo", "Ella"]
+
     override func setUpWithError() throws {
         continueAfterFailure = false
-        app = AppLauncher.launchClean()
+        app = AppLauncher.launchWithPIN()
     }
 
     override func tearDownWithError() throws {
@@ -23,16 +26,148 @@ final class AccessibilityUITests: XCTestCase {
         app = nil
     }
 
-    // MARK: - REQ-005 AC-1, AC-2 — Landscape orientation lock
+    // MARK: - Helpers
+
+    private func openParentManagement() {
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
+        XCTAssertTrue(
+            gearButton.waitForExistence(timeout: 5),
+            "Gear button must exist to open parent management"
+        )
+        gearButton.tap()
+
+        XCTAssertTrue(
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
+            "PIN entry screen must appear"
+        )
+        enterPIN(TestConstants.testPIN)
+
+        XCTAssertTrue(
+            app.row(AX.ParentManagement.root).waitForExistence(timeout: 5),
+            "Parent management root must appear after correct PIN"
+        )
+    }
+
+    private func enterPIN(_ pin: String) {
+        for character in pin {
+            guard let digit = Int(String(character)) else { continue }
+            let key = app.row(AX.PINGate.key(digit))
+            key.waitForExistence(timeout: 3)
+            key.tap()
+        }
+    }
+
+    private func addChild(name: String) {
+        let addButton = app.row(AX.ChildManagement.addChildButton)
+        XCTAssertTrue(addButton.waitForExistence(timeout: 3), "Add Child button must exist")
+        addButton.tap()
+
+        let nameField = app.textFields[AX.ChildManagement.childNameField]
+        XCTAssertTrue(nameField.waitForExistence(timeout: 3), "Child name field must appear")
+        nameField.tap()
+        nameField.typeText(name)
+
+        let saveButton = app.row(AX.ChildManagement.childFormSaveButton)
+        saveButton.assertExists(timeout: 3)
+        saveButton.tap()
+    }
+
+    private func addTemplate(name: String) {
+        let addButton = app.row(AX.TaskBank.addTemplateButton)
+        XCTAssertTrue(addButton.waitForExistence(timeout: 3), "Add Template button must exist")
+        addButton.tap()
+
+        let nameField = app.textFields[AX.TaskBank.templateNameField]
+        nameField.assertExists(timeout: 3)
+        nameField.tap()
+        nameField.typeText(name)
+
+        let chooseIconButton = app.row(AX.TaskBank.templateChooseIconButton)
+        if chooseIconButton.waitForExistence(timeout: 2) {
+            chooseIconButton.tap()
+            let firstIcon = app.buttons.matching(
+                NSPredicate(format: "identifier BEGINSWITH 'iconPicker_'")
+            ).firstMatch
+            if firstIcon.waitForExistence(timeout: 3) {
+                firstIcon.tap()
+            }
+        }
+
+        let saveButton = app.row(AX.TaskBank.templateFormSaveButton)
+        saveButton.assertExists(timeout: 3)
+        saveButton.tap()
+    }
+
+    private func navigateToTaskEditor(child: String, topic: String) {
+        let childRow = app.row(AX.ParentManagement.childRowByName(child))
+        XCTAssertTrue(childRow.waitForExistence(timeout: 3), "Child row for '\(child)' must exist")
+        childRow.tap()
+
+        let topicRow = app.row(AX.TopicManagement.childTopicRow(child: child, topic: topic))
+        XCTAssertTrue(topicRow.waitForExistence(timeout: 3), "Topic row must exist")
+        topicRow.tap()
+    }
+
+    private func assignTemplate(named templateName: String) {
+        let addFromBankButton = app.row(AX.TaskAssignment.addFromBankButton)
+        addFromBankButton.assertExists(timeout: 3)
+        addFromBankButton.tap()
+
+        let selectorRow = app.row(AX.TaskAssignment.bankSelectorRow(templateName))
+        XCTAssertTrue(selectorRow.waitForExistence(timeout: 5), "Bank selector must show '\(templateName)'")
+        selectorRow.tap()
+
+        let addButton = app.row(AX.TaskAssignment.bankSelectorAddButton)
+        addButton.assertExists(timeout: 3)
+        addButton.tap()
+    }
+
+    private func navigateBackToParentHome() {
+        app.navigationBars.buttons.firstMatch.tap()
+        if app.navigationBars.buttons.firstMatch.waitForExistence(timeout: 2) {
+            app.navigationBars.buttons.firstMatch.tap()
+        }
+        _ = app.row(AX.ParentManagement.root).waitForExistence(timeout: 3)
+    }
+
+    private func dismissParentManagement() {
+        let doneButton = app.row(AX.ParentManagement.doneButton)
+        if doneButton.waitForExistence(timeout: 3) {
+            doneButton.tap()
+        }
+    }
+
+    /// Sets up 3 test children via parent management, then returns to routine view.
+    private func setupThreeChildren() {
+        openParentManagement()
+        for name in testChildren {
+            addChild(name: name)
+        }
+        dismissParentManagement()
+    }
+
+    /// Sets up 3 test children with tasks, then returns to routine view.
+    private func setupThreeChildrenWithTasks() {
+        openParentManagement()
+        for name in testChildren {
+            addChild(name: name)
+        }
+        addTemplate(name: "TestTask")
+        for name in testChildren {
+            navigateToTaskEditor(child: name, topic: "Aamu")
+            assignTemplate(named: "TestTask")
+            navigateBackToParentHome()
+        }
+        dismissParentManagement()
+    }
+
+    // MARK: - REQ-005 AC-1, AC-2 -- Landscape orientation lock
 
     func testAppRunsInLandscapeOrientation() throws {
         // REQ-005 AC-1: App runs in landscape orientation on all supported iPad sizes.
-        // REQ-005 AC-2: Portrait orientation is locked.
-        // DSGN-002 §iOS-Specific: Info.plist must include only landscape orientations.
-        //
-        // XCUITest verifies the device is in landscape by checking that the routine view
-        // root element's frame is wider than it is tall (landscape aspect ratio).
-        let routineRoot = app.otherElements[AX.ChildRoutine.root]
+        setupThreeChildren()
+
+        let routineRoot = app.row(AX.ChildRoutine.root)
         XCTAssertTrue(
             routineRoot.waitForExistence(timeout: 5),
             "Routine view root must exist to check orientation"
@@ -47,20 +182,17 @@ final class AccessibilityUITests: XCTestCase {
     }
 
     func testRotatingDeviceDoesNotAlterLayout() throws {
-        // REQ-005 AC-2: Portrait orientation is locked — rotating the device does not change layout.
-        // Verify that the three child columns remain visible after a rotation attempt.
+        // REQ-005 AC-2: Portrait orientation is locked.
+        setupThreeChildren()
+
         XCUIDevice.shared.orientation = .landscapeLeft
-        _ = app.otherElements[AX.ChildRoutine.root].waitForExistence(timeout: 3)
+        _ = app.row(AX.ChildRoutine.root).waitForExistence(timeout: 3)
 
-        // Attempt portrait rotation
         XCUIDevice.shared.orientation = .portrait
-
-        // Small wait for any (incorrect) layout change
         Thread.sleep(forTimeInterval: 0.5)
 
-        // All 3 child columns must still be visible (app ignores portrait)
         for index in 0..<3 {
-            let column = app.otherElements[AX.ChildRoutine.column(index)]
+            let column = app.row(AX.ChildRoutine.column(index))
             XCTAssertTrue(
                 column.waitForExistence(timeout: 3),
                 "Child column \(index) must still exist after portrait rotation attempt"
@@ -71,26 +203,23 @@ final class AccessibilityUITests: XCTestCase {
             )
         }
 
-        // Restore landscape for subsequent tests
         XCUIDevice.shared.orientation = .landscapeLeft
     }
 
-    // MARK: - REQ-005 AC-3 — Child-facing touch targets >= 60x60pt
+    // MARK: - REQ-005 AC-3 -- Child-facing touch targets >= 60x60pt
 
     func testAllChildFacingTaskButtonsHave60ptMinimumTouchTarget() throws {
-        // REQ-005 AC-3: All child-facing touch targets are >= 60x60pt (verified via XCUITest frame).
-        // REQ-001 AC-5: Minimum touch target 60x60pt for child-facing elements.
-        // DSGN-002 MRV-AC-05: task_<Name>_<Task>.frame.height >= 60 && .frame.width >= 60
+        // REQ-005 AC-3: All child-facing touch targets are >= 60x60pt.
+        setupThreeChildrenWithTasks()
+
         let taskButtons = app.buttons.matching(
             NSPredicate(format: "identifier BEGINSWITH 'childRoutine_taskButton_'")
         )
-        // With seed data there may be no tasks; this test verifies any tasks that do exist.
         for index in 0..<taskButtons.count {
             let button = taskButtons.element(boundBy: index)
             button.assertMinTouchTarget(60)
         }
 
-        // Also check task row elements (entire row is tappable per DSGN-002 §2.4)
         let taskRows = app.otherElements.matching(
             NSPredicate(format: "identifier BEGINSWITH 'childRoutine_taskRow_'")
         )
@@ -101,8 +230,7 @@ final class AccessibilityUITests: XCTestCase {
     }
 
     func testParentGearButtonMeetsStandardMinimumTouchTarget() throws {
-        // DSGN-002 §2.2: Parent gear button has 44x44pt touch target (standard iOS minimum for parent elements).
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         XCTAssertTrue(
             gearButton.waitForExistence(timeout: 5),
             "Parent settings gear button must exist"
@@ -110,20 +238,18 @@ final class AccessibilityUITests: XCTestCase {
         gearButton.assertMinTouchTarget(44)
     }
 
-    // MARK: - REQ-005 AC-6 — VoiceOver labels present on all interactive elements
+    // MARK: - REQ-005 AC-6 -- VoiceOver labels present on all interactive elements
 
     func testGearButtonHasVoiceOverLabel() throws {
-        // REQ-005 AC-6: All interactive elements have VoiceOver labels.
-        // DSGN-002 MRV-AC-13: parentSettingsButton.label == "Parent Settings"
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         XCTAssertTrue(
             gearButton.waitForExistence(timeout: 5),
             "Gear button must exist"
         )
         XCTAssertEqual(
             gearButton.label,
-            "Parent Settings",
-            "Gear button must have VoiceOver label 'Parent Settings'"
+            "Vanhempien asetukset",
+            "Gear button must have VoiceOver label 'Vanhempien asetukset' (Finnish locale)"
         )
         XCTAssertFalse(
             gearButton.label.isEmpty,
@@ -132,10 +258,10 @@ final class AccessibilityUITests: XCTestCase {
     }
 
     func testChildColumnCardsHaveVoiceOverLabels() throws {
-        // REQ-005 AC-6: Child column cards have VoiceOver labels.
-        // DSGN-002 §2.3: column card accessibilityLabel == "<Child Name>'s morning routine"
-        for childName in AX.ChildNames.all {
-            let column = app.otherElements[AX.ChildRoutine.columnByName(childName)]
+        setupThreeChildren()
+
+        for childName in testChildren {
+            let column = app.row(AX.ChildRoutine.columnByName(childName))
             if column.waitForExistence(timeout: 5) {
                 XCTAssertFalse(
                     column.label.isEmpty,
@@ -150,9 +276,9 @@ final class AccessibilityUITests: XCTestCase {
     }
 
     func testChildNameLabelsHaveVoiceOverLabels() throws {
-        // REQ-005 AC-6: Child name labels have correct VoiceOver labels.
-        // DSGN-002 §2.3: childName_<Name>.accessibilityLabel == "<Name>'s tasks"
-        for childName in AX.ChildNames.all {
+        setupThreeChildren()
+
+        for childName in testChildren {
             let nameLabel = app.staticTexts[AX.ChildRoutine.childNameLabel(childName)]
             if nameLabel.waitForExistence(timeout: 5) {
                 XCTAssertFalse(
@@ -161,17 +287,16 @@ final class AccessibilityUITests: XCTestCase {
                 )
                 XCTAssertEqual(
                     nameLabel.label,
-                    "\(childName)'s tasks",
-                    "Name label for '\(childName)' must have VoiceOver label '\(childName)'s tasks'"
+                    "\(childName):n tehtävät",
+                    "Name label for '\(childName)' must have VoiceOver label '\(childName):n tehtävät' (Finnish locale)"
                 )
             }
         }
     }
 
     func testTaskButtonsHaveVoiceOverLabelsAndValues() throws {
-        // REQ-005 AC-6: All interactive elements have VoiceOver labels.
-        // DSGN-002 MRV-AC-12: accessibilityLabel and accessibilityValue assertions on task elements.
-        // DSGN-002 §2.4: accessibilityValue == "not done" (incomplete) or "done" (complete).
+        setupThreeChildrenWithTasks()
+
         let taskButtons = app.buttons.matching(
             NSPredicate(format: "identifier BEGINSWITH 'childRoutine_taskButton_'")
         )
@@ -190,80 +315,41 @@ final class AccessibilityUITests: XCTestCase {
     }
 
     func testProgressIndicatorsHaveVoiceOverLabels() throws {
-        // REQ-005 AC-6 + DSGN-002 §2.3: progressIndicator_<Name> has VoiceOver label.
-        // Label format: "N of total tasks complete".
-        for childName in AX.ChildNames.all {
-            let progressIndicator = app.otherElements[AX.ChildRoutine.progressIndicator(childName)]
+        setupThreeChildren()
+
+        for childName in testChildren {
+            let progressIndicator = app.row(AX.ChildRoutine.progressIndicator(childName))
             if progressIndicator.waitForExistence(timeout: 5) {
                 XCTAssertFalse(
                     progressIndicator.label.isEmpty,
                     "Progress indicator for '\(childName)' must have a non-empty VoiceOver label"
                 )
-                // Label must mention "tasks" and a number pattern like "N of M tasks complete"
                 XCTAssertTrue(
-                    progressIndicator.label.lowercased().contains("task"),
-                    "Progress indicator label must mention 'task' — got '\(progressIndicator.label)'"
+                    progressIndicator.label.lowercased().contains("tehtävä") ||
+                    progressIndicator.label.lowercased().contains("valmis"),
+                    "Progress indicator label must mention 'tehtävä' or 'valmis' (Finnish locale) -- got '\(progressIndicator.label)'"
                 )
             }
         }
     }
 
-    // MARK: - REQ-005 AC-7, AC-8 — State persistence: task completion survives app restart
+    // MARK: - REQ-005 AC-7, AC-8 -- State persistence: task completion survives app restart
 
     func testTaskCompletionStatePersistedAcrossAppRestart() throws {
-        // REQ-005 AC-7: Task completion state persists if app is backgrounded and resumed.
-        // REQ-005 AC-8: Task completion state persists across app restarts until manually reset.
-        //
-        // IMPORTANT: This test uses real on-disk SwiftData persistence (no --uitesting flag).
-        // The test is self-contained: it adds a task, completes it, relaunches, and verifies the state.
-        // It also cleans up after itself by resetting the day.
+        // REQ-005 AC-7, AC-8: Task completion state persists across app restarts.
+        // IMPORTANT: This test uses real on-disk SwiftData persistence.
 
         app.terminate()
-        // Launch with persistence (no --uitesting → real SwiftData store)
         app = AppLauncher.launchWithPersistenceAndPIN()
 
-        // First, add a task via parent management so we have a known task to complete
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
-        XCTAssertTrue(
-            gearButton.waitForExistence(timeout: 5),
-            "Gear button must exist for persistence test"
-        )
-        gearButton.tap()
-
-        app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3)
-        enterPIN(TestConstants.testPIN)
-        app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5)
-
-        // Add a task to child 0
-        let childRow = app.cells[AX.ParentManagement.childRowByName(AX.ChildNames.child0)]
-        childRow.waitForExistence(timeout: 3)
-        childRow.tap()
-
-        let addButton = app.buttons[AX.ParentManagement.addTaskButton]
-        addButton.waitForExistence(timeout: 3)
-        addButton.tap()
-
-        let nameField = app.textFields[AX.TaskEditor.taskNameField]
-        nameField.waitForExistence(timeout: 3)
-        nameField.tap()
-        nameField.typeText("PersistenceTask")
-
-        // Choose an icon
-        let chooseIcon = app.buttons[AX.TaskEditor.chooseIconButton]
-        if chooseIcon.waitForExistence(timeout: 2) {
-            chooseIcon.tap()
-            app.buttons.matching(
-                NSPredicate(format: "identifier BEGINSWITH 'iconPicker_'")
-            ).firstMatch.tap()
-        }
-        app.buttons[AX.TaskEditor.formSaveButton].tap()
-
-        // Exit to routine view
-        app.navigationBars.buttons.firstMatch.tap()
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
-        if doneButton.waitForExistence(timeout: 3) {
-            doneButton.tap()
-        }
+        // Add a child and task via parent management
+        openParentManagement()
+        addChild(name: "Mia")
+        addTemplate(name: "PersistenceTask")
+        navigateToTaskEditor(child: "Mia", topic: "Aamu")
+        assignTemplate(named: "PersistenceTask")
+        navigateBackToParentHome()
+        dismissParentManagement()
 
         // Complete the first task in child 0's column
         let taskButton = app.buttons.matching(
@@ -276,17 +362,15 @@ final class AccessibilityUITests: XCTestCase {
         let taskIdentifier = taskButton.identifier
         taskButton.tap()
 
-        // Verify it's done
         let donePredicate = NSPredicate(format: "value == 'done'")
         let doneExpectation = expectation(for: donePredicate, evaluatedWith: taskButton)
         wait(for: [doneExpectation], timeout: 2.0)
 
-        // Relaunch the app WITHOUT --uitesting to preserve the on-disk data
+        // Relaunch WITHOUT --uitesting to preserve on-disk data
         app.terminate()
         app = AppLauncher.launchWithPersistence()
 
-        // After relaunch, the same task must still show as "done"
-        let restoredTaskButton = app.buttons[taskIdentifier]
+        let restoredTaskButton = app.row(taskIdentifier)
         XCTAssertTrue(
             restoredTaskButton.waitForExistence(timeout: 5),
             "Task button '\(taskIdentifier)' must still exist after app restart"
@@ -297,62 +381,39 @@ final class AccessibilityUITests: XCTestCase {
             "Task completion state must persist across app restart (REQ-005 AC-8)"
         )
 
-        // Cleanup: reset the day to avoid contaminating other tests
-        let gearButtonAfterRelaunch = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        // Cleanup: reset the day
+        let gearButtonAfterRelaunch = app.row(AX.ChildRoutine.parentSettingsButton)
         gearButtonAfterRelaunch.waitForExistence(timeout: 5)
         gearButtonAfterRelaunch.tap()
-        app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3)
+        app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3)
         enterPIN(TestConstants.testPIN)
-        app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5)
-        app.buttons[AX.ParentManagement.resetDayButton].tap()
-        app.buttons[AX.ParentManagement.resetDayConfirmButton].tap()
+        app.row(AX.ParentManagement.root).waitForExistence(timeout: 5)
+        app.row(AX.ParentManagement.resetDayButton).tap()
+        app.row(AX.ParentManagement.resetDayConfirmButton).tap()
     }
 
-    // MARK: - REQ-005 AC-9 — Settings persistence: add task, relaunch, task still exists
+    // MARK: - REQ-005 AC-9 -- Settings persistence
 
     func testParentSettingsPersistedAcrossAppRestart() throws {
-        // REQ-005 AC-9: Parent settings (task list, PIN) persist across app restarts using SwiftData.
-        // E2E: add a task, relaunch app, task still exists.
-        //
-        // This test uses real on-disk persistence (no --uitesting flag).
-
+        // REQ-005 AC-9: Parent settings persist across app restarts.
         app.terminate()
         app = AppLauncher.launchWithPersistenceAndPIN()
 
-        // Add a task via parent management
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
-        gearButton.waitForExistence(timeout: 5)
-        gearButton.tap()
-        app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3)
-        enterPIN(TestConstants.testPIN)
-        app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5)
+        // Add a child and task via parent management
+        openParentManagement()
+        addChild(name: "Leo")
+        addTemplate(name: "PersistTask2")
+        navigateToTaskEditor(child: "Leo", topic: "Aamu")
+        assignTemplate(named: "PersistTask2")
+        navigateBackToParentHome()
 
-        let childRow = app.cells[AX.ParentManagement.childRowByName(AX.ChildNames.child1)]
-        childRow.waitForExistence(timeout: 3)
-        childRow.tap()
-
-        let addButton = app.buttons[AX.ParentManagement.addTaskButton]
-        addButton.waitForExistence(timeout: 3)
-        addButton.tap()
-
-        let nameField = app.textFields[AX.TaskEditor.taskNameField]
-        nameField.waitForExistence(timeout: 3)
-        nameField.tap()
-        nameField.typeText("PersistTask2")
-
-        let chooseIcon = app.buttons[AX.TaskEditor.chooseIconButton]
-        if chooseIcon.waitForExistence(timeout: 2) {
-            chooseIcon.tap()
-            app.buttons.matching(
-                NSPredicate(format: "identifier BEGINSWITH 'iconPicker_'")
-            ).firstMatch.tap()
-        }
-        app.buttons[AX.TaskEditor.formSaveButton].tap()
-
-        // Verify the task appears in the editor
-        let taskEditorRow = app.cells[AX.ParentManagement.taskEditorRowByName("PersistTask2")]
+        // Verify assignment row exists
+        navigateToTaskEditor(child: "Leo", topic: "Aamu")
+        let assignmentRow = app.cells[
+            AX.TaskAssignment.assignmentRow(child: "Leo", topic: "Aamu", template: "PersistTask2")
+        ]
         XCTAssertTrue(
-            taskEditorRow.waitForExistence(timeout: 3),
+            assignmentRow.waitForExistence(timeout: 3),
             "Task 'PersistTask2' must appear in task editor after adding"
         )
 
@@ -361,30 +422,33 @@ final class AccessibilityUITests: XCTestCase {
         app = AppLauncher.launchWithPersistence()
 
         // Navigate to parent management again
-        let gearButtonAfter = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButtonAfter = app.row(AX.ChildRoutine.parentSettingsButton)
         gearButtonAfter.waitForExistence(timeout: 5)
         gearButtonAfter.tap()
-        app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3)
+        app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3)
         enterPIN(TestConstants.testPIN)
-        app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5)
+        app.row(AX.ParentManagement.root).waitForExistence(timeout: 5)
 
-        let childRowAfter = app.cells[AX.ParentManagement.childRowByName(AX.ChildNames.child1)]
+        let childRowAfter = app.row(AX.ParentManagement.childRowByName("Leo"))
         childRowAfter.waitForExistence(timeout: 3)
         childRowAfter.tap()
 
+        let topicRow = app.row(AX.TopicManagement.childTopicRow(child: "Leo", topic: "Aamu"))
+        topicRow.waitForExistence(timeout: 3)
+        topicRow.tap()
+
         // Task must still exist after restart
-        let persistedTask = app.cells[AX.ParentManagement.taskEditorRowByName("PersistTask2")]
+        let persistedAssignment = app.cells[
+            AX.TaskAssignment.assignmentRow(child: "Leo", topic: "Aamu", template: "PersistTask2")
+        ]
         XCTAssertTrue(
-            persistedTask.waitForExistence(timeout: 5),
+            persistedAssignment.waitForExistence(timeout: 5),
             "Task 'PersistTask2' must persist across app restart (REQ-005 AC-9)"
         )
 
         // Also verify in routine view
-        app.navigationBars.buttons.firstMatch.tap()
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
-        if doneButton.waitForExistence(timeout: 3) {
-            doneButton.tap()
-        }
+        navigateBackToParentHome()
+        dismissParentManagement()
 
         let taskInRoutine = app.buttons.matching(
             NSPredicate(format: "identifier CONTAINS 'PersistTask2'")
@@ -395,69 +459,62 @@ final class AccessibilityUITests: XCTestCase {
         )
 
         // Cleanup: remove the added task
-        let gearCleanup = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearCleanup = app.row(AX.ChildRoutine.parentSettingsButton)
         gearCleanup.waitForExistence(timeout: 5)
         gearCleanup.tap()
-        app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3)
+        app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3)
         enterPIN(TestConstants.testPIN)
-        app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5)
-        let childRowCleanup = app.cells[AX.ParentManagement.childRowByName(AX.ChildNames.child1)]
-        childRowCleanup.waitForExistence(timeout: 3)
-        childRowCleanup.tap()
-        let cleanupRow = app.cells[AX.ParentManagement.taskEditorRowByName("PersistTask2")]
-        if cleanupRow.waitForExistence(timeout: 3) {
-            cleanupRow.swipeLeft()
-            app.buttons[AX.ParentManagement.deleteTaskAction("PersistTask2")].tap()
-            app.buttons[AX.ParentManagement.deleteTaskConfirmButton].tap()
+        app.row(AX.ParentManagement.root).waitForExistence(timeout: 5)
+
+        // Delete the template from the bank to clean up
+        let templateRow = app.row(AX.TaskBank.templateRow("PersistTask2"))
+        if templateRow.waitForExistence(timeout: 3) {
+            templateRow.swipeLeft()
+            app.row(AX.TaskBank.templateDeleteAction("PersistTask2")).tap()
+            app.row(AX.TaskBank.deleteTemplateConfirmButton).tap()
         }
     }
 
     // MARK: - Full child-facing interaction path (integration of REQ-005 criteria)
 
     func testAllThreeChildColumnsHaveVoiceOverStructure() throws {
-        // REQ-005 AC-6 (comprehensive): All interactive child-facing elements have VoiceOver labels.
-        // This test verifies the full VoiceOver tree is populated for all 3 children simultaneously.
+        setupThreeChildren()
 
-        // Verify all column cards exist with labels
-        for childName in AX.ChildNames.all {
-            let column = app.otherElements[AX.ChildRoutine.columnByName(childName)]
+        for childName in testChildren {
+            let column = app.row(AX.ChildRoutine.columnByName(childName))
             if column.waitForExistence(timeout: 5) {
                 XCTAssertFalse(column.label.isEmpty,
                     "Column card for '\(childName)' must have non-empty VoiceOver label")
             }
 
-            // Name label
             let nameLabel = app.staticTexts[AX.ChildRoutine.childNameLabel(childName)]
             if nameLabel.exists {
                 XCTAssertFalse(nameLabel.label.isEmpty,
                     "Name label for '\(childName)' must have non-empty VoiceOver label")
             }
 
-            // Progress indicator
-            let progress = app.otherElements[AX.ChildRoutine.progressIndicator(childName)]
+            let progress = app.row(AX.ChildRoutine.progressIndicator(childName))
             if progress.exists {
                 XCTAssertFalse(progress.label.isEmpty,
                     "Progress indicator for '\(childName)' must have non-empty VoiceOver label")
             }
         }
 
-        // Verify gear button VoiceOver label and hint
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         gearButton.waitForExistence(timeout: 5)
-        XCTAssertEqual(gearButton.label, "Parent Settings",
-            "Gear button must have VoiceOver label 'Parent Settings' (DSGN-002 §2.2)")
+        XCTAssertEqual(gearButton.label, "Vanhempien asetukset",
+            "Gear button must have VoiceOver label 'Vanhempien asetukset' (DSGN-002 §2.2, Finnish locale)")
     }
 
     func testAllTaskButtonsHaveAccessibilityHintWhenIncomplete() throws {
-        // DSGN-002 §2.4: incomplete task accessibilityHint == "Tap to mark as done"
+        setupThreeChildrenWithTasks()
+
         let taskButtons = app.buttons.matching(
             NSPredicate(format: "identifier BEGINSWITH 'childRoutine_taskButton_'")
         )
         for index in 0..<taskButtons.count {
             let button = taskButtons.element(boundBy: index)
             if (button.value as? String) == "not done" {
-                // hint property may not be directly readable in XCUITest;
-                // we at minimum verify the label is non-empty as a proxy
                 XCTAssertFalse(
                     button.label.isEmpty,
                     "Incomplete task button '\(button.identifier)' must have a non-empty accessibility label"
@@ -469,33 +526,17 @@ final class AccessibilityUITests: XCTestCase {
     // MARK: - REQ-005 AC-4 (text size >= 24pt)
 
     func testChildFacingTextMeetsMinimumFontSizeViaAccessibilityTree() throws {
-        // REQ-005 AC-4: All text in child-facing view is >= 24pt.
-        // DSGN-002 MRV-AC-14: font size assertion on task label elements.
-        //
-        // XCUITest does not expose font metrics directly; we verify that labels are large
-        // enough by checking frame height as a proxy (a 24pt font typically produces a
-        // label frame height of at least 28pt with standard line height).
-        for childName in AX.ChildNames.all {
+        setupThreeChildren()
+
+        for childName in testChildren {
             let nameLabel = app.staticTexts[AX.ChildRoutine.childNameLabel(childName)]
             if nameLabel.waitForExistence(timeout: 5) {
-                // 32pt SF Rounded Bold (DSGN-002 §2.3) → frame height typically ~38-42pt
                 XCTAssertGreaterThanOrEqual(
                     nameLabel.frame.height,
                     28,
                     "Child name label for '\(childName)' frame height \(nameLabel.frame.height)pt suggests font below 24pt minimum"
                 )
             }
-        }
-    }
-
-    // MARK: - Private helpers
-
-    private func enterPIN(_ pin: String) {
-        for character in pin {
-            guard let digit = Int(String(character)) else { continue }
-            let key = app.buttons[AX.PINGate.key(digit)]
-            key.waitForExistence(timeout: 3)
-            key.tap()
         }
     }
 }

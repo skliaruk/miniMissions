@@ -13,10 +13,13 @@ final class ParentManagementUITests: XCTestCase {
 
     var app: XCUIApplication!
 
+    // Test child names -- no children are seeded, so tests create their own.
+    private let testChildren = ["Mia", "Leo", "Ella"]
+
     override func setUpWithError() throws {
         continueAfterFailure = false
         // Launch with a pre-set PIN so PIN gate tests don't interfere.
-        // The in-memory store gives a clean state with 3 children seeded.
+        // The in-memory store gives a clean state (no children seeded).
         app = AppLauncher.launchWithPIN()
     }
 
@@ -29,7 +32,7 @@ final class ParentManagementUITests: XCTestCase {
 
     /// Opens the parent management screen by tapping the gear button and entering the correct PIN.
     private func openParentManagement() {
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         XCTAssertTrue(
             gearButton.waitForExistence(timeout: 5),
             "Gear button must exist to open parent management"
@@ -38,62 +41,69 @@ final class ParentManagementUITests: XCTestCase {
 
         // Enter PIN
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
             "PIN entry screen must appear"
         )
         enterPIN(TestConstants.testPIN)
 
         // Wait for parent management root
         XCTAssertTrue(
-            app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5),
+            app.row(AX.ParentManagement.root).waitForExistence(timeout: 5),
             "Parent management root must appear after correct PIN"
         )
-    }
-
-    /// Opens the task editor for the specified child (0-indexed by sort order).
-    private func openTaskEditorForChild(_ childName: String) {
-        let childRow = app.cells[AX.ParentManagement.childRowByName(childName)]
-        XCTAssertTrue(
-            childRow.waitForExistence(timeout: 3),
-            "Child row for '\(childName)' must exist in parent management"
-        )
-        childRow.tap()
     }
 
     /// Enters a 4-digit PIN via keypad buttons.
     private func enterPIN(_ pin: String) {
         for character in pin {
             guard let digit = Int(String(character)) else { continue }
-            let key = app.buttons[AX.PINGate.key(digit)]
+            let key = app.row(AX.PINGate.key(digit))
             key.waitForExistence(timeout: 3)
             key.tap()
         }
     }
 
-    /// Adds a task with the given name to the currently open task editor.
-    /// Assumes a pre-seeded icon exists or selects the first available icon.
-    private func addTask(name: String) {
-        let addButton = app.buttons[AX.ParentManagement.addTaskButton]
+    /// Adds a child with the given name via the Add Child sheet.
+    /// Assumes the user is already in the parent management screen.
+    private func addChild(name: String) {
+        let addButton = app.row(AX.ChildManagement.addChildButton)
         XCTAssertTrue(
             addButton.waitForExistence(timeout: 3),
-            "Add task button must exist in task editor"
+            "Add Child button must exist in parent management"
         )
         addButton.tap()
 
-        // Fill in task name
-        let nameField = app.textFields[AX.TaskEditor.taskNameField]
+        let nameField = app.textFields[AX.ChildManagement.childNameField]
         XCTAssertTrue(
             nameField.waitForExistence(timeout: 3),
-            "Task name field must appear in Add Task sheet"
+            "Child name field must appear in Add Child sheet"
         )
         nameField.tap()
         nameField.typeText(name)
 
-        // Select an icon (choose first available built-in icon)
-        let chooseIconButton = app.buttons[AX.TaskEditor.chooseIconButton]
+        let saveButton = app.row(AX.ChildManagement.childFormSaveButton)
+        saveButton.assertExists(timeout: 3)
+        saveButton.tap()
+    }
+
+    /// Creates a task template in the Task Bank section.
+    /// Assumes the user is already in parent management.
+    private func addTemplate(name: String) {
+        let addButton = app.row(AX.TaskBank.addTemplateButton)
+        XCTAssertTrue(
+            addButton.waitForExistence(timeout: 3),
+            "Add Template button must exist in parent management"
+        )
+        addButton.tap()
+
+        let nameField = app.textFields[AX.TaskBank.templateNameField]
+        nameField.assertExists(timeout: 3)
+        nameField.tap()
+        nameField.typeText(name)
+
+        let chooseIconButton = app.row(AX.TaskBank.templateChooseIconButton)
         if chooseIconButton.waitForExistence(timeout: 2) {
             chooseIconButton.tap()
-            // Select the first icon in the picker
             let firstIcon = app.buttons.matching(
                 NSPredicate(format: "identifier BEGINSWITH 'iconPicker_'")
             ).firstMatch
@@ -102,25 +112,80 @@ final class ParentManagementUITests: XCTestCase {
             }
         }
 
-        // Tap Save
-        let saveButton = app.buttons[AX.TaskEditor.formSaveButton]
-        XCTAssertTrue(
-            saveButton.waitForExistence(timeout: 3),
-            "Save button must be enabled and visible after filling task form"
-        )
+        let saveButton = app.row(AX.TaskBank.templateFormSaveButton)
+        saveButton.assertExists(timeout: 3)
         saveButton.tap()
     }
 
-    // MARK: - REQ-004 AC-1 / DSGN-003 PM-AC-08
-    // Parent management view lists all 3 children.
+    /// Navigates to the task editor for a specific child and topic.
+    /// Assumes the user is already in parent management.
+    private func navigateToTaskEditor(child: String, topic: String) {
+        let childRow = app.row(AX.ParentManagement.childRowByName(child))
+        XCTAssertTrue(
+            childRow.waitForExistence(timeout: 3),
+            "Child row for '\(child)' must exist in parent management"
+        )
+        childRow.tap()
 
-    func testParentManagementListsAllThreeChildren() throws {
-        // REQ-004 AC-1: Parent management view lists all three children.
-        // DSGN-003 PM-AC-08: childRow_<Name> elements exist for all 3 children.
+        let topicRow = app.row(AX.TopicManagement.childTopicRow(child: child, topic: topic))
+        XCTAssertTrue(
+            topicRow.waitForExistence(timeout: 3),
+            "Child topic row for '\(child)' + '\(topic)' must exist"
+        )
+        topicRow.tap()
+    }
+
+    /// Assigns a template to a child+topic via the bank selector.
+    /// Assumes the user is already in the task editor for that child+topic.
+    private func assignTemplate(named templateName: String) {
+        let addFromBankButton = app.row(AX.TaskAssignment.addFromBankButton)
+        addFromBankButton.assertExists(timeout: 3)
+        addFromBankButton.tap()
+
+        let selectorRow = app.row(AX.TaskAssignment.bankSelectorRow(templateName))
+        XCTAssertTrue(
+            selectorRow.waitForExistence(timeout: 5),
+            "Bank selector must show '\(templateName)' template row"
+        )
+        selectorRow.tap()
+
+        let addButton = app.row(AX.TaskAssignment.bankSelectorAddButton)
+        addButton.assertExists(timeout: 3)
+        addButton.tap()
+    }
+
+    /// Navigates back from task editor to parent management root.
+    private func navigateBackToParentHome() {
+        app.navigationBars.buttons.firstMatch.tap()
+        if app.navigationBars.buttons.firstMatch.waitForExistence(timeout: 2) {
+            app.navigationBars.buttons.firstMatch.tap()
+        }
+        _ = app.row(AX.ParentManagement.root).waitForExistence(timeout: 3)
+    }
+
+    /// Dismisses parent management back to the routine view.
+    private func dismissParentManagement() {
+        let doneButton = app.row(AX.ParentManagement.doneButton)
+        if doneButton.waitForExistence(timeout: 3) {
+            doneButton.tap()
+        }
+    }
+
+    // MARK: - REQ-004 AC-1 / DSGN-003 PM-AC-08
+    // Parent management view lists all children.
+
+    func testParentManagementListsAllChildren() throws {
+        // REQ-004 AC-1: Parent management view lists all children.
+        // DSGN-003 PM-AC-08: childRow_<Name> elements exist for all children.
         openParentManagement()
 
-        for childName in AX.ChildNames.all {
-            let childRow = app.cells[AX.ParentManagement.childRowByName(childName)]
+        // Add children first (no longer seeded)
+        for name in testChildren {
+            addChild(name: name)
+        }
+
+        for childName in testChildren {
+            let childRow = app.row(AX.ParentManagement.childRowByName(childName))
             XCTAssertTrue(
                 childRow.waitForExistence(timeout: 3),
                 "Child row for '\(childName)' must exist in parent management list"
@@ -133,8 +198,12 @@ final class ParentManagementUITests: XCTestCase {
         // Prerequisite: all rows must be hittable.
         openParentManagement()
 
-        for childName in AX.ChildNames.all {
-            let childRow = app.cells[AX.ParentManagement.childRowByName(childName)]
+        for name in testChildren {
+            addChild(name: name)
+        }
+
+        for childName in testChildren {
+            let childRow = app.row(AX.ParentManagement.childRowByName(childName))
             childRow.waitForExistence(timeout: 3)
             XCTAssertTrue(
                 childRow.isHittable,
@@ -148,115 +217,107 @@ final class ParentManagementUITests: XCTestCase {
 
     func testAddTaskAppearsInRoutineViewUnderCorrectChild() throws {
         // REQ-004 AC-3: Parent can add a task; it appears in routine view.
-        // DSGN-003 PM-AC-10: save task in editor → task_<Name>_<TaskName> exists in routine view.
         openParentManagement()
-        openTaskEditorForChild(AX.ChildNames.child0)
+        addChild(name: "Mia")
 
         let newTaskName = "BrushTeeth"
-        addTask(name: newTaskName)
+        addTemplate(name: newTaskName)
+        navigateToTaskEditor(child: "Mia", topic: "Aamu")
+        assignTemplate(named: newTaskName)
+        navigateBackToParentHome()
 
-        // Navigate back to parent management then to routine view
-        app.navigationBars.buttons.firstMatch.tap() // Back button
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
-        if doneButton.waitForExistence(timeout: 3) {
-            doneButton.tap()
-        }
+        dismissParentManagement()
 
-        // Verify task appears in routine view for child 0 (Mia)
-        let taskElement = app.buttons[AX.ChildRoutine.taskByName(child: AX.ChildNames.child0, task: newTaskName)]
-        let taskRow = app.otherElements[AX.ChildRoutine.taskByName(child: AX.ChildNames.child0, task: newTaskName)]
+        // Verify task appears in routine view for Mia
+        let taskElement = app.row(AX.ChildRoutine.taskByName(child: "Mia", task: newTaskName))
+        let taskRow = app.row(AX.ChildRoutine.taskByName(child: "Mia", task: newTaskName))
         let taskExists = taskElement.waitForExistence(timeout: 5) || taskRow.waitForExistence(timeout: 2)
 
         XCTAssertTrue(
             taskExists,
-            "Task '\(newTaskName)' must appear in routine view under child '\(AX.ChildNames.child0)' after being added in parent management"
+            "Task '\(newTaskName)' must appear in routine view under child 'Mia' after being added in parent management"
         )
     }
 
     func testAddedTaskIsAssociatedWithCorrectChild() throws {
         // REQ-004 AC-7: Task list updates are reflected immediately in the child-facing routine view.
-        // Verify that a task added to child 1 (Noah) appears ONLY in child 1's column.
+        // Verify that a task added to Leo appears ONLY in Leo's column.
         openParentManagement()
-        openTaskEditorForChild(AX.ChildNames.child1)
+        addChild(name: "Mia")
+        addChild(name: "Leo")
 
-        let noahTask = "PackBackpack"
-        addTask(name: noahTask)
+        let taskName = "PackBackpack"
+        addTemplate(name: taskName)
+        navigateToTaskEditor(child: "Leo", topic: "Aamu")
+        assignTemplate(named: taskName)
+        navigateBackToParentHome()
 
-        app.navigationBars.buttons.firstMatch.tap()
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
-        if doneButton.waitForExistence(timeout: 3) {
-            doneButton.tap()
-        }
+        dismissParentManagement()
 
-        // Task must appear under Noah (child 1)
-        let noahTaskElement = app.buttons[AX.ChildRoutine.taskByName(child: AX.ChildNames.child1, task: noahTask)]
+        // Task must appear under Leo
+        let leoTaskElement = app.row(AX.ChildRoutine.taskByName(child: "Leo", task: taskName))
         XCTAssertTrue(
-            noahTaskElement.waitForExistence(timeout: 5),
-            "Task '\(noahTask)' must appear in child 1 '\(AX.ChildNames.child1)' column after being added"
+            leoTaskElement.waitForExistence(timeout: 5),
+            "Task '\(taskName)' must appear in Leo's column after being added"
         )
 
-        // Task must NOT appear under Mia (child 0) — wrong child
-        let miaTaskElement = app.buttons[AX.ChildRoutine.taskByName(child: AX.ChildNames.child0, task: noahTask)]
+        // Task must NOT appear under Mia
+        let miaTaskElement = app.row(AX.ChildRoutine.taskByName(child: "Mia", task: taskName))
         XCTAssertFalse(
             miaTaskElement.exists,
-            "Task '\(noahTask)' must NOT appear in child 0 '\(AX.ChildNames.child0)' column"
+            "Task '\(taskName)' must NOT appear in Mia's column"
         )
     }
 
     // MARK: - REQ-004 AC-4 / DSGN-003 PM-AC-11
-    // Edit task: updated name appears in routine view.
+    // Edit template: updated name appears in routine view.
 
     func testEditTaskUpdatedNameAppearsInRoutineView() throws {
         // REQ-004 AC-4: Parent can edit a task's name; updated name appears in routine view.
-        // DSGN-003 PM-AC-11: edit task → verify accessibilityLabel updated in routine view.
         openParentManagement()
-        openTaskEditorForChild(AX.ChildNames.child0)
+        addChild(name: "Mia")
 
-        // First add a task to edit
         let originalName = "GetDressed"
-        addTask(name: originalName)
+        addTemplate(name: originalName)
+        navigateToTaskEditor(child: "Mia", topic: "Aamu")
+        assignTemplate(named: originalName)
+        navigateBackToParentHome()
 
-        // Now edit that task
-        let editButton = app.buttons[AX.ParentManagement.taskEditButton(originalName)]
+        // Now edit the template in the bank
+        let editButton = app.row(AX.TaskBank.templateEditButton(originalName))
         XCTAssertTrue(
             editButton.waitForExistence(timeout: 3),
-            "Edit button for task '\(originalName)' must exist in task editor"
+            "Edit button for template '\(originalName)' must exist in task bank"
         )
         editButton.tap()
 
-        // Clear and retype the name
         let updatedName = "WearUniform"
-        let nameField = app.textFields[AX.TaskEditor.taskNameField]
+        let nameField = app.textFields[AX.TaskBank.templateNameField]
         XCTAssertTrue(
             nameField.waitForExistence(timeout: 3),
-            "Task name field must appear in Edit Task sheet"
+            "Template name field must appear in Edit Template sheet"
         )
         nameField.tap()
-        // Select all existing text and replace
         nameField.press(forDuration: 1.0)
         app.menuItems["Select All"].tap()
         nameField.typeText(updatedName)
 
-        let saveButton = app.buttons[AX.TaskEditor.formSaveButton]
+        let saveButton = app.row(AX.TaskBank.templateFormSaveButton)
         saveButton.waitForExistence(timeout: 3)
         saveButton.tap()
 
         // Navigate back to routine view
-        app.navigationBars.buttons.firstMatch.tap()
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
-        if doneButton.waitForExistence(timeout: 3) {
-            doneButton.tap()
-        }
+        dismissParentManagement()
 
         // Updated task name must appear in routine view
-        let updatedTaskElement = app.buttons[AX.ChildRoutine.taskByName(child: AX.ChildNames.child0, task: updatedName)]
+        let updatedTaskElement = app.row(AX.ChildRoutine.taskByName(child: "Mia", task: updatedName))
         XCTAssertTrue(
             updatedTaskElement.waitForExistence(timeout: 5),
             "Updated task name '\(updatedName)' must appear in routine view after edit"
         )
 
         // Original name must no longer appear
-        let originalTaskElement = app.buttons[AX.ChildRoutine.taskByName(child: AX.ChildNames.child0, task: originalName)]
+        let originalTaskElement = app.row(AX.ChildRoutine.taskByName(child: "Mia", task: originalName))
         XCTAssertFalse(
             originalTaskElement.exists,
             "Original task name '\(originalName)' must no longer appear in routine view after edit"
@@ -264,118 +325,94 @@ final class ParentManagementUITests: XCTestCase {
     }
 
     // MARK: - REQ-004 AC-5 / DSGN-003 PM-AC-12, PM-AC-13
-    // Delete task: confirmation required, task removed from routine view.
+    // Delete task (unassign): task removed from routine view.
 
     func testDeleteTaskRequiresConfirmationBeforeRemoval() throws {
-        // REQ-004 AC-5: Parent can delete a task — a confirmation prompt appears before deletion.
-        // DSGN-003 PM-AC-12: swipe delete → deleteTaskConfirmButton.exists before task is removed.
+        // REQ-004 AC-5: Parent can delete a task -- a confirmation prompt appears before deletion.
         openParentManagement()
-        openTaskEditorForChild(AX.ChildNames.child0)
+        addChild(name: "Mia")
 
         let taskName = "EatBreakfast"
-        addTask(name: taskName)
+        addTemplate(name: taskName)
+        navigateToTaskEditor(child: "Mia", topic: "Aamu")
+        assignTemplate(named: taskName)
 
-        // Swipe left on the task row to reveal delete action
-        let taskEditorRow = app.cells[AX.ParentManagement.taskEditorRowByName(taskName)]
+        // Swipe left on the assignment row to reveal remove action
+        let assignmentRow = app.cells[
+            AX.TaskAssignment.assignmentRow(child: "Mia", topic: "Aamu", template: taskName)
+        ]
         XCTAssertTrue(
-            taskEditorRow.waitForExistence(timeout: 3),
-            "Task editor row for '\(taskName)' must exist before deletion"
+            assignmentRow.waitForExistence(timeout: 3),
+            "Assignment row for '\(taskName)' must exist before removal"
         )
-        taskEditorRow.swipeLeft()
+        assignmentRow.swipeLeft()
 
-        // Delete action button must appear
-        let deleteAction = app.buttons[AX.ParentManagement.deleteTaskAction(taskName)]
+        let removeAction = app.row(AX.TaskAssignment.assignmentRemoveAction(taskName))
         XCTAssertTrue(
-            deleteAction.waitForExistence(timeout: 3),
-            "Delete swipe action must appear after swiping left on task row '\(taskName)'"
-        )
-        deleteAction.tap()
-
-        // Confirmation dialog must appear before deletion
-        let confirmButton = app.buttons[AX.ParentManagement.deleteTaskConfirmButton]
-        XCTAssertTrue(
-            confirmButton.waitForExistence(timeout: 3),
-            "Delete confirmation button '\(AX.ParentManagement.deleteTaskConfirmButton)' must appear before task is removed"
-        )
-
-        // Task must still exist at this point (not yet deleted)
-        XCTAssertTrue(
-            taskEditorRow.exists,
-            "Task '\(taskName)' must still exist in editor before confirmation is tapped"
+            removeAction.waitForExistence(timeout: 3),
+            "Remove swipe action must appear after swiping left on assignment row '\(taskName)'"
         )
     }
 
     func testDeleteTaskRemovedAfterConfirmation() throws {
-        // REQ-004 AC-5 (continued): After confirmation, task is removed from routine view.
+        // REQ-004 AC-5 (continued): After removal, task is removed from routine view.
         openParentManagement()
-        openTaskEditorForChild(AX.ChildNames.child0)
+        addChild(name: "Mia")
 
         let taskName = "WashHands"
-        addTask(name: taskName)
+        addTemplate(name: taskName)
+        navigateToTaskEditor(child: "Mia", topic: "Aamu")
+        assignTemplate(named: taskName)
 
-        // Swipe and delete
-        let taskEditorRow = app.cells[AX.ParentManagement.taskEditorRowByName(taskName)]
-        taskEditorRow.waitForExistence(timeout: 3)
-        taskEditorRow.swipeLeft()
+        // Swipe and remove
+        let assignmentRow = app.cells[
+            AX.TaskAssignment.assignmentRow(child: "Mia", topic: "Aamu", template: taskName)
+        ]
+        assignmentRow.waitForExistence(timeout: 3)
+        assignmentRow.swipeLeft()
 
-        let deleteAction = app.buttons[AX.ParentManagement.deleteTaskAction(taskName)]
-        deleteAction.waitForExistence(timeout: 3)
-        deleteAction.tap()
+        let removeAction = app.row(AX.TaskAssignment.assignmentRemoveAction(taskName))
+        removeAction.waitForExistence(timeout: 3)
+        removeAction.tap()
 
-        // Confirm deletion
-        let confirmButton = app.buttons[AX.ParentManagement.deleteTaskConfirmButton]
-        confirmButton.waitForExistence(timeout: 3)
-        confirmButton.tap()
-
-        // Task must be removed from editor
+        // Assignment must be removed from editor
         XCTAssertFalse(
-            app.cells[AX.ParentManagement.taskEditorRowByName(taskName)].exists,
-            "Task '\(taskName)' must be removed from editor after delete confirmation"
+            app.cells[
+                AX.TaskAssignment.assignmentRow(child: "Mia", topic: "Aamu", template: taskName)
+            ].waitForExistence(timeout: 2),
+            "Assignment '\(taskName)' must be removed from editor after removal"
         )
 
         // Navigate to routine view and verify task is absent there too
-        app.navigationBars.buttons.firstMatch.tap()
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
-        if doneButton.waitForExistence(timeout: 3) {
-            doneButton.tap()
-        }
+        navigateBackToParentHome()
+        dismissParentManagement()
 
-        let taskInRoutineView = app.buttons[AX.ChildRoutine.taskByName(child: AX.ChildNames.child0, task: taskName)]
+        let taskInRoutineView = app.row(AX.ChildRoutine.taskByName(child: "Mia", task: taskName))
         XCTAssertFalse(
             taskInRoutineView.exists,
-            "Deleted task '\(taskName)' must not appear in routine view"
+            "Removed task '\(taskName)' must not appear in routine view"
         )
     }
 
     func testCancellingDeleteLeavesTaskIntact() throws {
-        // DSGN-003 PM-AC-13: deleteTaskCancelButton tap → task still exists.
+        // DSGN-003 PM-AC-13: cancel removal -- task still exists.
+        // With the bank selector model, swipe-to-remove is immediate (no confirmation dialog).
+        // This test verifies that a template not removed stays in the task editor.
         openParentManagement()
-        openTaskEditorForChild(AX.ChildNames.child0)
+        addChild(name: "Mia")
 
-        let taskName = "ComBHair"
-        addTask(name: taskName)
+        let taskName = "CombHair"
+        addTemplate(name: taskName)
+        navigateToTaskEditor(child: "Mia", topic: "Aamu")
+        assignTemplate(named: taskName)
 
-        // Swipe to reveal delete, then cancel
-        let taskEditorRow = app.cells[AX.ParentManagement.taskEditorRowByName(taskName)]
-        taskEditorRow.waitForExistence(timeout: 3)
-        taskEditorRow.swipeLeft()
-
-        let deleteAction = app.buttons[AX.ParentManagement.deleteTaskAction(taskName)]
-        deleteAction.waitForExistence(timeout: 3)
-        deleteAction.tap()
-
-        // Cancel the confirmation
-        let cancelButton = app.buttons[AX.ParentManagement.deleteTaskCancelButton]
+        // Verify the assignment row exists
+        let assignmentRow = app.cells[
+            AX.TaskAssignment.assignmentRow(child: "Mia", topic: "Aamu", template: taskName)
+        ]
         XCTAssertTrue(
-            cancelButton.waitForExistence(timeout: 3),
-            "Delete cancel button '\(AX.ParentManagement.deleteTaskCancelButton)' must exist in confirmation dialog"
-        )
-        cancelButton.tap()
-
-        // Task must still exist in editor
-        XCTAssertTrue(
-            app.cells[AX.ParentManagement.taskEditorRowByName(taskName)].waitForExistence(timeout: 3),
-            "Task '\(taskName)' must still exist in editor after cancelling delete"
+            assignmentRow.waitForExistence(timeout: 3),
+            "Assignment row '\(taskName)' must exist in task editor"
         )
     }
 
@@ -384,19 +421,20 @@ final class ParentManagementUITests: XCTestCase {
 
     func testReorderTasksOrderReflectedInRoutineView() throws {
         // REQ-004 AC-6: Parent can reorder tasks via drag-and-drop.
-        // DSGN-003 PM-AC-14: reorder tasks → routine view shows new order.
         openParentManagement()
-        openTaskEditorForChild(AX.ChildNames.child0)
+        addChild(name: "Mia")
 
-        // Add two tasks
         let taskA = "TaskAlpha"
         let taskB = "TaskBeta"
-        addTask(name: taskA)
-        addTask(name: taskB)
+        addTemplate(name: taskA)
+        addTemplate(name: taskB)
+        navigateToTaskEditor(child: "Mia", topic: "Aamu")
+        assignTemplate(named: taskA)
+        assignTemplate(named: taskB)
 
         // Drag task B's reorder handle above task A
-        let handleB = app.buttons[AX.ParentManagement.taskReorderHandle(taskB)]
-        let handleA = app.buttons[AX.ParentManagement.taskReorderHandle(taskA)]
+        let handleB = app.row(AX.TaskAssignment.assignmentReorderHandle(taskB))
+        let handleA = app.row(AX.TaskAssignment.assignmentReorderHandle(taskA))
 
         XCTAssertTrue(
             handleB.waitForExistence(timeout: 3),
@@ -407,15 +445,11 @@ final class ParentManagementUITests: XCTestCase {
             "Reorder handle for task '\(taskA)' must exist"
         )
 
-        // Perform drag to reorder: drag B's handle to above A's position
         handleB.press(forDuration: 0.5, thenDragTo: handleA)
 
         // Navigate back to routine view
-        app.navigationBars.buttons.firstMatch.tap()
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
-        if doneButton.waitForExistence(timeout: 3) {
-            doneButton.tap()
-        }
+        navigateBackToParentHome()
+        dismissParentManagement()
 
         // Verify both tasks exist in routine view
         let taskAInRoutine = app.buttons.matching(
@@ -435,7 +469,6 @@ final class ParentManagementUITests: XCTestCase {
         )
 
         // Verify B appears before A in visual position (y-coordinate check)
-        // After dragging B above A, B's frame should have a smaller y-origin than A's.
         XCTAssertLessThan(
             taskBInRoutine.frame.origin.y,
             taskAInRoutine.frame.origin.y,
@@ -443,15 +476,14 @@ final class ParentManagementUITests: XCTestCase {
         )
     }
 
-    // MARK: - REQ-004 AC-8–AC-11 / DSGN-003 PM-AC-15, PM-AC-16, PM-AC-17
+    // MARK: - REQ-004 AC-8-AC-11 / DSGN-003 PM-AC-15, PM-AC-16, PM-AC-17
     // Reset day button: confirmation required, all tasks incomplete after confirm.
 
     func testResetDayButtonIsVisibleInParentManagement() throws {
         // REQ-004 AC-8: "Reset day" button is clearly visible in parent management.
-        // DSGN-003 PM-AC-15: resetDayButton exists in nav bar.
         openParentManagement()
 
-        let resetButton = app.buttons[AX.ParentManagement.resetDayButton]
+        let resetButton = app.row(AX.ParentManagement.resetDayButton)
         XCTAssertTrue(
             resetButton.waitForExistence(timeout: 3),
             "Reset Day button '\(AX.ParentManagement.resetDayButton)' must be visible in parent management"
@@ -460,15 +492,13 @@ final class ParentManagementUITests: XCTestCase {
 
     func testResetDayShowsConfirmationPrompt() throws {
         // REQ-004 AC-9: Tapping "Reset day" shows a confirmation prompt.
-        // DSGN-003 PM-AC-15: resetDayButton tap → resetDayConfirmButton.exists == true
         openParentManagement()
 
-        let resetButton = app.buttons[AX.ParentManagement.resetDayButton]
+        let resetButton = app.row(AX.ParentManagement.resetDayButton)
         resetButton.waitForExistence(timeout: 3)
         resetButton.tap()
 
-        // Confirmation prompt must appear
-        let confirmButton = app.buttons[AX.ParentManagement.resetDayConfirmButton]
+        let confirmButton = app.row(AX.ParentManagement.resetDayConfirmButton)
         XCTAssertTrue(
             confirmButton.waitForExistence(timeout: 3),
             "Reset Day confirmation button '\(AX.ParentManagement.resetDayConfirmButton)' must appear after tapping Reset Day"
@@ -476,23 +506,19 @@ final class ParentManagementUITests: XCTestCase {
     }
 
     func testConfirmingResetDaySetsAllTasksToIncomplete() throws {
-        // REQ-004 AC-10, AC-11: Confirming reset sets all tasks across all children to incomplete;
-        // routine view reflects cleared state immediately.
-        // DSGN-003 PM-AC-16: resetDayConfirmButton tap → all task_* elements have accessibilityValue == "not done"
+        // REQ-004 AC-10, AC-11: Confirming reset sets all tasks to incomplete.
         openParentManagement()
 
-        // Add a task to child 0 so we have something to reset
-        openTaskEditorForChild(AX.ChildNames.child0)
-        addTask(name: "TestReset")
-        app.navigationBars.buttons.firstMatch.tap()
+        // Add a child and task
+        addChild(name: "Mia")
+        addTemplate(name: "TestReset")
+        navigateToTaskEditor(child: "Mia", topic: "Aamu")
+        assignTemplate(named: "TestReset")
+        navigateBackToParentHome()
 
         // Go to routine view and complete the task
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
-        if doneButton.waitForExistence(timeout: 3) {
-            doneButton.tap()
-        }
+        dismissParentManagement()
 
-        // Complete the task in routine view
         let taskButton = app.buttons.matching(
             NSPredicate(format: "identifier BEGINSWITH 'childRoutine_taskButton_0_'")
         ).firstMatch
@@ -504,24 +530,24 @@ final class ParentManagementUITests: XCTestCase {
         }
 
         // Re-enter parent management and reset the day
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         gearButton.waitForExistence(timeout: 5)
         gearButton.tap()
-        app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3)
+        app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3)
         enterPIN(TestConstants.testPIN)
-        app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5)
+        app.row(AX.ParentManagement.root).waitForExistence(timeout: 5)
 
-        let resetButton = app.buttons[AX.ParentManagement.resetDayButton]
+        let resetButton = app.row(AX.ParentManagement.resetDayButton)
         resetButton.waitForExistence(timeout: 3)
         resetButton.tap()
 
-        let confirmButton = app.buttons[AX.ParentManagement.resetDayConfirmButton]
+        let confirmButton = app.row(AX.ParentManagement.resetDayConfirmButton)
         confirmButton.waitForExistence(timeout: 3)
         confirmButton.tap()
 
         // Navigate back to routine view
-        if app.buttons[AX.ParentManagement.doneButton].waitForExistence(timeout: 3) {
-            app.buttons[AX.ParentManagement.doneButton].tap()
+        if app.row(AX.ParentManagement.doneButton).waitForExistence(timeout: 3) {
+            app.row(AX.ParentManagement.doneButton).tap()
         }
 
         // All task buttons must have accessibilityValue "not done"
@@ -541,18 +567,16 @@ final class ParentManagementUITests: XCTestCase {
 
     func testCancellingResetDayLeavesTaskStatesUnchanged() throws {
         // REQ-004 AC-9 (cancel): Cancelling the confirmation leaves task states unchanged.
-        // DSGN-003 PM-AC-17: resetDayCancelButton tap → task states unchanged.
         openParentManagement()
 
-        // Add and complete a task
-        openTaskEditorForChild(AX.ChildNames.child0)
-        addTask(name: "CancelTest")
-        app.navigationBars.buttons.firstMatch.tap()
+        // Add a child and task, then complete it
+        addChild(name: "Mia")
+        addTemplate(name: "CancelTest")
+        navigateToTaskEditor(child: "Mia", topic: "Aamu")
+        assignTemplate(named: "CancelTest")
+        navigateBackToParentHome()
 
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
-        if doneButton.waitForExistence(timeout: 3) {
-            doneButton.tap()
-        }
+        dismissParentManagement()
 
         // Complete the task in routine view
         let taskButton = app.buttons.matching(
@@ -566,19 +590,19 @@ final class ParentManagementUITests: XCTestCase {
         }
 
         // Re-enter parent management and attempt reset but cancel
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         gearButton.waitForExistence(timeout: 5)
         gearButton.tap()
-        app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3)
+        app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3)
         enterPIN(TestConstants.testPIN)
-        app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5)
+        app.row(AX.ParentManagement.root).waitForExistence(timeout: 5)
 
-        let resetButton = app.buttons[AX.ParentManagement.resetDayButton]
+        let resetButton = app.row(AX.ParentManagement.resetDayButton)
         resetButton.waitForExistence(timeout: 3)
         resetButton.tap()
 
         // Cancel the reset
-        let cancelButton = app.buttons[AX.ParentManagement.resetDayCancelButton]
+        let cancelButton = app.row(AX.ParentManagement.resetDayCancelButton)
         XCTAssertTrue(
             cancelButton.waitForExistence(timeout: 3),
             "Reset Day cancel button '\(AX.ParentManagement.resetDayCancelButton)' must exist in confirmation dialog"
@@ -586,8 +610,8 @@ final class ParentManagementUITests: XCTestCase {
         cancelButton.tap()
 
         // Navigate back to routine view
-        if app.buttons[AX.ParentManagement.doneButton].waitForExistence(timeout: 3) {
-            app.buttons[AX.ParentManagement.doneButton].tap()
+        if app.row(AX.ParentManagement.doneButton).waitForExistence(timeout: 3) {
+            app.row(AX.ParentManagement.doneButton).tap()
         }
 
         // Task that was completed before must STILL be "done" after cancelling reset
@@ -604,21 +628,20 @@ final class ParentManagementUITests: XCTestCase {
     }
 
     // MARK: - DSGN-003 PM-AC-21
-    // Task name field enforces 30-character maximum.
+    // Template name field enforces 30-character maximum.
 
     func testTaskNameFieldEnforces30CharacterMaximum() throws {
-        // DSGN-003 PM-AC-21: type 35 chars → taskNameField.value.count == 30
+        // DSGN-003 PM-AC-21: type 35 chars -> templateNameField.value.count == 30
         openParentManagement()
-        openTaskEditorForChild(AX.ChildNames.child0)
 
-        let addButton = app.buttons[AX.ParentManagement.addTaskButton]
+        let addButton = app.row(AX.TaskBank.addTemplateButton)
         addButton.waitForExistence(timeout: 3)
         addButton.tap()
 
-        let nameField = app.textFields[AX.TaskEditor.taskNameField]
+        let nameField = app.textFields[AX.TaskBank.templateNameField]
         XCTAssertTrue(
             nameField.waitForExistence(timeout: 3),
-            "Task name field must appear in Add Task sheet"
+            "Template name field must appear in Create Template sheet"
         )
         nameField.tap()
 
@@ -631,53 +654,51 @@ final class ParentManagementUITests: XCTestCase {
         XCTAssertLessThanOrEqual(
             fieldValue.count,
             30,
-            "Task name field must enforce 30-character maximum. Got \(fieldValue.count) characters."
+            "Template name field must enforce 30-character maximum. Got \(fieldValue.count) characters."
         )
         XCTAssertEqual(
             fieldValue.count,
             30,
-            "Task name field must contain exactly 30 characters when 35 are typed (truncated to max)"
+            "Template name field must contain exactly 30 characters when 35 are typed (truncated to max)"
         )
     }
 
     // MARK: - DSGN-003 PM-AC-22
-    // Save button is disabled when task name is empty or no icon is selected.
+    // Save button is disabled when template name is empty or no icon is selected.
 
     func testSaveButtonDisabledWhenTaskFormIsEmpty() throws {
-        // DSGN-003 PM-AC-22: empty form → taskFormSaveButton.isEnabled == false
+        // DSGN-003 PM-AC-22: empty form -> templateFormSaveButton.isEnabled == false
         openParentManagement()
-        openTaskEditorForChild(AX.ChildNames.child0)
 
-        let addButton = app.buttons[AX.ParentManagement.addTaskButton]
+        let addButton = app.row(AX.TaskBank.addTemplateButton)
         addButton.waitForExistence(timeout: 3)
         addButton.tap()
 
         // Save button must be disabled on an empty form (no name, no icon)
-        let saveButton = app.buttons[AX.TaskEditor.formSaveButton]
+        let saveButton = app.row(AX.TaskBank.templateFormSaveButton)
         XCTAssertTrue(
             saveButton.waitForExistence(timeout: 3),
-            "Save button must exist in Add Task sheet"
+            "Save button must exist in Create Template sheet"
         )
         XCTAssertFalse(
             saveButton.isEnabled,
-            "Save button must be disabled when task name is empty and no icon is selected"
+            "Save button must be disabled when template name is empty and no icon is selected"
         )
     }
 
     func testSaveButtonDisabledWithNameButNoIcon() throws {
         // DSGN-003 PM-AC-22: Save must require both name AND icon to be enabled.
         openParentManagement()
-        openTaskEditorForChild(AX.ChildNames.child0)
 
-        app.buttons[AX.ParentManagement.addTaskButton].tap()
+        app.row(AX.TaskBank.addTemplateButton).tap()
 
-        let nameField = app.textFields[AX.TaskEditor.taskNameField]
+        let nameField = app.textFields[AX.TaskBank.templateNameField]
         nameField.waitForExistence(timeout: 3)
         nameField.tap()
         nameField.typeText("SomeTask")
 
         // Without selecting an icon, save must remain disabled
-        let saveButton = app.buttons[AX.TaskEditor.formSaveButton]
+        let saveButton = app.row(AX.TaskBank.templateFormSaveButton)
         saveButton.waitForExistence(timeout: 3)
         XCTAssertFalse(
             saveButton.isEnabled,

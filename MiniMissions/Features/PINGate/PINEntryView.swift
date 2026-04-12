@@ -114,6 +114,7 @@ struct PINEntryView: View {
                 .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AX.PINGate.root)
         .onAppear {
             viewModel.mode = mode

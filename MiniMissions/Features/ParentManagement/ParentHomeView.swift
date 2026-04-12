@@ -263,6 +263,7 @@ struct ParentHomeView: View {
                 )
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AX.ParentManagement.root)
     }
 

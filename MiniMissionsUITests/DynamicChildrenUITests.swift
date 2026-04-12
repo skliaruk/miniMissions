@@ -32,7 +32,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
 
     /// Opens parent management by tapping the gear button and entering the correct PIN.
     private func openParentManagement() {
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         XCTAssertTrue(
             gearButton.waitForExistence(timeout: 5),
             "Gear button must exist to open parent management"
@@ -40,13 +40,13 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         gearButton.tap()
 
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
             "PIN entry screen must appear"
         )
         enterPIN(TestConstants.testPIN)
 
         XCTAssertTrue(
-            app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5),
+            app.row(AX.ParentManagement.root).waitForExistence(timeout: 5),
             "Parent management root must appear after correct PIN"
         )
     }
@@ -55,7 +55,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
     private func enterPIN(_ pin: String) {
         for character in pin {
             guard let digit = Int(String(character)) else { continue }
-            let key = app.buttons[AX.PINGate.key(digit)]
+            let key = app.row(AX.PINGate.key(digit))
             key.waitForExistence(timeout: 3)
             key.tap()
         }
@@ -63,7 +63,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
 
     /// Dismisses parent management back to the routine view.
     private func dismissParentManagement() {
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
+        let doneButton = app.row(AX.ParentManagement.doneButton)
         if doneButton.waitForExistence(timeout: 3) {
             doneButton.tap()
         }
@@ -72,7 +72,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
     /// Adds a child with the given name via the Add Child sheet.
     /// Assumes the user is already in the parent management screen.
     private func addChild(name: String) {
-        let addButton = app.buttons[AX.ChildManagement.addChildButton]
+        let addButton = app.row(AX.ChildManagement.addChildButton)
         XCTAssertTrue(
             addButton.waitForExistence(timeout: 3),
             "Add Child button must exist in parent management"
@@ -89,7 +89,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         nameField.typeText(name)
 
         // Save
-        let saveButton = app.buttons[AX.ChildManagement.childFormSaveButton]
+        let saveButton = app.row(AX.ChildManagement.childFormSaveButton)
         XCTAssertTrue(
             saveButton.waitForExistence(timeout: 3),
             "Save button must be visible in Add Child sheet"
@@ -109,7 +109,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         addChild(name: "Mia")
 
         // Verify child row appears in parent management
-        let childRow = app.cells[AX.ChildManagement.childRow("Mia")]
+        let childRow = app.row(AX.ChildManagement.childRow("Mia"))
         XCTAssertTrue(
             childRow.waitForExistence(timeout: 3),
             "Child row for 'Mia' must appear in parent management after adding"
@@ -119,7 +119,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         dismissParentManagement()
 
         // Verify the new child column appears in the routine view
-        let childColumn = app.otherElements[AX.ChildRoutine.columnByName("Mia")]
+        let childColumn = app.row(AX.ChildRoutine.columnByName("Mia"))
         XCTAssertTrue(
             childColumn.waitForExistence(timeout: 5),
             "Child column for 'Mia' must appear in the routine view after adding"
@@ -145,7 +145,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         addChild(name: "Leo")
 
         // Tap edit button on the child row
-        let editButton = app.buttons[AX.ChildManagement.childEditButton("Leo")]
+        let editButton = app.row(AX.ChildManagement.childEditButton("Leo"))
         XCTAssertTrue(
             editButton.waitForExistence(timeout: 3),
             "Edit button for 'Leo' must exist on the child row"
@@ -165,11 +165,11 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         nameField.typeText("Aino")
 
         // Save
-        let saveButton = app.buttons[AX.ChildManagement.childFormSaveButton]
+        let saveButton = app.row(AX.ChildManagement.childFormSaveButton)
         saveButton.tap()
 
         // Verify updated name in parent management
-        let updatedRow = app.cells[AX.ChildManagement.childRow("Aino")]
+        let updatedRow = app.row(AX.ChildManagement.childRow("Aino"))
         XCTAssertTrue(
             updatedRow.waitForExistence(timeout: 3),
             "Child row must now show updated name 'Aino'"
@@ -179,14 +179,14 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         dismissParentManagement()
 
         // Verify updated name in routine view
-        let updatedColumn = app.otherElements[AX.ChildRoutine.columnByName("Aino")]
+        let updatedColumn = app.row(AX.ChildRoutine.columnByName("Aino"))
         XCTAssertTrue(
             updatedColumn.waitForExistence(timeout: 5),
             "Routine view must show column with updated name 'Aino'"
         )
 
         // Old name should no longer exist
-        let oldColumn = app.otherElements[AX.ChildRoutine.columnByName("Leo")]
+        let oldColumn = app.row(AX.ChildRoutine.columnByName("Leo"))
         XCTAssertFalse(
             oldColumn.exists,
             "Routine view must not show column with old name 'Leo'"
@@ -203,7 +203,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         addChild(name: "Mia")
 
         // Edit the child to add a photo
-        let editButton = app.buttons[AX.ChildManagement.childEditButton("Mia")]
+        let editButton = app.row(AX.ChildManagement.childEditButton("Mia"))
         XCTAssertTrue(
             editButton.waitForExistence(timeout: 3),
             "Edit button for 'Mia' must exist"
@@ -211,7 +211,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         editButton.tap()
 
         // Tap photo picker button
-        let photoButton = app.buttons[AX.ChildManagement.childPhotoPickerButton]
+        let photoButton = app.row(AX.ChildManagement.childPhotoPickerButton)
         XCTAssertTrue(
             photoButton.waitForExistence(timeout: 3),
             "Photo picker button must appear in Edit Child sheet"
@@ -225,7 +225,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         let photoPickerExists = photoPicker.waitForExistence(timeout: 5)
         // We accept that the photo picker may present differently, but the button must at least be tappable
         XCTAssertTrue(
-            photoPickerExists || app.otherElements["PhotosGridView"].waitForExistence(timeout: 3),
+            photoPickerExists || app.row("PhotosGridView").waitForExistence(timeout: 3),
             "System photo picker must appear after tapping 'Choose Photo'"
         )
     }
@@ -243,7 +243,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         addChild(name: "Leo")
 
         // Swipe left on Mia's row to trigger delete
-        let miaRow = app.cells[AX.ChildManagement.childRow("Mia")]
+        let miaRow = app.row(AX.ChildManagement.childRow("Mia"))
         XCTAssertTrue(
             miaRow.waitForExistence(timeout: 3),
             "Child row for 'Mia' must exist"
@@ -251,7 +251,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         miaRow.swipeLeft()
 
         // Confirmation dialog should appear
-        let deleteConfirm = app.buttons[AX.ChildManagement.deleteChildConfirmButton]
+        let deleteConfirm = app.row(AX.ChildManagement.deleteChildConfirmButton)
         XCTAssertTrue(
             deleteConfirm.waitForExistence(timeout: 3),
             "Delete confirmation button must appear after swiping to delete"
@@ -268,14 +268,14 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         dismissParentManagement()
 
         // Mia's column should be gone
-        let miaColumn = app.otherElements[AX.ChildRoutine.columnByName("Mia")]
+        let miaColumn = app.row(AX.ChildRoutine.columnByName("Mia"))
         XCTAssertFalse(
             miaColumn.exists,
             "Routine view must not show column for deleted child 'Mia'"
         )
 
         // Leo's column should still exist
-        let leoColumn = app.otherElements[AX.ChildRoutine.columnByName("Leo")]
+        let leoColumn = app.row(AX.ChildRoutine.columnByName("Leo"))
         XCTAssertTrue(
             leoColumn.waitForExistence(timeout: 3),
             "Routine view must still show column for remaining child 'Leo'"
@@ -294,7 +294,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         // Add exactly one child
         addChild(name: "Mia")
 
-        let miaRow = app.cells[AX.ChildManagement.childRow("Mia")]
+        let miaRow = app.row(AX.ChildManagement.childRow("Mia"))
         XCTAssertTrue(
             miaRow.waitForExistence(timeout: 3),
             "Single child row must exist"
@@ -303,7 +303,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         // Attempt to swipe left -- delete action should not appear
         miaRow.swipeLeft()
 
-        let deleteConfirm = app.buttons[AX.ChildManagement.deleteChildConfirmButton]
+        let deleteConfirm = app.row(AX.ChildManagement.deleteChildConfirmButton)
         XCTAssertFalse(
             deleteConfirm.waitForExistence(timeout: 2),
             "Delete confirmation must NOT appear for the last remaining child"
@@ -333,7 +333,7 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         }
 
         // Verify add button is disabled
-        let addButton = app.buttons[AX.ChildManagement.addChildButton]
+        let addButton = app.row(AX.ChildManagement.addChildButton)
         XCTAssertTrue(
             addButton.waitForExistence(timeout: 3),
             "Add Child button must still be visible"
@@ -366,8 +366,8 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         // Verify initial order: Mia before Leo
         dismissParentManagement()
 
-        let miaColumn = app.otherElements[AX.ChildRoutine.columnByName("Mia")]
-        let leoColumn = app.otherElements[AX.ChildRoutine.columnByName("Leo")]
+        let miaColumn = app.row(AX.ChildRoutine.columnByName("Mia"))
+        let leoColumn = app.row(AX.ChildRoutine.columnByName("Leo"))
 
         XCTAssertTrue(miaColumn.waitForExistence(timeout: 5), "Mia column must exist")
         XCTAssertTrue(leoColumn.waitForExistence(timeout: 3), "Leo column must exist")
@@ -383,8 +383,8 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         openParentManagement()
 
         // Drag Leo's reorder handle above Mia's
-        let leoHandle = app.buttons[AX.ChildManagement.childReorderHandle("Leo")]
-        let miaHandle = app.buttons[AX.ChildManagement.childReorderHandle("Mia")]
+        let leoHandle = app.row(AX.ChildManagement.childReorderHandle("Leo"))
+        let miaHandle = app.row(AX.ChildManagement.childReorderHandle("Mia"))
         XCTAssertTrue(leoHandle.waitForExistence(timeout: 3), "Leo reorder handle must exist")
         XCTAssertTrue(miaHandle.waitForExistence(timeout: 3), "Mia reorder handle must exist")
 
@@ -393,8 +393,8 @@ final class DynamicChildrenCRUDUITests: XCTestCase {
         // Go back to routine view to verify new order
         dismissParentManagement()
 
-        let miaColumnAfter = app.otherElements[AX.ChildRoutine.columnByName("Mia")]
-        let leoColumnAfter = app.otherElements[AX.ChildRoutine.columnByName("Leo")]
+        let miaColumnAfter = app.row(AX.ChildRoutine.columnByName("Mia"))
+        let leoColumnAfter = app.row(AX.ChildRoutine.columnByName("Leo"))
 
         XCTAssertTrue(miaColumnAfter.waitForExistence(timeout: 5), "Mia column must exist after reorder")
         XCTAssertTrue(leoColumnAfter.waitForExistence(timeout: 3), "Leo column must exist after reorder")
@@ -427,18 +427,18 @@ final class DynamicChildrenLayoutUITests: XCTestCase {
     // MARK: - Navigation helpers
 
     private func openParentManagement() {
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         XCTAssertTrue(gearButton.waitForExistence(timeout: 5), "Gear button must exist")
         gearButton.tap()
 
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
             "PIN entry screen must appear"
         )
         enterPIN(TestConstants.testPIN)
 
         XCTAssertTrue(
-            app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5),
+            app.row(AX.ParentManagement.root).waitForExistence(timeout: 5),
             "Parent management root must appear after correct PIN"
         )
     }
@@ -446,21 +446,21 @@ final class DynamicChildrenLayoutUITests: XCTestCase {
     private func enterPIN(_ pin: String) {
         for character in pin {
             guard let digit = Int(String(character)) else { continue }
-            let key = app.buttons[AX.PINGate.key(digit)]
+            let key = app.row(AX.PINGate.key(digit))
             key.waitForExistence(timeout: 3)
             key.tap()
         }
     }
 
     private func dismissParentManagement() {
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
+        let doneButton = app.row(AX.ParentManagement.doneButton)
         if doneButton.waitForExistence(timeout: 3) {
             doneButton.tap()
         }
     }
 
     private func addChild(name: String) {
-        let addButton = app.buttons[AX.ChildManagement.addChildButton]
+        let addButton = app.row(AX.ChildManagement.addChildButton)
         XCTAssertTrue(addButton.waitForExistence(timeout: 3), "Add Child button must exist")
         addButton.tap()
 
@@ -469,7 +469,7 @@ final class DynamicChildrenLayoutUITests: XCTestCase {
         nameField.tap()
         nameField.typeText(name)
 
-        let saveButton = app.buttons[AX.ChildManagement.childFormSaveButton]
+        let saveButton = app.row(AX.ChildManagement.childFormSaveButton)
         XCTAssertTrue(saveButton.waitForExistence(timeout: 3), "Save button must be visible")
         saveButton.tap()
     }
@@ -491,9 +491,9 @@ final class DynamicChildrenLayoutUITests: XCTestCase {
         dismissParentManagement()
 
         // All three columns must exist
-        let miaColumn = app.otherElements[AX.ChildRoutine.columnByName("Mia")]
-        let leoColumn = app.otherElements[AX.ChildRoutine.columnByName("Leo")]
-        let ainoColumn = app.otherElements[AX.ChildRoutine.columnByName("Aino")]
+        let miaColumn = app.row(AX.ChildRoutine.columnByName("Mia"))
+        let leoColumn = app.row(AX.ChildRoutine.columnByName("Leo"))
+        let ainoColumn = app.row(AX.ChildRoutine.columnByName("Aino"))
 
         XCTAssertTrue(miaColumn.waitForExistence(timeout: 5), "Mia column must exist")
         XCTAssertTrue(leoColumn.waitForExistence(timeout: 3), "Leo column must exist")
@@ -554,7 +554,7 @@ final class DynamicChildrenLayoutUITests: XCTestCase {
 
         // All four columns must exist and be hittable
         let columns = ["Mia", "Leo", "Aino", "Elias"].map {
-            app.otherElements[AX.ChildRoutine.columnByName($0)]
+            app.row(AX.ChildRoutine.columnByName($0))
         }
 
         for (i, column) in columns.enumerated() {
@@ -590,7 +590,7 @@ final class DynamicChildrenLayoutUITests: XCTestCase {
 
         // All six columns must exist
         for name in childNames {
-            let column = app.otherElements[AX.ChildRoutine.columnByName(name)]
+            let column = app.row(AX.ChildRoutine.columnByName(name))
             XCTAssertTrue(
                 column.waitForExistence(timeout: 5),
                 "Column for '\(name)' must exist in 6-child grid layout"
@@ -598,8 +598,8 @@ final class DynamicChildrenLayoutUITests: XCTestCase {
         }
 
         // Verify 2-row layout: first 3 in row 1, last 3 in row 2
-        let row1Columns = childNames[0..<3].map { app.otherElements[AX.ChildRoutine.columnByName($0)] }
-        let row2Columns = childNames[3..<6].map { app.otherElements[AX.ChildRoutine.columnByName($0)] }
+        let row1Columns = childNames[0..<3].map { app.row(AX.ChildRoutine.columnByName($0)) }
+        let row2Columns = childNames[3..<6].map { app.row(AX.ChildRoutine.columnByName($0)) }
 
         let row1Y = row1Columns[0].frame.origin.y
         let row2Y = row2Columns[0].frame.origin.y
@@ -633,13 +633,13 @@ final class DynamicChildrenLayoutUITests: XCTestCase {
 
         // The in-memory store with --uitesting gives a clean state.
         // With dynamic children (REQ-007), no children are seeded.
-        let emptyState = app.otherElements[AX.ChildManagement.emptyStateView]
+        let emptyState = app.row(AX.ChildManagement.emptyStateView)
         XCTAssertTrue(
             emptyState.waitForExistence(timeout: 5),
             "Empty state view must appear when no children exist on first launch"
         )
 
-        let settingsButton = app.buttons[AX.ChildManagement.emptyStateSettingsButton]
+        let settingsButton = app.row(AX.ChildManagement.emptyStateSettingsButton)
         XCTAssertTrue(
             settingsButton.exists,
             "Empty state 'Open Settings' button must be visible"

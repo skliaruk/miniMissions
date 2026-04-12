@@ -18,8 +18,11 @@ final class TopicTabBarUITests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
-        // Each test gets a fresh in-memory store with seed data (3 children, default "Aamu" topic).
-        app = AppLauncher.launchClean()
+        // Launch with PIN so we can add a child via parent management.
+        // Tab bar only appears when at least one child exists (otherwise empty state is shown).
+        app = AppLauncher.launchWithPIN()
+        addChildViaParentManagement(name: "Testi")
+        dismissParentManagement()
     }
 
     override func tearDownWithError() throws {
@@ -33,7 +36,7 @@ final class TopicTabBarUITests: XCTestCase {
     func testFirstLaunchShowsAamuTabAsDefault() throws {
         // REQ-006 AC-1: Default topic "Aamu" exists on first launch.
         // DSGN-004 TT-AC-02: topicTab_Aamu has accessibilityValue == "Selected"
-        let aamuTab = app.buttons[AX.TopicTab.tab("Aamu")]
+        let aamuTab = app.row(AX.TopicTab.tab("Aamu"))
         XCTAssertTrue(
             aamuTab.waitForExistence(timeout: 5),
             "Default topic tab 'Aamu' (id: '\(AX.TopicTab.tab("Aamu"))') must exist on first launch"
@@ -48,7 +51,7 @@ final class TopicTabBarUITests: XCTestCase {
     func testTabBarIsVisibleOnLaunch() throws {
         // REQ-006 AC-2: Child-facing view shows tabs for each topic.
         // DSGN-004 TT-AC-01: topicTabBar.exists == true on launch.
-        let tabBar = app.otherElements[AX.TopicTab.tabBar]
+        let tabBar = app.row(AX.TopicTab.tabBar)
         XCTAssertTrue(
             tabBar.waitForExistence(timeout: 5),
             "Topic tab bar '\(AX.TopicTab.tabBar)' must be visible on app launch"
@@ -70,7 +73,7 @@ final class TopicTabBarUITests: XCTestCase {
         dismissParentManagement()
 
         // Verify the new tab exists
-        let iltaTab = app.buttons[AX.TopicTab.tab("Ilta")]
+        let iltaTab = app.row(AX.TopicTab.tab("Ilta"))
         XCTAssertTrue(
             iltaTab.waitForExistence(timeout: 5),
             "Newly added topic tab 'Ilta' must appear in the child-facing tab bar"
@@ -85,7 +88,7 @@ final class TopicTabBarUITests: XCTestCase {
         wait(for: [selectedExpectation], timeout: 3.0)
 
         // Verify the Aamu tab is no longer selected
-        let aamuTab = app.buttons[AX.TopicTab.tab("Aamu")]
+        let aamuTab = app.row(AX.TopicTab.tab("Aamu"))
         XCTAssertNotEqual(
             aamuTab.value as? String,
             "Selected",
@@ -100,7 +103,7 @@ final class TopicTabBarUITests: XCTestCase {
         // REQ-006 AC-4: Active tab is visually distinct from inactive tabs.
         // DSGN-004 TT-AC-02: active tab has accessibilityTraits containing .isSelected.
         // Verified via accessibilityValue == "Selected".
-        let aamuTab = app.buttons[AX.TopicTab.tab("Aamu")]
+        let aamuTab = app.row(AX.TopicTab.tab("Aamu"))
         XCTAssertTrue(
             aamuTab.waitForExistence(timeout: 5),
             "Aamu tab must exist to verify active state"
@@ -118,7 +121,7 @@ final class TopicTabBarUITests: XCTestCase {
     func testTabTouchTargetsMeetMinimumSize() throws {
         // REQ-006 AC-5: Tab touch targets are at minimum 60x60pt.
         // DSGN-004 TT-AC-04: topicTab_<Name>.frame.height >= 60 && .frame.width >= 120
-        let aamuTab = app.buttons[AX.TopicTab.tab("Aamu")]
+        let aamuTab = app.row(AX.TopicTab.tab("Aamu"))
         XCTAssertTrue(
             aamuTab.waitForExistence(timeout: 5),
             "Aamu tab must exist to check touch target size"
@@ -139,13 +142,13 @@ final class TopicTabBarUITests: XCTestCase {
     func testSingleTopicStillShowsTabBar() throws {
         // DSGN-004 TT-AC-06: when 1 topic exists, topicTabBar.exists == true and 1 tab visible.
         // Default seed data has only one topic ("Aamu"), so this is the natural first-launch state.
-        let tabBar = app.otherElements[AX.TopicTab.tabBar]
+        let tabBar = app.row(AX.TopicTab.tabBar)
         XCTAssertTrue(
             tabBar.waitForExistence(timeout: 5),
             "Tab bar must be visible even when only one topic exists"
         )
 
-        let aamuTab = app.buttons[AX.TopicTab.tab("Aamu")]
+        let aamuTab = app.row(AX.TopicTab.tab("Aamu"))
         XCTAssertTrue(
             aamuTab.exists,
             "Single topic 'Aamu' tab must be visible in the tab bar"
@@ -171,9 +174,9 @@ final class TopicTabBarUITests: XCTestCase {
         addTopicViaParentManagement(name: "Yoe")
         dismissParentManagement()
 
-        let aamuTab = app.buttons[AX.TopicTab.tab("Aamu")]
-        let iltaTab = app.buttons[AX.TopicTab.tab("Ilta")]
-        let yoeTab = app.buttons[AX.TopicTab.tab("Yoe")]
+        let aamuTab = app.row(AX.TopicTab.tab("Aamu"))
+        let iltaTab = app.row(AX.TopicTab.tab("Ilta"))
+        let yoeTab = app.row(AX.TopicTab.tab("Yoe"))
 
         XCTAssertTrue(aamuTab.waitForExistence(timeout: 5), "Aamu tab must exist")
         XCTAssertTrue(iltaTab.waitForExistence(timeout: 3), "Ilta tab must exist")
@@ -197,18 +200,18 @@ final class TopicTabBarUITests: XCTestCase {
 
     /// Opens parent management by tapping gear, entering PIN, and waiting for root.
     private func openParentManagement() {
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         XCTAssertTrue(gearButton.waitForExistence(timeout: 5), "Gear button must exist")
         gearButton.tap()
 
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
             "PIN entry screen must appear"
         )
         enterPIN(TestConstants.testPIN)
 
         XCTAssertTrue(
-            app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5),
+            app.row(AX.ParentManagement.root).waitForExistence(timeout: 5),
             "Parent management root must appear after correct PIN"
         )
     }
@@ -217,24 +220,21 @@ final class TopicTabBarUITests: XCTestCase {
     private func enterPIN(_ pin: String) {
         for character in pin {
             guard let digit = Int(String(character)) else { continue }
-            let key = app.buttons[AX.PINGate.key(digit)]
+            let key = app.row(AX.PINGate.key(digit))
             key.waitForExistence(timeout: 3)
             key.tap()
         }
     }
 
     /// Adds a topic via parent management. Leaves the user in parent management view.
-    /// Assumes app is launched with PIN (uses launchClean -> re-enters for this).
+    /// Assumes app is launched with PIN.
     private func addTopicViaParentManagement(name: String) {
         // If not already in parent management, open it
-        if !app.otherElements[AX.ParentManagement.root].exists {
-            // Need PIN for this. Re-launch with PIN.
-            app.terminate()
-            app = AppLauncher.launchWithPIN()
+        if !app.row(AX.ParentManagement.root).exists {
             openParentManagement()
         }
 
-        let addButton = app.buttons[AX.TopicManagement.addTopicButton]
+        let addButton = app.row(AX.TopicManagement.addTopicButton)
         XCTAssertTrue(
             addButton.waitForExistence(timeout: 3),
             "Add Topic button must exist in parent management"
@@ -251,7 +251,7 @@ final class TopicTabBarUITests: XCTestCase {
         nameField.typeText(name)
 
         // Confirm
-        let confirmButton = app.buttons[AX.TopicManagement.addTopicConfirmButton]
+        let confirmButton = app.row(AX.TopicManagement.addTopicConfirmButton)
         XCTAssertTrue(
             confirmButton.waitForExistence(timeout: 3),
             "Add Topic confirm button must exist"
@@ -259,9 +259,29 @@ final class TopicTabBarUITests: XCTestCase {
         confirmButton.tap()
     }
 
+    /// Adds a child via parent management. Opens parent management if not already open.
+    private func addChildViaParentManagement(name: String) {
+        if !app.row(AX.ParentManagement.root).exists {
+            openParentManagement()
+        }
+
+        let addButton = app.row(AX.ChildManagement.addChildButton)
+        XCTAssertTrue(addButton.waitForExistence(timeout: 3), "Add Child button must exist")
+        addButton.tap()
+
+        let nameField = app.textFields[AX.ChildManagement.childNameField]
+        XCTAssertTrue(nameField.waitForExistence(timeout: 3), "Child name field must appear")
+        nameField.tap()
+        nameField.typeText(name)
+
+        let saveButton = app.row(AX.ChildManagement.childFormSaveButton)
+        saveButton.assertExists(timeout: 3)
+        saveButton.tap()
+    }
+
     /// Dismisses parent management back to the routine view.
     private func dismissParentManagement() {
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
+        let doneButton = app.row(AX.ParentManagement.doneButton)
         if doneButton.waitForExistence(timeout: 3) {
             doneButton.tap()
         }
@@ -287,18 +307,18 @@ final class TopicCRUDUITests: XCTestCase {
     // MARK: - Navigation helpers
 
     private func openParentManagement() {
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         XCTAssertTrue(gearButton.waitForExistence(timeout: 5), "Gear button must exist")
         gearButton.tap()
 
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
             "PIN entry screen must appear"
         )
         enterPIN(TestConstants.testPIN)
 
         XCTAssertTrue(
-            app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5),
+            app.row(AX.ParentManagement.root).waitForExistence(timeout: 5),
             "Parent management root must appear after correct PIN"
         )
     }
@@ -306,14 +326,14 @@ final class TopicCRUDUITests: XCTestCase {
     private func enterPIN(_ pin: String) {
         for character in pin {
             guard let digit = Int(String(character)) else { continue }
-            let key = app.buttons[AX.PINGate.key(digit)]
+            let key = app.row(AX.PINGate.key(digit))
             key.waitForExistence(timeout: 3)
             key.tap()
         }
     }
 
     private func dismissParentManagement() {
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
+        let doneButton = app.row(AX.ParentManagement.doneButton)
         if doneButton.waitForExistence(timeout: 3) {
             doneButton.tap()
         }
@@ -327,7 +347,7 @@ final class TopicCRUDUITests: XCTestCase {
         // DSGN-004 TT-AC-10: addTopicButton tap -> addTopicConfirmButton visible, enter name, confirm -> new topicRow appears.
         openParentManagement()
 
-        let addButton = app.buttons[AX.TopicManagement.addTopicButton]
+        let addButton = app.row(AX.TopicManagement.addTopicButton)
         XCTAssertTrue(
             addButton.waitForExistence(timeout: 3),
             "Add Topic button '\(AX.TopicManagement.addTopicButton)' must exist in parent management"
@@ -343,7 +363,7 @@ final class TopicCRUDUITests: XCTestCase {
         nameField.tap()
         nameField.typeText("Ilta")
 
-        let confirmButton = app.buttons[AX.TopicManagement.addTopicConfirmButton]
+        let confirmButton = app.row(AX.TopicManagement.addTopicConfirmButton)
         XCTAssertTrue(
             confirmButton.waitForExistence(timeout: 3),
             "Add Topic confirm button must be visible"
@@ -351,7 +371,7 @@ final class TopicCRUDUITests: XCTestCase {
         confirmButton.tap()
 
         // New topic row must appear in the Topics section
-        let newTopicRow = app.cells[AX.TopicManagement.topicRow("Ilta")]
+        let newTopicRow = app.row(AX.TopicManagement.topicRow("Ilta"))
             .firstMatch
         XCTAssertTrue(
             newTopicRow.waitForExistence(timeout: 3),
@@ -364,7 +384,7 @@ final class TopicCRUDUITests: XCTestCase {
         openParentManagement()
 
         // Add the topic
-        let addButton = app.buttons[AX.TopicManagement.addTopicButton]
+        let addButton = app.row(AX.TopicManagement.addTopicButton)
         addButton.waitForExistence(timeout: 3)
         addButton.tap()
 
@@ -373,13 +393,13 @@ final class TopicCRUDUITests: XCTestCase {
         nameField.tap()
         nameField.typeText("Ilta")
 
-        app.buttons[AX.TopicManagement.addTopicConfirmButton].tap()
+        app.row(AX.TopicManagement.addTopicConfirmButton).tap()
 
         // Dismiss parent management to return to routine view
         dismissParentManagement()
 
         // Verify new tab appears in child-facing view
-        let newTab = app.buttons[AX.TopicTab.tab("Ilta")]
+        let newTab = app.row(AX.TopicTab.tab("Ilta"))
         XCTAssertTrue(
             newTab.waitForExistence(timeout: 5),
             "Newly added topic 'Ilta' must appear as a tab in the child-facing routine view"
@@ -395,14 +415,14 @@ final class TopicCRUDUITests: XCTestCase {
         openParentManagement()
 
         // Default topic "Aamu" should exist
-        let aamuRow = app.cells[AX.TopicManagement.topicRow("Aamu")]
+        let aamuRow = app.row(AX.TopicManagement.topicRow("Aamu"))
         XCTAssertTrue(
             aamuRow.waitForExistence(timeout: 3),
             "Default topic row 'Aamu' must exist in parent management"
         )
 
         // Tap rename/edit button
-        let editButton = app.buttons[AX.TopicManagement.topicEditButton("Aamu")]
+        let editButton = app.row(AX.TopicManagement.topicEditButton("Aamu"))
         XCTAssertTrue(
             editButton.waitForExistence(timeout: 3),
             "Edit button for topic 'Aamu' must exist"
@@ -424,7 +444,7 @@ final class TopicCRUDUITests: XCTestCase {
         }
         nameField.typeText("Aamupala")
 
-        let saveButton = app.buttons[AX.TopicManagement.renameTopicConfirmButton]
+        let saveButton = app.row(AX.TopicManagement.renameTopicConfirmButton)
         XCTAssertTrue(
             saveButton.waitForExistence(timeout: 3),
             "Rename Topic confirm (Save) button must be visible"
@@ -432,7 +452,7 @@ final class TopicCRUDUITests: XCTestCase {
         saveButton.tap()
 
         // Row must now show the new name
-        let renamedRow = app.cells[AX.TopicManagement.topicRow("Aamupala")]
+        let renamedRow = app.row(AX.TopicManagement.topicRow("Aamupala"))
         XCTAssertTrue(
             renamedRow.waitForExistence(timeout: 3),
             "Topic row must update to show new name 'Aamupala' after renaming"
@@ -440,7 +460,7 @@ final class TopicCRUDUITests: XCTestCase {
 
         // Old name must no longer exist
         XCTAssertFalse(
-            app.cells[AX.TopicManagement.topicRow("Aamu")].exists,
+            app.row(AX.TopicManagement.topicRow("Aamu")).exists,
             "Old topic name 'Aamu' must no longer appear in parent management after rename"
         )
     }
@@ -450,7 +470,7 @@ final class TopicCRUDUITests: XCTestCase {
         openParentManagement()
 
         // Rename "Aamu" to "Aamupala"
-        let editButton = app.buttons[AX.TopicManagement.topicEditButton("Aamu")]
+        let editButton = app.row(AX.TopicManagement.topicEditButton("Aamu"))
         editButton.waitForExistence(timeout: 3)
         editButton.tap()
 
@@ -462,19 +482,19 @@ final class TopicCRUDUITests: XCTestCase {
             app.menuItems["Select All"].tap()
         }
         nameField.typeText("Aamupala")
-        app.buttons[AX.TopicManagement.renameTopicConfirmButton].tap()
+        app.row(AX.TopicManagement.renameTopicConfirmButton).tap()
 
         // Navigate to routine view
         dismissParentManagement()
 
         // Verify tab label updated
-        let newTab = app.buttons[AX.TopicTab.tab("Aamupala")]
+        let newTab = app.row(AX.TopicTab.tab("Aamupala"))
         XCTAssertTrue(
             newTab.waitForExistence(timeout: 5),
             "Tab label must update to 'Aamupala' after renaming topic"
         )
 
-        let oldTab = app.buttons[AX.TopicTab.tab("Aamu")]
+        let oldTab = app.row(AX.TopicTab.tab("Aamu"))
         XCTAssertFalse(
             oldTab.exists,
             "Old tab label 'Aamu' must no longer exist after renaming topic"
@@ -490,24 +510,24 @@ final class TopicCRUDUITests: XCTestCase {
         openParentManagement()
 
         // First add a second topic so deletion of the first is allowed
-        let addButton = app.buttons[AX.TopicManagement.addTopicButton]
+        let addButton = app.row(AX.TopicManagement.addTopicButton)
         addButton.waitForExistence(timeout: 3)
         addButton.tap()
         let nameField = app.textFields[AX.TopicManagement.addTopicNameField]
         nameField.waitForExistence(timeout: 3)
         nameField.tap()
         nameField.typeText("Ilta")
-        app.buttons[AX.TopicManagement.addTopicConfirmButton].tap()
+        app.row(AX.TopicManagement.addTopicConfirmButton).tap()
 
         // Verify both topics exist
-        let aamuRow = app.cells[AX.TopicManagement.topicRow("Aamu")]
+        let aamuRow = app.row(AX.TopicManagement.topicRow("Aamu"))
         XCTAssertTrue(aamuRow.waitForExistence(timeout: 3), "Aamu row must exist")
 
         // Swipe to delete "Aamu"
         aamuRow.swipeLeft()
 
         // Delete action must appear
-        let deleteAction = app.buttons[AX.TopicManagement.topicDeleteAction("Aamu")]
+        let deleteAction = app.row(AX.TopicManagement.topicDeleteAction("Aamu"))
         XCTAssertTrue(
             deleteAction.waitForExistence(timeout: 3),
             "Delete swipe action must appear for topic 'Aamu'"
@@ -515,7 +535,7 @@ final class TopicCRUDUITests: XCTestCase {
         deleteAction.tap()
 
         // Confirmation dialog must appear
-        let confirmButton = app.buttons[AX.TopicManagement.deleteTopicConfirmButton]
+        let confirmButton = app.row(AX.TopicManagement.deleteTopicConfirmButton)
         XCTAssertTrue(
             confirmButton.waitForExistence(timeout: 3),
             "Delete Topic confirmation button must appear before topic is removed"
@@ -526,7 +546,7 @@ final class TopicCRUDUITests: XCTestCase {
 
         // Topic row must be removed
         XCTAssertFalse(
-            app.cells[AX.TopicManagement.topicRow("Aamu")].waitForExistence(timeout: 2),
+            app.row(AX.TopicManagement.topicRow("Aamu")).waitForExistence(timeout: 2),
             "Topic 'Aamu' must be removed from parent management after confirmed deletion"
         )
     }
@@ -536,32 +556,32 @@ final class TopicCRUDUITests: XCTestCase {
         openParentManagement()
 
         // Add a second topic
-        app.buttons[AX.TopicManagement.addTopicButton].tap()
+        app.row(AX.TopicManagement.addTopicButton).tap()
         let nameField = app.textFields[AX.TopicManagement.addTopicNameField]
         nameField.waitForExistence(timeout: 3)
         nameField.tap()
         nameField.typeText("Ilta")
-        app.buttons[AX.TopicManagement.addTopicConfirmButton].tap()
+        app.row(AX.TopicManagement.addTopicConfirmButton).tap()
 
         // Delete "Aamu"
-        let aamuRow = app.cells[AX.TopicManagement.topicRow("Aamu")]
+        let aamuRow = app.row(AX.TopicManagement.topicRow("Aamu"))
         aamuRow.waitForExistence(timeout: 3)
         aamuRow.swipeLeft()
-        app.buttons[AX.TopicManagement.topicDeleteAction("Aamu")].tap()
-        app.buttons[AX.TopicManagement.deleteTopicConfirmButton].tap()
+        app.row(AX.TopicManagement.topicDeleteAction("Aamu")).tap()
+        app.row(AX.TopicManagement.deleteTopicConfirmButton).tap()
 
         // Navigate to routine view
         dismissParentManagement()
 
         // Deleted tab must be gone
-        let deletedTab = app.buttons[AX.TopicTab.tab("Aamu")]
+        let deletedTab = app.row(AX.TopicTab.tab("Aamu"))
         XCTAssertFalse(
             deletedTab.waitForExistence(timeout: 2),
             "Deleted topic 'Aamu' must not appear as a tab in the routine view"
         )
 
         // Remaining tab "Ilta" must exist and be active
-        let iltaTab = app.buttons[AX.TopicTab.tab("Ilta")]
+        let iltaTab = app.row(AX.TopicTab.tab("Ilta"))
         XCTAssertTrue(
             iltaTab.waitForExistence(timeout: 5),
             "Remaining topic 'Ilta' must be visible as a tab"
@@ -577,7 +597,7 @@ final class TopicCRUDUITests: XCTestCase {
         openParentManagement()
 
         // Only default topic "Aamu" exists (single topic state)
-        let aamuRow = app.cells[AX.TopicManagement.topicRow("Aamu")]
+        let aamuRow = app.row(AX.TopicManagement.topicRow("Aamu"))
         XCTAssertTrue(
             aamuRow.waitForExistence(timeout: 3),
             "Default topic 'Aamu' must exist as the only topic"
@@ -587,14 +607,14 @@ final class TopicCRUDUITests: XCTestCase {
         aamuRow.swipeLeft()
 
         // Delete action must NOT appear for the last remaining topic
-        let deleteAction = app.buttons[AX.TopicManagement.topicDeleteAction("Aamu")]
+        let deleteAction = app.row(AX.TopicManagement.topicDeleteAction("Aamu"))
         XCTAssertFalse(
             deleteAction.waitForExistence(timeout: 2),
             "Delete swipe action must NOT be available for the last remaining topic 'Aamu'"
         )
 
         // And the confirmation button must definitely not appear
-        let confirmButton = app.buttons[AX.TopicManagement.deleteTopicConfirmButton]
+        let confirmButton = app.row(AX.TopicManagement.deleteTopicConfirmButton)
         XCTAssertFalse(
             confirmButton.exists,
             "Delete Topic confirmation button must NOT appear when trying to delete the last topic"
@@ -610,16 +630,16 @@ final class TopicCRUDUITests: XCTestCase {
         openParentManagement()
 
         // Add a second topic
-        app.buttons[AX.TopicManagement.addTopicButton].tap()
+        app.row(AX.TopicManagement.addTopicButton).tap()
         let nameField = app.textFields[AX.TopicManagement.addTopicNameField]
         nameField.waitForExistence(timeout: 3)
         nameField.tap()
         nameField.typeText("Ilta")
-        app.buttons[AX.TopicManagement.addTopicConfirmButton].tap()
+        app.row(AX.TopicManagement.addTopicConfirmButton).tap()
 
         // Drag "Ilta" reorder handle above "Aamu" reorder handle
-        let iltaHandle = app.buttons[AX.TopicManagement.topicReorderHandle("Ilta")]
-        let aamuHandle = app.buttons[AX.TopicManagement.topicReorderHandle("Aamu")]
+        let iltaHandle = app.row(AX.TopicManagement.topicReorderHandle("Ilta"))
+        let aamuHandle = app.row(AX.TopicManagement.topicReorderHandle("Aamu"))
 
         XCTAssertTrue(
             iltaHandle.waitForExistence(timeout: 3),
@@ -636,8 +656,8 @@ final class TopicCRUDUITests: XCTestCase {
         // Navigate to routine view to verify tab order changed
         dismissParentManagement()
 
-        let aamuTab = app.buttons[AX.TopicTab.tab("Aamu")]
-        let iltaTab = app.buttons[AX.TopicTab.tab("Ilta")]
+        let aamuTab = app.row(AX.TopicTab.tab("Aamu"))
+        let iltaTab = app.row(AX.TopicTab.tab("Ilta"))
 
         XCTAssertTrue(aamuTab.waitForExistence(timeout: 5), "Aamu tab must exist")
         XCTAssertTrue(iltaTab.waitForExistence(timeout: 3), "Ilta tab must exist")
@@ -657,7 +677,7 @@ final class TopicCRUDUITests: XCTestCase {
         // DSGN-004 TT-AC-25: type 35 chars in add dialog -> field value length == 30.
         openParentManagement()
 
-        app.buttons[AX.TopicManagement.addTopicButton].tap()
+        app.row(AX.TopicManagement.addTopicButton).tap()
 
         let nameField = app.textFields[AX.TopicManagement.addTopicNameField]
         XCTAssertTrue(
@@ -692,14 +712,14 @@ final class TopicCRUDUITests: XCTestCase {
         openParentManagement()
 
         // Default topic must be listed
-        let aamuRow = app.cells[AX.TopicManagement.topicRow("Aamu")]
+        let aamuRow = app.row(AX.TopicManagement.topicRow("Aamu"))
         XCTAssertTrue(
             aamuRow.waitForExistence(timeout: 3),
             "Default topic 'Aamu' must appear as a row in the Topics section of parent management"
         )
 
         // Add Topic button must be visible
-        let addButton = app.buttons[AX.TopicManagement.addTopicButton]
+        let addButton = app.row(AX.TopicManagement.addTopicButton)
         XCTAssertTrue(
             addButton.exists,
             "Add Topic button must be visible in the Topics section header"
@@ -726,18 +746,18 @@ final class TopicResetUITests: XCTestCase {
     // MARK: - Navigation helpers
 
     private func openParentManagement() {
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         XCTAssertTrue(gearButton.waitForExistence(timeout: 5), "Gear button must exist")
         gearButton.tap()
 
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
             "PIN entry screen must appear"
         )
         enterPIN(TestConstants.testPIN)
 
         XCTAssertTrue(
-            app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5),
+            app.row(AX.ParentManagement.root).waitForExistence(timeout: 5),
             "Parent management root must appear after correct PIN"
         )
     }
@@ -745,58 +765,49 @@ final class TopicResetUITests: XCTestCase {
     private func enterPIN(_ pin: String) {
         for character in pin {
             guard let digit = Int(String(character)) else { continue }
-            let key = app.buttons[AX.PINGate.key(digit)]
+            let key = app.row(AX.PINGate.key(digit))
             key.waitForExistence(timeout: 3)
             key.tap()
         }
     }
 
     private func dismissParentManagement() {
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
+        let doneButton = app.row(AX.ParentManagement.doneButton)
         if doneButton.waitForExistence(timeout: 3) {
             doneButton.tap()
         }
     }
 
-    /// Adds a topic from parent management. Assumes already in parent management.
-    private func addTopic(name: String) {
-        app.buttons[AX.TopicManagement.addTopicButton].tap()
-        let nameField = app.textFields[AX.TopicManagement.addTopicNameField]
-        nameField.waitForExistence(timeout: 3)
-        nameField.tap()
-        nameField.typeText(name)
-        app.buttons[AX.TopicManagement.addTopicConfirmButton].tap()
-    }
-
-    /// Adds a task to a child in a given topic. Assumes already in parent management.
-    private func addTaskToChild(_ childName: String, topicName: String, taskName: String) {
-        // Tap child row to go to child topic picker
-        let childRow = app.cells[AX.ParentManagement.childRowByName(childName)]
-        childRow.waitForExistence(timeout: 3)
-        childRow.tap()
-
-        // Select the topic from the child topic picker
-        let topicRow = app.cells[AX.TopicManagement.childTopicRow(child: childName, topic: topicName)]
-        XCTAssertTrue(
-            topicRow.waitForExistence(timeout: 3),
-            "Child topic row for '\(childName)' + '\(topicName)' must exist"
-        )
-        topicRow.tap()
-
-        // Now in task editor scoped to child+topic. Add the task.
-        let addButton = app.buttons[AX.ParentManagement.addTaskButton]
-        addButton.waitForExistence(timeout: 3)
+    /// Adds a child with the given name. Assumes already in parent management.
+    private func addChild(name: String) {
+        let addButton = app.row(AX.ChildManagement.addChildButton)
+        XCTAssertTrue(addButton.waitForExistence(timeout: 3), "Add Child button must exist")
         addButton.tap()
 
-        let nameField = app.textFields[AX.TaskEditor.taskNameField]
-        nameField.waitForExistence(timeout: 3)
+        let nameField = app.textFields[AX.ChildManagement.childNameField]
+        XCTAssertTrue(nameField.waitForExistence(timeout: 3), "Child name field must appear")
         nameField.tap()
-        nameField.typeText(taskName)
+        nameField.typeText(name)
 
-        // Select first icon if icon picker is required
-        let chooseIcon = app.buttons[AX.TaskEditor.chooseIconButton]
-        if chooseIcon.waitForExistence(timeout: 2) {
-            chooseIcon.tap()
+        let saveButton = app.row(AX.ChildManagement.childFormSaveButton)
+        saveButton.assertExists(timeout: 3)
+        saveButton.tap()
+    }
+
+    /// Creates a task template in the Task Bank. Assumes already in parent management.
+    private func addTemplate(name: String) {
+        let addButton = app.row(AX.TaskBank.addTemplateButton)
+        XCTAssertTrue(addButton.waitForExistence(timeout: 3), "Add Template button must exist")
+        addButton.tap()
+
+        let nameField = app.textFields[AX.TaskBank.templateNameField]
+        nameField.assertExists(timeout: 3)
+        nameField.tap()
+        nameField.typeText(name)
+
+        let chooseIconButton = app.row(AX.TaskBank.templateChooseIconButton)
+        if chooseIconButton.waitForExistence(timeout: 2) {
+            chooseIconButton.tap()
             let firstIcon = app.buttons.matching(
                 NSPredicate(format: "identifier BEGINSWITH 'iconPicker_'")
             ).firstMatch
@@ -805,18 +816,74 @@ final class TopicResetUITests: XCTestCase {
             }
         }
 
-        app.buttons[AX.TaskEditor.formSaveButton].tap()
+        let saveButton = app.row(AX.TaskBank.templateFormSaveButton)
+        saveButton.assertExists(timeout: 3)
+        saveButton.tap()
+    }
 
-        // Navigate back to parent home (back from task editor, then back from child topic picker)
+    /// Navigates to task editor for a child+topic. Assumes already in parent management.
+    private func navigateToTaskEditor(child: String, topic: String) {
+        let childRow = app.row(AX.ParentManagement.childRowByName(child))
+        childRow.waitForExistence(timeout: 3)
+        childRow.tap()
+
+        let topicRow = app.row(AX.TopicManagement.childTopicRow(child: child, topic: topic))
+        XCTAssertTrue(topicRow.waitForExistence(timeout: 3), "Topic row must exist")
+        topicRow.tap()
+    }
+
+    /// Assigns a template to the current child+topic via bank selector.
+    private func assignTemplate(named templateName: String) {
+        let addFromBankButton = app.row(AX.TaskAssignment.addFromBankButton)
+        addFromBankButton.assertExists(timeout: 3)
+        addFromBankButton.tap()
+
+        let selectorRow = app.row(AX.TaskAssignment.bankSelectorRow(templateName))
+        XCTAssertTrue(selectorRow.waitForExistence(timeout: 5), "Bank selector must show '\(templateName)'")
+        selectorRow.tap()
+
+        let addButton = app.row(AX.TaskAssignment.bankSelectorAddButton)
+        addButton.assertExists(timeout: 3)
+        addButton.tap()
+    }
+
+    /// Navigates back from task editor to parent management root.
+    private func navigateBackToParentHome() {
         app.navigationBars.buttons.firstMatch.tap()
         if app.navigationBars.buttons.firstMatch.waitForExistence(timeout: 2) {
             app.navigationBars.buttons.firstMatch.tap()
         }
+        _ = app.row(AX.ParentManagement.root).waitForExistence(timeout: 3)
+    }
+
+    /// Adds a topic from parent management. Assumes already in parent management.
+    private func addTopic(name: String) {
+        app.row(AX.TopicManagement.addTopicButton).tap()
+        let nameField = app.textFields[AX.TopicManagement.addTopicNameField]
+        nameField.waitForExistence(timeout: 3)
+        nameField.tap()
+        nameField.typeText(name)
+        app.row(AX.TopicManagement.addTopicConfirmButton).tap()
+    }
+
+    /// Adds a task template and assigns it to a child in a given topic. Assumes already in parent management.
+    private func addTaskToChild(_ childName: String, topicName: String, taskName: String) {
+        // Create template if it doesn't exist yet (idempotent -- if it already exists, this is a no-op attempt)
+        addTemplate(name: taskName)
+
+        // Navigate to task editor for this child+topic
+        navigateToTaskEditor(child: childName, topic: topicName)
+
+        // Assign the template
+        assignTemplate(named: taskName)
+
+        // Navigate back to parent home
+        navigateBackToParentHome()
     }
 
     /// Completes a task in the routine view for a given child index and task index.
     private func completeTask(childIndex: Int, taskIndex: Int) {
-        let taskButton = app.buttons[AX.ChildRoutine.taskButton(childIndex, taskIndex)]
+        let taskButton = app.row(AX.ChildRoutine.taskButton(childIndex, taskIndex))
         XCTAssertTrue(
             taskButton.waitForExistence(timeout: 5),
             "Task button \(childIndex)_\(taskIndex) must exist"
@@ -835,14 +902,14 @@ final class TopicResetUITests: XCTestCase {
         // DSGN-004 TT-AC-15: topicResetButton_<Name> tap -> resetTopicConfirmButton_<Name>.exists == true.
         openParentManagement()
 
-        let resetButton = app.buttons[AX.TopicManagement.topicResetButton("Aamu")]
+        let resetButton = app.row(AX.TopicManagement.topicResetButton("Aamu"))
         XCTAssertTrue(
             resetButton.waitForExistence(timeout: 3),
             "Per-topic reset button for 'Aamu' must exist"
         )
         resetButton.tap()
 
-        let confirmButton = app.buttons[AX.TopicManagement.resetTopicConfirmButton("Aamu")]
+        let confirmButton = app.row(AX.TopicManagement.resetTopicConfirmButton("Aamu"))
         XCTAssertTrue(
             confirmButton.waitForExistence(timeout: 3),
             "Per-topic reset confirmation button for 'Aamu' must appear after tapping reset"
@@ -854,12 +921,15 @@ final class TopicResetUITests: XCTestCase {
         // DSGN-004 TT-AC-16: confirm reset -> tasks in that topic have accessibilityValue == "not done", other topics unchanged.
         openParentManagement()
 
+        // Add a child first (no children seeded)
+        addChild(name: "Mia")
+
         // Add a second topic "Ilta"
         addTopic(name: "Ilta")
 
-        // Add tasks to child 0 in both topics
-        addTaskToChild(AX.ChildNames.child0, topicName: "Aamu", taskName: "AamuTask1")
-        addTaskToChild(AX.ChildNames.child0, topicName: "Ilta", taskName: "IltaTask1")
+        // Add tasks to Mia in both topics
+        addTaskToChild("Mia", topicName: "Aamu", taskName: "AamuTask1")
+        addTaskToChild("Mia", topicName: "Ilta", taskName: "IltaTask1")
 
         // Go to routine view and complete tasks in both topics
         dismissParentManagement()
@@ -868,7 +938,7 @@ final class TopicResetUITests: XCTestCase {
         completeTask(childIndex: 0, taskIndex: 0)
 
         // Switch to Ilta and complete its task
-        let iltaTab = app.buttons[AX.TopicTab.tab("Ilta")]
+        let iltaTab = app.row(AX.TopicTab.tab("Ilta"))
         iltaTab.waitForExistence(timeout: 5)
         iltaTab.tap()
         completeTask(childIndex: 0, taskIndex: 0)
@@ -876,11 +946,11 @@ final class TopicResetUITests: XCTestCase {
         // Now go to parent management and reset only "Aamu"
         openParentManagement()
 
-        let resetButton = app.buttons[AX.TopicManagement.topicResetButton("Aamu")]
+        let resetButton = app.row(AX.TopicManagement.topicResetButton("Aamu"))
         resetButton.waitForExistence(timeout: 3)
         resetButton.tap()
 
-        let confirmButton = app.buttons[AX.TopicManagement.resetTopicConfirmButton("Aamu")]
+        let confirmButton = app.row(AX.TopicManagement.resetTopicConfirmButton("Aamu"))
         confirmButton.waitForExistence(timeout: 3)
         confirmButton.tap()
 
@@ -888,11 +958,11 @@ final class TopicResetUITests: XCTestCase {
         dismissParentManagement()
 
         // Aamu topic should be active; its task must be "not done"
-        let aamuTab = app.buttons[AX.TopicTab.tab("Aamu")]
+        let aamuTab = app.row(AX.TopicTab.tab("Aamu"))
         aamuTab.waitForExistence(timeout: 5)
         aamuTab.tap()
 
-        let aamuTask = app.buttons[AX.ChildRoutine.taskButton(0, 0)]
+        let aamuTask = app.row(AX.ChildRoutine.taskButton(0, 0))
         XCTAssertTrue(aamuTask.waitForExistence(timeout: 5), "Aamu task must exist")
         XCTAssertEqual(
             aamuTask.value as? String,
@@ -901,10 +971,10 @@ final class TopicResetUITests: XCTestCase {
         )
 
         // Switch to Ilta; its task must STILL be "done" (unaffected by Aamu reset)
-        let iltaTabAfterReset = app.buttons[AX.TopicTab.tab("Ilta")]
+        let iltaTabAfterReset = app.row(AX.TopicTab.tab("Ilta"))
         iltaTabAfterReset.tap()
 
-        let iltaTask = app.buttons[AX.ChildRoutine.taskButton(0, 0)]
+        let iltaTask = app.row(AX.ChildRoutine.taskButton(0, 0))
         XCTAssertTrue(iltaTask.waitForExistence(timeout: 5), "Ilta task must exist")
         XCTAssertEqual(
             iltaTask.value as? String,
@@ -921,14 +991,14 @@ final class TopicResetUITests: XCTestCase {
         // DSGN-004 TT-AC-17: resetAllButton tap -> resetAllConfirmButton.exists == true.
         openParentManagement()
 
-        let resetAllButton = app.buttons[AX.TopicManagement.resetAllButton]
+        let resetAllButton = app.row(AX.TopicManagement.resetAllButton)
         XCTAssertTrue(
             resetAllButton.waitForExistence(timeout: 3),
             "Reset All button '\(AX.TopicManagement.resetAllButton)' must exist in parent management"
         )
         resetAllButton.tap()
 
-        let confirmButton = app.buttons[AX.TopicManagement.resetAllConfirmButton]
+        let confirmButton = app.row(AX.TopicManagement.resetAllConfirmButton)
         XCTAssertTrue(
             confirmButton.waitForExistence(timeout: 3),
             "Reset All confirmation button must appear after tapping Reset All"
@@ -940,16 +1010,19 @@ final class TopicResetUITests: XCTestCase {
         // DSGN-004 TT-AC-17: confirm -> all tasks accessibilityValue == "not done".
         openParentManagement()
 
+        // Add a child first (no children seeded)
+        addChild(name: "Mia")
+
         // Add a second topic and tasks
         addTopic(name: "Ilta")
-        addTaskToChild(AX.ChildNames.child0, topicName: "Aamu", taskName: "AamuTask1")
-        addTaskToChild(AX.ChildNames.child0, topicName: "Ilta", taskName: "IltaTask1")
+        addTaskToChild("Mia", topicName: "Aamu", taskName: "AamuTask1")
+        addTaskToChild("Mia", topicName: "Ilta", taskName: "IltaTask1")
 
         // Go to routine view and complete tasks in both topics
         dismissParentManagement()
         completeTask(childIndex: 0, taskIndex: 0)
 
-        let iltaTab = app.buttons[AX.TopicTab.tab("Ilta")]
+        let iltaTab = app.row(AX.TopicTab.tab("Ilta"))
         iltaTab.waitForExistence(timeout: 5)
         iltaTab.tap()
         completeTask(childIndex: 0, taskIndex: 0)
@@ -957,11 +1030,11 @@ final class TopicResetUITests: XCTestCase {
         // Reset all via parent management
         openParentManagement()
 
-        let resetAllButton = app.buttons[AX.TopicManagement.resetAllButton]
+        let resetAllButton = app.row(AX.TopicManagement.resetAllButton)
         resetAllButton.waitForExistence(timeout: 3)
         resetAllButton.tap()
 
-        let confirmButton = app.buttons[AX.TopicManagement.resetAllConfirmButton]
+        let confirmButton = app.row(AX.TopicManagement.resetAllConfirmButton)
         confirmButton.waitForExistence(timeout: 3)
         confirmButton.tap()
 
@@ -969,11 +1042,11 @@ final class TopicResetUITests: XCTestCase {
         dismissParentManagement()
 
         // Check Aamu tasks
-        let aamuTab = app.buttons[AX.TopicTab.tab("Aamu")]
+        let aamuTab = app.row(AX.TopicTab.tab("Aamu"))
         aamuTab.waitForExistence(timeout: 5)
         aamuTab.tap()
 
-        let aamuTask = app.buttons[AX.ChildRoutine.taskButton(0, 0)]
+        let aamuTask = app.row(AX.ChildRoutine.taskButton(0, 0))
         if aamuTask.waitForExistence(timeout: 5) {
             XCTAssertEqual(
                 aamuTask.value as? String,
@@ -983,10 +1056,10 @@ final class TopicResetUITests: XCTestCase {
         }
 
         // Check Ilta tasks
-        let iltaTabAfterReset = app.buttons[AX.TopicTab.tab("Ilta")]
+        let iltaTabAfterReset = app.row(AX.TopicTab.tab("Ilta"))
         iltaTabAfterReset.tap()
 
-        let iltaTask = app.buttons[AX.ChildRoutine.taskButton(0, 0)]
+        let iltaTask = app.row(AX.ChildRoutine.taskButton(0, 0))
         if iltaTask.waitForExistence(timeout: 5) {
             XCTAssertEqual(
                 iltaTask.value as? String,
@@ -1002,7 +1075,8 @@ final class TopicResetUITests: XCTestCase {
     func testCancellingPerTopicResetLeavesStateUnchanged() throws {
         // DSGN-004 TT-AC-18: tap cancel on reset dialogs -> verify task states unchanged.
         openParentManagement()
-        addTaskToChild(AX.ChildNames.child0, topicName: "Aamu", taskName: "AamuTask1")
+        addChild(name: "Mia")
+        addTaskToChild("Mia", topicName: "Aamu", taskName: "AamuTask1")
 
         // Complete the task
         dismissParentManagement()
@@ -1011,11 +1085,11 @@ final class TopicResetUITests: XCTestCase {
         // Open parent management and attempt reset but cancel
         openParentManagement()
 
-        let resetButton = app.buttons[AX.TopicManagement.topicResetButton("Aamu")]
+        let resetButton = app.row(AX.TopicManagement.topicResetButton("Aamu"))
         resetButton.waitForExistence(timeout: 3)
         resetButton.tap()
 
-        let cancelButton = app.buttons[AX.TopicManagement.resetTopicCancelButton("Aamu")]
+        let cancelButton = app.row(AX.TopicManagement.resetTopicCancelButton("Aamu"))
         XCTAssertTrue(
             cancelButton.waitForExistence(timeout: 3),
             "Reset Topic cancel button must exist in confirmation dialog"
@@ -1025,7 +1099,7 @@ final class TopicResetUITests: XCTestCase {
         // Navigate back and verify task is still done
         dismissParentManagement()
 
-        let taskButton = app.buttons[AX.ChildRoutine.taskButton(0, 0)]
+        let taskButton = app.row(AX.ChildRoutine.taskButton(0, 0))
         XCTAssertTrue(taskButton.waitForExistence(timeout: 5), "Task must exist")
         XCTAssertEqual(
             taskButton.value as? String,
@@ -1037,7 +1111,8 @@ final class TopicResetUITests: XCTestCase {
     func testCancellingResetAllLeavesStateUnchanged() throws {
         // DSGN-004 TT-AC-18: cancelling Reset All leaves task states unchanged.
         openParentManagement()
-        addTaskToChild(AX.ChildNames.child0, topicName: "Aamu", taskName: "AamuTask1")
+        addChild(name: "Mia")
+        addTaskToChild("Mia", topicName: "Aamu", taskName: "AamuTask1")
 
         // Complete the task
         dismissParentManagement()
@@ -1046,11 +1121,11 @@ final class TopicResetUITests: XCTestCase {
         // Open parent management and attempt Reset All but cancel
         openParentManagement()
 
-        let resetAllButton = app.buttons[AX.TopicManagement.resetAllButton]
+        let resetAllButton = app.row(AX.TopicManagement.resetAllButton)
         resetAllButton.waitForExistence(timeout: 3)
         resetAllButton.tap()
 
-        let cancelButton = app.buttons[AX.TopicManagement.resetAllCancelButton]
+        let cancelButton = app.row(AX.TopicManagement.resetAllCancelButton)
         XCTAssertTrue(
             cancelButton.waitForExistence(timeout: 3),
             "Reset All cancel button must exist in confirmation dialog"
@@ -1060,7 +1135,7 @@ final class TopicResetUITests: XCTestCase {
         // Navigate back and verify task is still done
         dismissParentManagement()
 
-        let taskButton = app.buttons[AX.ChildRoutine.taskButton(0, 0)]
+        let taskButton = app.row(AX.ChildRoutine.taskButton(0, 0))
         XCTAssertTrue(taskButton.waitForExistence(timeout: 5), "Task must exist")
         XCTAssertEqual(
             taskButton.value as? String,
@@ -1089,18 +1164,18 @@ final class TaskTopicAssociationUITests: XCTestCase {
     // MARK: - Navigation helpers
 
     private func openParentManagement() {
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         XCTAssertTrue(gearButton.waitForExistence(timeout: 5), "Gear button must exist")
         gearButton.tap()
 
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
             "PIN entry screen must appear"
         )
         enterPIN(TestConstants.testPIN)
 
         XCTAssertTrue(
-            app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5),
+            app.row(AX.ParentManagement.root).waitForExistence(timeout: 5),
             "Parent management root must appear after correct PIN"
         )
     }
@@ -1108,53 +1183,49 @@ final class TaskTopicAssociationUITests: XCTestCase {
     private func enterPIN(_ pin: String) {
         for character in pin {
             guard let digit = Int(String(character)) else { continue }
-            let key = app.buttons[AX.PINGate.key(digit)]
+            let key = app.row(AX.PINGate.key(digit))
             key.waitForExistence(timeout: 3)
             key.tap()
         }
     }
 
     private func dismissParentManagement() {
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
+        let doneButton = app.row(AX.ParentManagement.doneButton)
         if doneButton.waitForExistence(timeout: 3) {
             doneButton.tap()
         }
     }
 
-    private func addTopic(name: String) {
-        app.buttons[AX.TopicManagement.addTopicButton].tap()
-        let nameField = app.textFields[AX.TopicManagement.addTopicNameField]
-        nameField.waitForExistence(timeout: 3)
-        nameField.tap()
-        nameField.typeText(name)
-        app.buttons[AX.TopicManagement.addTopicConfirmButton].tap()
-    }
-
-    /// Adds a task to a child in a given topic. Assumes already in parent management.
-    private func addTaskToChild(_ childName: String, topicName: String, taskName: String) {
-        let childRow = app.cells[AX.ParentManagement.childRowByName(childName)]
-        childRow.waitForExistence(timeout: 3)
-        childRow.tap()
-
-        let topicRow = app.cells[AX.TopicManagement.childTopicRow(child: childName, topic: topicName)]
-        XCTAssertTrue(
-            topicRow.waitForExistence(timeout: 3),
-            "Child topic row for '\(childName)' + '\(topicName)' must exist"
-        )
-        topicRow.tap()
-
-        let addButton = app.buttons[AX.ParentManagement.addTaskButton]
-        addButton.waitForExistence(timeout: 3)
+    /// Adds a child with the given name. Assumes already in parent management.
+    private func addChild(name: String) {
+        let addButton = app.row(AX.ChildManagement.addChildButton)
+        XCTAssertTrue(addButton.waitForExistence(timeout: 3), "Add Child button must exist")
         addButton.tap()
 
-        let nameField = app.textFields[AX.TaskEditor.taskNameField]
-        nameField.waitForExistence(timeout: 3)
+        let nameField = app.textFields[AX.ChildManagement.childNameField]
+        XCTAssertTrue(nameField.waitForExistence(timeout: 3), "Child name field must appear")
         nameField.tap()
-        nameField.typeText(taskName)
+        nameField.typeText(name)
 
-        let chooseIcon = app.buttons[AX.TaskEditor.chooseIconButton]
-        if chooseIcon.waitForExistence(timeout: 2) {
-            chooseIcon.tap()
+        let saveButton = app.row(AX.ChildManagement.childFormSaveButton)
+        saveButton.assertExists(timeout: 3)
+        saveButton.tap()
+    }
+
+    /// Creates a task template in the Task Bank. Assumes already in parent management.
+    private func addTemplate(name: String) {
+        let addButton = app.row(AX.TaskBank.addTemplateButton)
+        XCTAssertTrue(addButton.waitForExistence(timeout: 3), "Add Template button must exist")
+        addButton.tap()
+
+        let nameField = app.textFields[AX.TaskBank.templateNameField]
+        nameField.assertExists(timeout: 3)
+        nameField.tap()
+        nameField.typeText(name)
+
+        let chooseIconButton = app.row(AX.TaskBank.templateChooseIconButton)
+        if chooseIconButton.waitForExistence(timeout: 2) {
+            chooseIconButton.tap()
             let firstIcon = app.buttons.matching(
                 NSPredicate(format: "identifier BEGINSWITH 'iconPicker_'")
             ).firstMatch
@@ -1163,13 +1234,61 @@ final class TaskTopicAssociationUITests: XCTestCase {
             }
         }
 
-        app.buttons[AX.TaskEditor.formSaveButton].tap()
+        let saveButton = app.row(AX.TaskBank.templateFormSaveButton)
+        saveButton.assertExists(timeout: 3)
+        saveButton.tap()
+    }
 
-        // Navigate back to parent home
+    /// Navigates to task editor for a child+topic. Assumes already in parent management.
+    private func navigateToTaskEditor(child: String, topic: String) {
+        let childRow = app.row(AX.ParentManagement.childRowByName(child))
+        childRow.waitForExistence(timeout: 3)
+        childRow.tap()
+
+        let topicRow = app.row(AX.TopicManagement.childTopicRow(child: child, topic: topic))
+        XCTAssertTrue(topicRow.waitForExistence(timeout: 3), "Topic row must exist")
+        topicRow.tap()
+    }
+
+    /// Assigns a template to the current child+topic via bank selector.
+    private func assignTemplate(named templateName: String) {
+        let addFromBankButton = app.row(AX.TaskAssignment.addFromBankButton)
+        addFromBankButton.assertExists(timeout: 3)
+        addFromBankButton.tap()
+
+        let selectorRow = app.row(AX.TaskAssignment.bankSelectorRow(templateName))
+        XCTAssertTrue(selectorRow.waitForExistence(timeout: 5), "Bank selector must show '\(templateName)'")
+        selectorRow.tap()
+
+        let addButton = app.row(AX.TaskAssignment.bankSelectorAddButton)
+        addButton.assertExists(timeout: 3)
+        addButton.tap()
+    }
+
+    /// Navigates back from task editor to parent management root.
+    private func navigateBackToParentHome() {
         app.navigationBars.buttons.firstMatch.tap()
         if app.navigationBars.buttons.firstMatch.waitForExistence(timeout: 2) {
             app.navigationBars.buttons.firstMatch.tap()
         }
+        _ = app.row(AX.ParentManagement.root).waitForExistence(timeout: 3)
+    }
+
+    private func addTopic(name: String) {
+        app.row(AX.TopicManagement.addTopicButton).tap()
+        let nameField = app.textFields[AX.TopicManagement.addTopicNameField]
+        nameField.waitForExistence(timeout: 3)
+        nameField.tap()
+        nameField.typeText(name)
+        app.row(AX.TopicManagement.addTopicConfirmButton).tap()
+    }
+
+    /// Adds a task template and assigns it to a child in a given topic. Assumes already in parent management.
+    private func addTaskToChild(_ childName: String, topicName: String, taskName: String) {
+        addTemplate(name: taskName)
+        navigateToTaskEditor(child: childName, topic: topicName)
+        assignTemplate(named: taskName)
+        navigateBackToParentHome()
     }
 
     // MARK: - REQ-006 AC-11 / DSGN-004 TT-AC-19, TT-AC-20
@@ -1177,29 +1296,32 @@ final class TaskTopicAssociationUITests: XCTestCase {
 
     func testEachChildHasIndependentTasksPerTopic() throws {
         // REQ-006 AC-11: Each child has independent tasks per topic.
-        // Verify that adding a task to child 0 in "Aamu" does not show it under child 1 in "Aamu".
+        // Verify that adding a task to Mia in "Aamu" does not show it under Leo in "Aamu".
         openParentManagement()
 
-        // Add a task to child 0 in default topic "Aamu"
-        addTaskToChild(AX.ChildNames.child0, topicName: "Aamu", taskName: "Child0OnlyTask")
+        // Add children first (no children seeded)
+        addChild(name: "Mia")
+        addChild(name: "Leo")
+
+        // Add a task to Mia in default topic "Aamu"
+        addTaskToChild("Mia", topicName: "Aamu", taskName: "MiaOnlyTask")
 
         dismissParentManagement()
 
-        // In routine view, the task should appear in child 0's column
-        let child0Task = app.buttons.matching(
-            NSPredicate(format: "identifier CONTAINS 'Child0OnlyTask'")
+        // In routine view, the task should appear in Mia's column
+        let miaTask = app.buttons.matching(
+            NSPredicate(format: "identifier CONTAINS 'MiaOnlyTask'")
         ).firstMatch
         XCTAssertTrue(
-            child0Task.waitForExistence(timeout: 5),
-            "Task 'Child0OnlyTask' must appear in child 0's column"
+            miaTask.waitForExistence(timeout: 5),
+            "Task 'MiaOnlyTask' must appear in Mia's column"
         )
 
-        // The task must NOT appear in child 1's column
-        // Since the task identifiers include child information, check child 1's column for the same task name
-        let child1TaskByName = app.buttons[AX.ChildRoutine.taskByName(child: AX.ChildNames.child1, task: "Child0OnlyTask")]
+        // The task must NOT appear in Leo's column
+        let leoTaskByName = app.row(AX.ChildRoutine.taskByName(child: "Leo", task: "MiaOnlyTask"))
         XCTAssertFalse(
-            child1TaskByName.exists,
-            "Task 'Child0OnlyTask' must NOT appear in child 1's column -- tasks are per-child"
+            leoTaskByName.exists,
+            "Task 'MiaOnlyTask' must NOT appear in Leo's column -- tasks are per-child"
         )
     }
 
@@ -1209,11 +1331,14 @@ final class TaskTopicAssociationUITests: XCTestCase {
         // REQ-006: Tasks added to a specific topic only appear when that topic's tab is active.
         openParentManagement()
 
+        // Add a child first (no children seeded)
+        addChild(name: "Mia")
+
         // Add a second topic
         addTopic(name: "Ilta")
 
-        // Add a task to child 0 in "Ilta" only
-        addTaskToChild(AX.ChildNames.child0, topicName: "Ilta", taskName: "IltaOnlyTask")
+        // Add a task to Mia in "Ilta" only
+        addTaskToChild("Mia", topicName: "Ilta", taskName: "IltaOnlyTask")
 
         dismissParentManagement()
 
@@ -1227,7 +1352,7 @@ final class TaskTopicAssociationUITests: XCTestCase {
         )
 
         // Switch to Ilta tab -- now the task must appear
-        let iltaTab = app.buttons[AX.TopicTab.tab("Ilta")]
+        let iltaTab = app.row(AX.TopicTab.tab("Ilta"))
         XCTAssertTrue(iltaTab.waitForExistence(timeout: 5), "Ilta tab must exist")
         iltaTab.tap()
 
@@ -1246,46 +1371,50 @@ final class TaskTopicAssociationUITests: XCTestCase {
         // REQ-006 AC-8: Deleting a topic deletes all associated tasks for all children.
         openParentManagement()
 
+        // Add children first (no children seeded)
+        addChild(name: "Mia")
+        addChild(name: "Leo")
+
         // Add a second topic and tasks in it
         addTopic(name: "Ilta")
-        addTaskToChild(AX.ChildNames.child0, topicName: "Ilta", taskName: "IltaChild0Task")
-        addTaskToChild(AX.ChildNames.child1, topicName: "Ilta", taskName: "IltaChild1Task")
+        addTaskToChild("Mia", topicName: "Ilta", taskName: "IltaMiaTask")
+        addTaskToChild("Leo", topicName: "Ilta", taskName: "IltaLeoTask")
 
         // Also add a task to Aamu for comparison (should survive the Ilta deletion)
-        addTaskToChild(AX.ChildNames.child0, topicName: "Aamu", taskName: "AamuSurvivorTask")
+        addTaskToChild("Mia", topicName: "Aamu", taskName: "AamuSurvivorTask")
 
         // Delete "Ilta" topic
-        let iltaRow = app.cells[AX.TopicManagement.topicRow("Ilta")]
+        let iltaRow = app.row(AX.TopicManagement.topicRow("Ilta"))
         iltaRow.waitForExistence(timeout: 3)
         iltaRow.swipeLeft()
-        app.buttons[AX.TopicManagement.topicDeleteAction("Ilta")].tap()
-        app.buttons[AX.TopicManagement.deleteTopicConfirmButton].tap()
+        app.row(AX.TopicManagement.topicDeleteAction("Ilta")).tap()
+        app.row(AX.TopicManagement.deleteTopicConfirmButton).tap()
 
         // Navigate to routine view
         dismissParentManagement()
 
         // "Ilta" tab must no longer exist
-        let iltaTab = app.buttons[AX.TopicTab.tab("Ilta")]
+        let iltaTab = app.row(AX.TopicTab.tab("Ilta"))
         XCTAssertFalse(
             iltaTab.waitForExistence(timeout: 2),
             "Deleted topic 'Ilta' tab must not exist in routine view"
         )
 
-        // Tasks from Ilta must be gone -- no element with IltaChild0Task or IltaChild1Task
-        let iltaChild0Task = app.buttons.matching(
-            NSPredicate(format: "identifier CONTAINS 'IltaChild0Task'")
+        // Tasks from Ilta must be gone -- no element with IltaMiaTask or IltaLeoTask
+        let iltaMiaTask = app.buttons.matching(
+            NSPredicate(format: "identifier CONTAINS 'IltaMiaTask'")
         ).firstMatch
         XCTAssertFalse(
-            iltaChild0Task.exists,
-            "Tasks from deleted topic 'Ilta' must be removed for child 0"
+            iltaMiaTask.exists,
+            "Tasks from deleted topic 'Ilta' must be removed for Mia"
         )
 
-        let iltaChild1Task = app.buttons.matching(
-            NSPredicate(format: "identifier CONTAINS 'IltaChild1Task'")
+        let iltaLeoTask = app.buttons.matching(
+            NSPredicate(format: "identifier CONTAINS 'IltaLeoTask'")
         ).firstMatch
         XCTAssertFalse(
-            iltaChild1Task.exists,
-            "Tasks from deleted topic 'Ilta' must be removed for child 1"
+            iltaLeoTask.exists,
+            "Tasks from deleted topic 'Ilta' must be removed for Leo"
         )
 
         // Aamu task must still exist (unaffected by Ilta deletion)
@@ -1305,38 +1434,44 @@ final class TaskTopicAssociationUITests: XCTestCase {
         // DSGN-004 TT-AC-19: childRow_<Name> tap -> childTopicRow_<Name>_<TopicName>.exists == true.
         openParentManagement()
 
-        let childRow = app.cells[AX.ParentManagement.childRowByName(AX.ChildNames.child0)]
+        // Add a child first (no children seeded)
+        addChild(name: "Mia")
+
+        let childRow = app.row(AX.ParentManagement.childRowByName("Mia"))
         XCTAssertTrue(
             childRow.waitForExistence(timeout: 3),
-            "Child row for '\(AX.ChildNames.child0)' must exist"
+            "Child row for 'Mia' must exist"
         )
         childRow.tap()
 
         // Child topic picker must show the default topic "Aamu"
-        let topicRow = app.cells[AX.TopicManagement.childTopicRow(child: AX.ChildNames.child0, topic: "Aamu")]
+        let topicRow = app.row(AX.TopicManagement.childTopicRow(child: "Mia", topic: "Aamu"))
         XCTAssertTrue(
             topicRow.waitForExistence(timeout: 5),
-            "Child topic picker must show topic 'Aamu' for child '\(AX.ChildNames.child0)'"
+            "Child topic picker must show topic 'Aamu' for child 'Mia'"
         )
     }
 
     func testTappingTopicInChildTopicPickerOpensTaskEditor() throws {
-        // DSGN-004 TT-AC-20: childTopicRow_<Name>_<TopicName> tap -> addTaskButton.exists == true.
+        // DSGN-004 TT-AC-20: childTopicRow_<Name>_<TopicName> tap -> addFromBankButton.exists == true.
         openParentManagement()
 
-        let childRow = app.cells[AX.ParentManagement.childRowByName(AX.ChildNames.child0)]
+        // Add a child first (no children seeded)
+        addChild(name: "Mia")
+
+        let childRow = app.row(AX.ParentManagement.childRowByName("Mia"))
         childRow.waitForExistence(timeout: 3)
         childRow.tap()
 
-        let topicRow = app.cells[AX.TopicManagement.childTopicRow(child: AX.ChildNames.child0, topic: "Aamu")]
+        let topicRow = app.row(AX.TopicManagement.childTopicRow(child: "Mia", topic: "Aamu"))
         topicRow.waitForExistence(timeout: 3)
         topicRow.tap()
 
-        // Task editor must be visible with Add Task button
-        let addTaskButton = app.buttons[AX.ParentManagement.addTaskButton]
+        // Task editor must be visible with Add from Bank button (REQ-008 replaced addTaskButton)
+        let addFromBankButton = app.row(AX.TaskAssignment.addFromBankButton)
         XCTAssertTrue(
-            addTaskButton.waitForExistence(timeout: 5),
-            "Task editor (scoped to child + topic) must show Add Task button"
+            addFromBankButton.waitForExistence(timeout: 5),
+            "Task editor (scoped to child + topic) must show 'Add from Bank' button"
         )
     }
 }

@@ -83,6 +83,7 @@ struct PINSetupView: View {
                 Spacer()
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AX.PINGate.setupRoot)
         .onAppear {
             viewModel.mode = .setup

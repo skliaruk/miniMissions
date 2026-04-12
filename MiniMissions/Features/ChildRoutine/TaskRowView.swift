@@ -101,6 +101,7 @@ struct TaskRowView: View {
         }
         // Row-level identifier (ADR-004 taskRow) on the ZStack container.
         // Used by AccessibilityUITests to verify row touch targets.
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AX.ChildRoutine.taskRow(childIndex, taskIndex))
     }
 

@@ -1,88 +1,84 @@
 # QA Memory - Test Coverage Status
 
-## Last Updated: 2026-04-09
+## Last Updated: 2026-04-10
 
-## Test Files
+## Test Count Summary
 
-| File | Target | Test Count | Status |
-|------|--------|-----------|--------|
-| RoutineViewUITests.swift | UITests | 14 | Existing |
-| ParentalGateUITests.swift | UITests | TBD | Existing |
-| ParentManagementUITests.swift | UITests | 12 | Existing |
-| AccessibilityUITests.swift | UITests | TBD | Existing |
-| TopicCategoriesUITests.swift | UITests | TBD | Existing |
-| DynamicChildrenUITests.swift | UITests | 10 | Red (not in pbxproj) |
-| TaskBankUITests.swift | UITests | 24 | Red (TDD Red Phase) |
-| DailyResetUITests.swift | UITests | 3 | Red (TDD Red Phase) |
-| CopyTasksUITests.swift | UITests | 5 | Red (TDD Red Phase) |
-| PINServiceTests.swift | UnitTests | TBD | Existing |
-| SeedDataServiceTests.swift | UnitTests | TBD | Existing |
-
-## REQ: Automatic Daily Reset Tests (DailyResetUITests.swift)
-
-### Class: DailyResetUITests (3 tests)
-- testDailyResetClearsCompletionsOnNewDay — completes a task, relaunches with --resetDateYesterday, verifies task is cleared
-- testDailyResetDoesNotClearOnSameDay — completes a task, backgrounds/foregrounds on same day, verifies task stays done
-- testDailyResetRunsOnFirstLaunch — fresh launch with no stored date, verifies all tasks are in "not done" state
-
-### Infrastructure changes
-- AppLauncher.swift: added `launchWithResetDateYesterday()` method
-- AppEnvironment.swift: added `resetDateYesterday: Bool` property and `--resetDateYesterday` argument parsing
-- MorningRoutineApp.swift: added `--resetDateYesterday` handling in init() to set UserDefaults lastDailyResetDate to yesterday
-- project.pbxproj: added DailyResetUITests.swift with FC000012 / AC000012
-
-## REQ-008 Task Bank Tests (TaskBankUITests.swift)
-
-### Class 1: TaskBankCRUDUITests (8 tests)
-- testTaskBankSectionVisibleOnParentHome (TB-AC-01)
-- testEmptyTaskBankShowsPlaceholder (TB-AC-22)
-- testCreateTaskTemplate (TB-AC-02)
-- testTemplateNameMaxThirtyChars (TB-AC-03)
-- testSaveButtonDisabledWhenNameEmpty (TB-AC-04)
-- testEditTaskTemplate (TB-AC-05)
-- testDeleteTaskTemplateWithConfirmation (TB-AC-07)
-- testDeleteTemplateRemovesItFromBank (TB-AC-08 partial)
-
-### Class 2: TaskBankAssignmentUITests (10 tests)
-- testTaskEditorShowsAddFromBankButton (TB-AC-09)
-- testEmptyTaskEditorShowsPlaceholder (TB-AC-23)
-- testAssignTemplateToChild (TB-AC-10, TB-AC-13)
-- testBankSelectorShowsAllTemplates (TB-AC-10)
-- testAlreadyAssignedTemplateShowsAssignedBadge (TB-AC-11)
-- testMultiSelectTemplatesForAssignment (TB-AC-12)
-- testUnassignTemplateFromChild (TB-AC-14)
-- testUnassignDoesNotDeleteFromBank (TB-AC-15)
-- testBankSelectorSearchFiltersTemplates (TB-AC-24)
-- testCreateNewTemplateFromBankSelector (TB-AC-25)
-
-### Class 3: TaskBankRoutineViewUITests (6 tests)
-- testAssignedTaskAppearsInRoutineView (AC-10)
-- testEditingTemplateUpdatesRoutineView (TB-AC-06)
-- testDeletingTemplateRemovesFromRoutineView (TB-AC-08)
-- testSameTemplateTwoChildren (TB-AC-18)
-- testCompletionIndependentPerChild (TB-AC-20)
-- testSameTemplateInTwoTopics (TB-AC-19)
-
-## Copy Tasks Feature Tests (CopyTasksUITests.swift)
-
-### Class: CopyTasksUITests (5 tests)
-- testCopyButtonVisibleWhenOtherChildrenHaveTasks — AC1: Copy button visible when other children have tasks in same topic
-- testCopyButtonHiddenWhenNoOtherChildrenHaveTasks — AC2: Copy button hidden when no other children have tasks
-- testCopyingBringsAllTemplatesFromSourceChild — AC3: All templates from source child copied to target
-- testAlreadyAssignedTemplatesAreNotDuplicated — AC4: Already-assigned templates skipped during copy
-- testCopyingDoesNotRemoveTasksFromSourceChild — AC5: Source child's tasks remain after copy
-
-### Infrastructure changes
-- AccessibilityIdentifiers.swift: added copyFromButton, copySourceChildRow(_:), copySourceConfirmButton, copySourceCancelButton in AX.TaskAssignment
-- project.pbxproj: added CopyTasksUITests.swift with FC000013 / AC000013
-
-## Known Issues
-
-- DynamicChildrenUITests.swift exists on disk but is NOT in the pbxproj file.
-  It is not compiled or run. Needs to be added to the Xcode project.
+| Target | Count |
+|--------|-------|
+| MiniMissionsUITests (UI/E2E) | ~122 |
+| MiniMissionsTests (Unit) | 6 |
+| **Total** | **~128** |
+| Unit test ratio | ~4.7% (limit: 25%) -- OK |
 
 ## Build Status
 
-- DailyResetUITests.swift: BUILD SUCCEEDED (compiles, tests expected to pass if implementation exists)
-- TaskBankUITests.swift: BUILD SUCCEEDED (compiles, tests will fail at runtime - TDD Red)
-- CopyTasksUITests.swift: BUILD SUCCEEDED (compiles, tests will fail at runtime - TDD Red)
+TEST BUILD SUCCEEDED (2026-04-10) after fixing all broken tests.
+
+## Fixes Applied (2026-04-10 session 2)
+
+### Category 1: VoiceOver label language mismatch
+AppLauncher forces Finnish locale (`-AppleLanguages fi`), so all accessibility labels are in Finnish.
+Updated all hardcoded English label comparisons in tests:
+- "Parent Settings" -> "Vanhempien asetukset" (RoutineViewUITests, AccessibilityUITests)
+- "<Name>'s tasks" -> "<Name>:n tehtavat" (RoutineViewUITests, AccessibilityUITests)
+- `.contains("task")` -> `.contains("tehtava") || .contains("valmis")` (AccessibilityUITests progress indicator)
+
+### Category 2: Keychain pollution for first-launch tests
+Added `--clear-keychain` launch argument support:
+- AppEnvironment.swift: added `clearKeychain: Bool` property and parser
+- MiniMissionsApp.swift: calls `KeychainStore.shared.deletePINHash()` when `clearKeychain == true`
+- AppLauncher.launchFirstLaunch(): includes `--clear-keychain` in launch arguments
+- ParentalGateUITests: changed `routineRoot.exists` -> `routineRoot.isHittable` assertions (ChildRoutineView always exists behind fullScreenCover)
+
+### Category 3: Tab bar and routine view require children
+TopicTabBarUITests was using `launchClean()` which has no children (empty state, no tab bar).
+- Changed setUp to use `launchWithPIN()` and add a child via `addChildViaParentManagement(name:)`
+- Added `addChildViaParentManagement` helper method to TopicTabBarUITests
+- Fixed `addTopicViaParentManagement` to not re-launch app (would lose in-memory children)
+
+### Category 4: UI structure identifier mismatch
+App's AccessibilityIdentifiers.swift used plain names (e.g. "addTopicButton") while tests expected prefixed names (e.g. "parentMgmt_addTopicButton").
+Updated app's TopicManagement identifiers to match test expectations:
+- addTopicButton, addTopicConfirmButton, addTopicCancelButton, addTopicNameField
+- renameTopicConfirmButton, renameTopicCancelButton, renameTopicNameField
+- deleteTopicConfirmButton, deleteTopicCancelButton
+- resetAllButton, resetAllConfirmButton, resetAllCancelButton
+
+### Spot-check results (all passed)
+- MiniMissionsUITests/RoutineViewUITests/testParentEntryButtonHasVoiceOverLabel -- PASSED
+- MiniMissionsUITests/ParentalGateUITests/testFirstLaunchShowsPINSetupScreen -- PASSED
+- MiniMissionsUITests/TopicTabBarUITests/testTabBarIsVisibleOnLaunch -- PASSED
+- MiniMissionsUITests/TaskBankCRUDUITests/testTaskBankSectionVisibleOnParentHome -- PASSED
+
+## Test Files
+
+| File | Target | Status |
+|------|--------|--------|
+| RoutineViewUITests.swift | UITests | FIXED -- Finnish locale labels |
+| ParentalGateUITests.swift | UITests | FIXED -- clear-keychain + isHittable assertions |
+| ParentManagementUITests.swift | UITests | OK |
+| AccessibilityUITests.swift | UITests | FIXED -- Finnish locale labels |
+| TopicCategoriesUITests.swift | UITests | FIXED -- TopicTabBarUITests adds child in setUp |
+| DynamicChildrenUITests.swift | UITests | OK |
+| TaskBankUITests.swift | UITests | FIXED -- identifier mismatch resolved |
+| DailyResetUITests.swift | UITests | OK |
+| CopyTasksUITests.swift | UITests | OK |
+| PINServiceTests.swift | UnitTests | OK |
+| SeedDataServiceTests.swift | UnitTests | OK |
+
+## Known Issues (remaining)
+
+1. **AX.ChildNames is stale** -- references old fixed children; could be removed or repurposed
+2. **REQ-009 (Localization) has 0 tests**
+3. **REQ-010 (Freemium) has 0 tests**
+
+## Missing Test Coverage
+
+| REQ | Missing |
+|-----|---------|
+| REQ-002 AC-2 | Star animation existence test |
+| REQ-002 AC-7 | Done vs not-done visual distinction (non-color) |
+| REQ-008 AC-9 | Per-child-per-topic sort order test |
+| REQ-009 (Localization) | All ACs (1-6) |
+| REQ-010 (Freemium) | All ACs (1-9) |

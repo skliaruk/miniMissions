@@ -141,6 +141,7 @@ struct TaskEditorView: View {
                 .foregroundColor(.textPrimary)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier(
             AX.TaskAssignment.assignmentRow(child: childNamePascal, topic: topicNamePascal, template: namePascal)
         )

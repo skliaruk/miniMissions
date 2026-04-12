@@ -43,11 +43,11 @@
 		AA000035 /* TaskAssignment.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000035 /* TaskAssignment.swift */; };
 		AA000036 /* AddEditTemplateSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000036 /* AddEditTemplateSheet.swift */; };
 		AA000037 /* BankSelectorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000037 /* BankSelectorSheet.swift */; };
-		AA000050 /* CopyTasksSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000050 /* CopyTasksSheet.swift */; };
+		AA000040 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = VG000001 /* Localizable.strings */; };
 		AA000043 /* StoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000043 /* StoreService.swift */; };
 		AA000044 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000044 /* PaywallView.swift */; };
-		AA000040 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = VG000001 /* Localizable.strings */; };
 		AA000045 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = FA000045 /* Products.storekit */; };
+		AA000050 /* CopyTasksSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA000050 /* CopyTasksSheet.swift */; };
 		AB000001 /* PINServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB000001 /* PINServiceTests.swift */; };
 		AB000002 /* SeedDataServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB000002 /* SeedDataServiceTests.swift */; };
 		AC000002 /* AppLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC000002 /* AppLauncher.swift */; };
@@ -119,13 +119,13 @@
 		FA000035 /* TaskAssignment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskAssignment.swift; sourceTree = "<group>"; };
 		FA000036 /* AddEditTemplateSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditTemplateSheet.swift; sourceTree = "<group>"; };
 		FA000037 /* BankSelectorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankSelectorSheet.swift; sourceTree = "<group>"; };
-		FA000050 /* CopyTasksSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyTasksSheet.swift; sourceTree = "<group>"; };
-		FA000043 /* StoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreService.swift; sourceTree = "<group>"; };
-		FA000044 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
-		FA000045 /* Products.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
 		FA000040 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FA000041 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		FA000042 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		FA000043 /* StoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreService.swift; sourceTree = "<group>"; };
+		FA000044 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		FA000045 /* Products.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
+		FA000050 /* CopyTasksSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyTasksSheet.swift; sourceTree = "<group>"; };
 		FB000001 /* PINServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINServiceTests.swift; sourceTree = "<group>"; };
 		FB000002 /* SeedDataServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedDataServiceTests.swift; sourceTree = "<group>"; };
 		FC000002 /* AppLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLauncher.swift; sourceTree = "<group>"; };
@@ -201,14 +201,6 @@
 			path = Features;
 			sourceTree = "<group>";
 		};
-		GR000003D /* Paywall */ = {
-			isa = PBXGroup;
-			children = (
-				FA000044 /* PaywallView.swift */,
-			);
-			path = Paywall;
-			sourceTree = "<group>";
-		};
 		GR000003A /* ChildRoutine */ = {
 			isa = PBXGroup;
 			children = (
@@ -249,6 +241,14 @@
 				FA000027 /* ChangePINView.swift */,
 			);
 			path = PINGate;
+			sourceTree = "<group>";
+		};
+		GR000003D /* Paywall */ = {
+			isa = PBXGroup;
+			children = (
+				FA000044 /* PaywallView.swift */,
+			);
+			path = Paywall;
 			sourceTree = "<group>";
 		};
 		GR000004 /* Models */ = {
@@ -670,6 +670,7 @@
 				DEVELOPMENT_TEAM = PDG55XDJMV;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = MiniMissions/Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Mini Missions Kids";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -698,6 +699,7 @@
 				DEVELOPMENT_TEAM = PDG55XDJMV;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = MiniMissions/Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Mini Missions Kids";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -28,7 +28,7 @@ final class ParentalGateUITests: XCTestCase {
     private func enterPIN(_ pin: String) {
         for character in pin {
             guard let digit = Int(String(character)) else { continue }
-            let key = app.buttons[AX.PINGate.key(digit)]
+            let key = app.row(AX.PINGate.key(digit))
             XCTAssertTrue(
                 key.waitForExistence(timeout: 3),
                 "PIN keypad button '\(AX.PINGate.key(digit))' must exist"
@@ -46,24 +46,24 @@ final class ParentalGateUITests: XCTestCase {
         app = AppLauncher.launchFirstLaunch()
 
         // PIN setup root must appear as the first screen
-        let pinSetupRoot = app.otherElements[AX.PINGate.setupRoot]
+        let pinSetupRoot = app.row(AX.PINGate.setupRoot)
         XCTAssertTrue(
             pinSetupRoot.waitForExistence(timeout: 3),
             "PIN setup screen root '\(AX.PINGate.setupRoot)' must be visible on first launch"
         )
 
         // PIN dot display must be visible
-        let dotDisplay = app.otherElements[AX.PINGate.dotDisplay]
+        let dotDisplay = app.row(AX.PINGate.dotDisplay)
         XCTAssertTrue(
             dotDisplay.waitForExistence(timeout: 3),
             "PIN dot display '\(AX.PINGate.dotDisplay)' must be visible on first launch"
         )
 
-        // Routine view must NOT be visible yet
-        let routineRoot = app.otherElements[AX.ChildRoutine.root]
+        // Routine view must NOT be interactable (it exists behind the fullScreenCover)
+        let routineRoot = app.row(AX.ChildRoutine.root)
         XCTAssertFalse(
-            routineRoot.exists,
-            "Routine view must NOT be shown until PIN setup is complete"
+            routineRoot.isHittable,
+            "Routine view must NOT be interactable until PIN setup is complete"
         )
     }
 
@@ -71,11 +71,13 @@ final class ParentalGateUITests: XCTestCase {
         // REQ-003 AC-1: PIN setup must occur before routine view is accessible.
         app = AppLauncher.launchFirstLaunch()
 
-        // Routine view root must not be accessible during PIN setup
-        let routineRoot = app.otherElements[AX.ChildRoutine.root]
+        // Routine view must not be interactable during PIN setup
+        let routineRoot = app.row(AX.ChildRoutine.root)
+        // Allow brief wait for fullScreenCover to present
+        _ = app.row(AX.PINGate.setupRoot).waitForExistence(timeout: 3)
         XCTAssertFalse(
-            routineRoot.waitForExistence(timeout: 1.0),
-            "Routine view must not appear before PIN setup is complete"
+            routineRoot.isHittable,
+            "Routine view must not be interactable before PIN setup is complete"
         )
     }
 
@@ -89,7 +91,7 @@ final class ParentalGateUITests: XCTestCase {
 
         // Verify setup screen is showing
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.setupRoot].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.setupRoot).waitForExistence(timeout: 3),
             "PIN setup root must be shown on first launch"
         )
 
@@ -98,7 +100,7 @@ final class ParentalGateUITests: XCTestCase {
 
         // After entering 4 digits the app should auto-advance to confirmation step.
         // Confirm button may appear, or digits may be sufficient to auto-advance.
-        let setupConfirmButton = app.buttons[AX.PINGate.setupConfirmButton]
+        let setupConfirmButton = app.row(AX.PINGate.setupConfirmButton)
         if setupConfirmButton.waitForExistence(timeout: 2) {
             setupConfirmButton.tap()
         }
@@ -112,7 +114,7 @@ final class ParentalGateUITests: XCTestCase {
         }
 
         // Routine view must now be shown
-        let routineRoot = app.otherElements[AX.ChildRoutine.root]
+        let routineRoot = app.row(AX.ChildRoutine.root)
         XCTAssertTrue(
             routineRoot.waitForExistence(timeout: 5),
             "Routine view must appear after PIN setup is successfully completed"
@@ -124,14 +126,14 @@ final class ParentalGateUITests: XCTestCase {
         app = AppLauncher.launchFirstLaunch()
 
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.setupRoot].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.setupRoot).waitForExistence(timeout: 3),
             "PIN setup root must be shown"
         )
 
         // Step 1: Enter PIN "1234"
         enterPIN(TestConstants.testPIN)
 
-        let setupConfirmButton = app.buttons[AX.PINGate.setupConfirmButton]
+        let setupConfirmButton = app.row(AX.PINGate.setupConfirmButton)
         if setupConfirmButton.waitForExistence(timeout: 2) {
             setupConfirmButton.tap()
         }
@@ -154,10 +156,10 @@ final class ParentalGateUITests: XCTestCase {
             "An error must be displayed when the PIN confirmation does not match the first entry"
         )
 
-        // Routine view must NOT appear
+        // Routine view must NOT be interactable (behind fullScreenCover)
         XCTAssertFalse(
-            app.otherElements[AX.ChildRoutine.root].exists,
-            "Routine view must not appear after a PIN confirmation mismatch"
+            app.row(AX.ChildRoutine.root).isHittable,
+            "Routine view must not be interactable after a PIN confirmation mismatch"
         )
     }
 
@@ -169,7 +171,7 @@ final class ParentalGateUITests: XCTestCase {
         // DSGN-003 PM-AC-03: parentSettingsButton exists; no visible text sibling.
         app = AppLauncher.launchClean()
 
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         XCTAssertTrue(
             gearButton.waitForExistence(timeout: 5),
             "Parent settings gear button '\(AX.ChildRoutine.parentSettingsButton)' must exist on routine view"
@@ -188,7 +190,7 @@ final class ParentalGateUITests: XCTestCase {
         // DSGN-003 PM-AC-04: parentSettingsButton tap → pinDotDisplay.exists == true
         app = AppLauncher.launchWithPIN()
 
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         XCTAssertTrue(
             gearButton.waitForExistence(timeout: 5),
             "Parent settings gear button must exist before tapping"
@@ -197,7 +199,7 @@ final class ParentalGateUITests: XCTestCase {
         gearButton.tap()
 
         // PIN dot display must appear
-        let dotDisplay = app.otherElements[AX.PINGate.dotDisplay]
+        let dotDisplay = app.row(AX.PINGate.dotDisplay)
         XCTAssertTrue(
             dotDisplay.waitForExistence(timeout: 3),
             "PIN dot display '\(AX.PINGate.dotDisplay)' must appear after tapping the gear button"
@@ -213,13 +215,13 @@ final class ParentalGateUITests: XCTestCase {
         app = AppLauncher.launchWithPIN()
 
         // Open PIN gate
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         gearButton.waitForExistence(timeout: 5)
         gearButton.tap()
 
         // Wait for PIN entry screen
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
             "PIN entry screen must appear after tapping gear button"
         )
 
@@ -227,8 +229,8 @@ final class ParentalGateUITests: XCTestCase {
         enterPIN(TestConstants.testPIN)
 
         // Parent management must now be visible
-        let parentRoot = app.otherElements[AX.ParentManagement.root]
-        let doneButton = app.buttons[AX.ParentManagement.doneButton]
+        let parentRoot = app.row(AX.ParentManagement.root)
+        let doneButton = app.row(AX.ParentManagement.doneButton)
 
         let accessGranted = parentRoot.waitForExistence(timeout: 5) ||
                             doneButton.waitForExistence(timeout: 5)
@@ -246,12 +248,12 @@ final class ParentalGateUITests: XCTestCase {
         // DSGN-003 PM-AC-06: enter wrong PIN → pinErrorLabel.exists == true
         app = AppLauncher.launchWithPIN()
 
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         gearButton.waitForExistence(timeout: 5)
         gearButton.tap()
 
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
             "PIN entry screen must appear"
         )
 
@@ -267,13 +269,13 @@ final class ParentalGateUITests: XCTestCase {
 
         // Parent management must NOT be shown
         XCTAssertFalse(
-            app.otherElements[AX.ParentManagement.root].exists,
+            app.row(AX.ParentManagement.root).exists,
             "Parent management must NOT appear after entering an incorrect PIN"
         )
 
         // PIN dot display must still be visible (user still on PIN screen)
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].exists,
+            app.row(AX.PINGate.dotDisplay).exists,
             "PIN dot display must remain visible after an incorrect PIN attempt"
         )
     }
@@ -283,8 +285,8 @@ final class ParentalGateUITests: XCTestCase {
         // DSGN-003 §2: Error label shows "Incorrect PIN ([N]/3 attempts)"
         app = AppLauncher.launchWithPIN()
 
-        app.buttons[AX.ChildRoutine.parentSettingsButton].tap()
-        app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3)
+        app.row(AX.ChildRoutine.parentSettingsButton).tap()
+        app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3)
 
         enterPIN(TestConstants.wrongPIN)
 
@@ -308,10 +310,10 @@ final class ParentalGateUITests: XCTestCase {
         // DSGN-003 PM-AC-07: 3 wrong PINs → pinLockoutLabel.exists == true, keypad buttons disabled.
         app = AppLauncher.launchWithPIN()
 
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         gearButton.waitForExistence(timeout: 5)
         gearButton.tap()
-        app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3)
+        app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3)
 
         // Attempt 1 — wrong PIN
         enterPIN(TestConstants.wrongPIN)
@@ -332,7 +334,7 @@ final class ParentalGateUITests: XCTestCase {
         )
 
         // Keypad buttons must be disabled during lockout
-        let key1 = app.buttons[AX.PINGate.key(1)]
+        let key1 = app.row(AX.PINGate.key(1))
         if key1.exists {
             XCTAssertFalse(
                 key1.isEnabled,
@@ -346,8 +348,8 @@ final class ParentalGateUITests: XCTestCase {
         // DSGN-003 §2: "Too many attempts. Try again in 0:30" with countdown.
         app = AppLauncher.launchWithPIN()
 
-        app.buttons[AX.ChildRoutine.parentSettingsButton].tap()
-        app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3)
+        app.row(AX.ChildRoutine.parentSettingsButton).tap()
+        app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3)
 
         enterPIN(TestConstants.wrongPIN)
         app.staticTexts[AX.PINGate.errorLabel].waitForExistence(timeout: 2)
@@ -376,21 +378,21 @@ final class ParentalGateUITests: XCTestCase {
         app = AppLauncher.launchWithPIN()
 
         // Enter parent management with correct PIN
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         gearButton.waitForExistence(timeout: 5)
         gearButton.tap()
-        app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3)
+        app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3)
         enterPIN(TestConstants.testPIN)
 
         // Parent management must be visible
         XCTAssertTrue(
-            app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5),
+            app.row(AX.ParentManagement.root).waitForExistence(timeout: 5),
             "Parent management root must be visible after correct PIN"
         )
 
         // Tap "Change PIN" row
-        let changePINRow = app.buttons[AX.ParentManagement.changePINRow]
-        let changePINButton = app.buttons[AX.ParentManagement.changePINButton]
+        let changePINRow = app.row(AX.ParentManagement.changePINRow)
+        let changePINButton = app.row(AX.ParentManagement.changePINButton)
         let changePINElement = changePINRow.exists ? changePINRow : changePINButton
 
         XCTAssertTrue(
@@ -401,7 +403,7 @@ final class ParentalGateUITests: XCTestCase {
 
         // Change PIN flow must show current PIN entry first
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
             "Change PIN flow must show PIN entry (current PIN required) before allowing new PIN entry"
         )
 
@@ -421,19 +423,19 @@ final class ParentalGateUITests: XCTestCase {
         app = AppLauncher.launchWithPIN()
 
         // Enter parent management
-        app.buttons[AX.ChildRoutine.parentSettingsButton].tap()
-        app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3)
+        app.row(AX.ChildRoutine.parentSettingsButton).tap()
+        app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3)
         enterPIN(TestConstants.testPIN)
-        app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5)
+        app.row(AX.ParentManagement.root).waitForExistence(timeout: 5)
 
         // Navigate to change PIN
-        let changePINRow = app.buttons[AX.ParentManagement.changePINRow]
-        let changePINButton = app.buttons[AX.ParentManagement.changePINButton]
+        let changePINRow = app.row(AX.ParentManagement.changePINRow)
+        let changePINButton = app.row(AX.ParentManagement.changePINButton)
         let changePINElement = changePINRow.exists ? changePINRow : changePINButton
         changePINElement.waitForExistence(timeout: 3)
         changePINElement.tap()
 
-        app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3)
+        app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3)
 
         // Enter correct current PIN "1234"
         enterPIN(TestConstants.testPIN)
@@ -447,7 +449,7 @@ final class ParentalGateUITests: XCTestCase {
         enterPIN(newPIN)
 
         // Success toast must appear
-        let toast = app.otherElements[AX.TaskEditor.pinChangedToast]
+        let toast = app.row(AX.TaskEditor.pinChangedToast)
         XCTAssertTrue(
             toast.waitForExistence(timeout: 5),
             "PIN changed success toast '\(AX.TaskEditor.pinChangedToast)' must appear after successful PIN change"
@@ -462,14 +464,14 @@ final class ParentalGateUITests: XCTestCase {
         // Standard iOS minimum for parent-facing elements is 44pt; keypad actual size is 80pt.
         app = AppLauncher.launchWithPIN()
 
-        app.buttons[AX.ChildRoutine.parentSettingsButton].tap()
+        app.row(AX.ChildRoutine.parentSettingsButton).tap()
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
             "PIN entry screen must appear before checking keypad touch targets"
         )
 
         for digit in 0...9 {
-            let key = app.buttons[AX.PINGate.key(digit)]
+            let key = app.row(AX.PINGate.key(digit))
             if key.exists {
                 key.assertMinTouchTarget(44) // WCAG minimum; keypad should be 80pt
             }
@@ -482,13 +484,13 @@ final class ParentalGateUITests: XCTestCase {
         // DSGN-003 §2: xmark button dismisses PIN screen and returns to routine view.
         app = AppLauncher.launchWithPIN()
 
-        app.buttons[AX.ChildRoutine.parentSettingsButton].tap()
+        app.row(AX.ChildRoutine.parentSettingsButton).tap()
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
             "PIN entry screen must appear"
         )
 
-        let cancelButton = app.buttons[AX.PINGate.cancelButton]
+        let cancelButton = app.row(AX.PINGate.cancelButton)
         XCTAssertTrue(
             cancelButton.waitForExistence(timeout: 3),
             "Cancel (xmark) button '\(AX.PINGate.cancelButton)' must exist on PIN entry screen"
@@ -497,11 +499,11 @@ final class ParentalGateUITests: XCTestCase {
 
         // Must return to routine view without granting access
         XCTAssertTrue(
-            app.otherElements[AX.ChildRoutine.root].waitForExistence(timeout: 3),
+            app.row(AX.ChildRoutine.root).waitForExistence(timeout: 3),
             "Routine view must be shown after cancelling PIN entry"
         )
         XCTAssertFalse(
-            app.otherElements[AX.ParentManagement.root].exists,
+            app.row(AX.ParentManagement.root).exists,
             "Parent management must NOT be accessible after cancelling PIN entry"
         )
     }

@@ -249,7 +249,7 @@ enum AX {
     /// Topic management identifiers within Parent Management (REQ-006, DSGN-004).
     enum TopicManagement {
         /// The "+ Add Topic" button in the Topics section header.
-        static let addTopicButton = "addTopicButton"
+        static let addTopicButton = "parentMgmt_addTopicButton"
 
         /// A topic row in the Topics section, identified by topic name.
         static func topicRow(_ topicName: String) -> String { "topicRow_\(topicName)" }
@@ -267,33 +267,33 @@ enum AX {
         static func topicDeleteAction(_ topicName: String) -> String { "topicDeleteAction_\(topicName)" }
 
         /// "Reset All" button in the parent management navigation bar.
-        static let resetAllButton = "resetAllButton"
+        static let resetAllButton = "parentMgmt_resetAllButton"
 
         // MARK: Dialog identifiers
 
         /// Confirm button in the Add Topic alert.
-        static let addTopicConfirmButton = "addTopicConfirmButton"
+        static let addTopicConfirmButton = "parentMgmt_addTopicConfirmButton"
 
         /// Cancel button in the Add Topic alert.
-        static let addTopicCancelButton = "addTopicCancelButton"
+        static let addTopicCancelButton = "parentMgmt_addTopicCancelButton"
 
         /// Text field in the Add Topic alert.
-        static let addTopicNameField = "addTopicNameField"
+        static let addTopicNameField = "parentMgmt_addTopicNameField"
 
         /// Confirm (Save) button in the Rename Topic alert.
-        static let renameTopicConfirmButton = "renameTopicConfirmButton"
+        static let renameTopicConfirmButton = "parentMgmt_renameTopicConfirmButton"
 
         /// Cancel button in the Rename Topic alert.
-        static let renameTopicCancelButton = "renameTopicCancelButton"
+        static let renameTopicCancelButton = "parentMgmt_renameTopicCancelButton"
 
         /// Text field in the Rename Topic alert.
-        static let renameTopicNameField = "renameTopicNameField"
+        static let renameTopicNameField = "parentMgmt_renameTopicNameField"
 
         /// Confirm button in the Delete Topic confirmation dialog.
-        static let deleteTopicConfirmButton = "deleteTopicConfirmButton"
+        static let deleteTopicConfirmButton = "parentMgmt_deleteTopicConfirmButton"
 
         /// Cancel button in the Delete Topic confirmation dialog.
-        static let deleteTopicCancelButton = "deleteTopicCancelButton"
+        static let deleteTopicCancelButton = "parentMgmt_deleteTopicCancelButton"
 
         /// Confirm button in the Per-Topic Reset confirmation dialog, identified by topic name.
         static func resetTopicConfirmButton(_ topicName: String) -> String { "resetTopicConfirmButton_\(topicName)" }
@@ -302,10 +302,10 @@ enum AX {
         static func resetTopicCancelButton(_ topicName: String) -> String { "resetTopicCancelButton_\(topicName)" }
 
         /// Confirm button in the Reset All confirmation dialog.
-        static let resetAllConfirmButton = "resetAllConfirmButton"
+        static let resetAllConfirmButton = "parentMgmt_resetAllConfirmButton"
 
         /// Cancel button in the Reset All confirmation dialog.
-        static let resetAllCancelButton = "resetAllCancelButton"
+        static let resetAllCancelButton = "parentMgmt_resetAllCancelButton"
 
         /// A child-topic row in the Child Topic Picker screen, identified by child name and topic name.
         static func childTopicRow(child: String, topic: String) -> String { "childTopicRow_\(child)_\(topic)" }

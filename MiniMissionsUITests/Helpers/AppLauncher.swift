@@ -37,6 +37,13 @@ enum TestConstants {
 /// according to the launch argument contract in ADR-004 §2.
 struct AppLauncher {
 
+    /// Locale arguments used in every launch so that localised strings (e.g. the seeded
+    /// "Aamu" topic name) match what the tests expect.
+    private static let localeArgs: [String] = [
+        "-AppleLanguages", "(fi)",
+        "-AppleLocale", "fi_FI"
+    ]
+
     // MARK: Standard configurations
 
     /// Launches the app in the standard clean-slate test environment.
@@ -51,7 +58,7 @@ struct AppLauncher {
     @discardableResult
     static func launchClean() -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--uitesting", "--skip-pin-setup"]
+        app.launchArguments = AppLauncher.localeArgs + ["--uitesting", "--skip-pin-setup"]
         app.launch()
         return app
     }
@@ -70,7 +77,7 @@ struct AppLauncher {
     @discardableResult
     static func launchWithPIN(_ hash: String = TestConstants.pin1234Hash) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--uitesting", "--skip-pin-setup", "--preset-pin-hash", hash]
+        app.launchArguments = AppLauncher.localeArgs + ["--uitesting", "--skip-pin-setup", "--preset-pin-hash", hash]
         app.launch()
         return app
     }
@@ -88,7 +95,7 @@ struct AppLauncher {
     @discardableResult
     static func launchWithReduceMotion() -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--uitesting", "--skip-pin-setup", "--reduce-motion"]
+        app.launchArguments = AppLauncher.localeArgs + ["--uitesting", "--skip-pin-setup", "--reduce-motion"]
         app.launch()
         return app
     }
@@ -105,7 +112,7 @@ struct AppLauncher {
     @discardableResult
     static func launchFirstLaunch() -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--uitesting"]
+        app.launchArguments = AppLauncher.localeArgs + ["--uitesting", "--clear-keychain"]
         // Intentionally no --skip-pin-setup and no --preset-pin-hash so that
         // ContentRootView detects no PIN in Keychain and shows PINSetupView.
         app.launch()
@@ -128,7 +135,7 @@ struct AppLauncher {
     @discardableResult
     static func launchWithResetDateYesterday() -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--uitesting", "--skip-pin-setup", "--resetDateYesterday"]
+        app.launchArguments = AppLauncher.localeArgs + ["--uitesting", "--skip-pin-setup", "--resetDateYesterday"]
         app.launch()
         return app
     }
@@ -148,7 +155,7 @@ struct AppLauncher {
     @discardableResult
     static func launchWithPersistence() -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--skip-pin-setup"]
+        app.launchArguments = AppLauncher.localeArgs + ["--skip-pin-setup"]
         // Intentionally NO --uitesting so the real on-disk store is used.
         app.launch()
         return app
@@ -162,7 +169,7 @@ struct AppLauncher {
     @discardableResult
     static func launchWithPersistenceAndPIN(_ hash: String = TestConstants.pin1234Hash) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["--preset-pin-hash", hash]
+        app.launchArguments = AppLauncher.localeArgs + ["--preset-pin-hash", hash]
         // Intentionally NO --uitesting so the real on-disk store is used.
         app.launch()
         return app
@@ -226,5 +233,23 @@ extension XCUIElement {
     /// Returns true if the element's accessibility value equals the given string.
     func hasAccessibilityValue(_ value: String) -> Bool {
         return (self.value as? String) == value
+    }
+}
+
+// MARK: - XCUIApplication row element helpers
+
+extension XCUIApplication {
+
+    /// Finds a tappable row element by accessibility identifier, searching across
+    /// cells, buttons, and generic descendants. SwiftUI List rows may render as
+    /// Cell or Button depending on the element type (NavigationLink vs plain row)
+    /// and iOS version. This helper abstracts over those differences.
+    ///
+    /// Supports `waitForExistence`, `tap()`, and all other XCUIElement APIs.
+    func row(_ identifier: String) -> XCUIElement {
+        // Use descendants(matching: .any) which finds the element regardless
+        // of its type (Cell, Button, Other, etc.). firstMatch avoids ambiguity
+        // when SwiftUI applies the identifier to both a container and its child.
+        return descendants(matching: .any).matching(identifier: identifier).firstMatch
     }
 }

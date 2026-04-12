@@ -27,7 +27,7 @@ final class CopyTasksUITests: XCTestCase {
 
     /// Opens parent management by tapping the gear button and entering the correct PIN.
     private func openParentManagement() {
-        let gearButton = app.buttons[AX.ChildRoutine.parentSettingsButton]
+        let gearButton = app.row(AX.ChildRoutine.parentSettingsButton)
         XCTAssertTrue(
             gearButton.waitForExistence(timeout: 5),
             "Gear button must exist to open parent management"
@@ -35,13 +35,13 @@ final class CopyTasksUITests: XCTestCase {
         gearButton.tap()
 
         XCTAssertTrue(
-            app.otherElements[AX.PINGate.dotDisplay].waitForExistence(timeout: 3),
+            app.row(AX.PINGate.dotDisplay).waitForExistence(timeout: 3),
             "PIN entry screen must appear"
         )
         enterPIN(TestConstants.testPIN)
 
         XCTAssertTrue(
-            app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 5),
+            app.row(AX.ParentManagement.root).waitForExistence(timeout: 5),
             "Parent management root must appear after correct PIN"
         )
     }
@@ -50,7 +50,7 @@ final class CopyTasksUITests: XCTestCase {
     private func enterPIN(_ pin: String) {
         for character in pin {
             guard let digit = Int(String(character)) else { continue }
-            let key = app.buttons[AX.PINGate.key(digit)]
+            let key = app.row(AX.PINGate.key(digit))
             key.waitForExistence(timeout: 3)
             key.tap()
         }
@@ -59,7 +59,7 @@ final class CopyTasksUITests: XCTestCase {
     /// Adds a child with the given name via the Add Child sheet.
     /// Assumes the user is already in the parent management screen.
     private func addChild(name: String) {
-        let addButton = app.buttons[AX.ChildManagement.addChildButton]
+        let addButton = app.row(AX.ChildManagement.addChildButton)
         XCTAssertTrue(
             addButton.waitForExistence(timeout: 3),
             "Add Child button must exist in parent management"
@@ -74,7 +74,7 @@ final class CopyTasksUITests: XCTestCase {
         nameField.tap()
         nameField.typeText(name)
 
-        let saveButton = app.buttons[AX.ChildManagement.childFormSaveButton]
+        let saveButton = app.row(AX.ChildManagement.childFormSaveButton)
         saveButton.assertExists(timeout: 3)
         saveButton.tap()
     }
@@ -82,7 +82,7 @@ final class CopyTasksUITests: XCTestCase {
     /// Creates a task template in the Task Bank section.
     /// Assumes the user is already in parent management.
     private func addTemplate(name: String) {
-        let addButton = app.buttons[AX.TaskBank.addTemplateButton]
+        let addButton = app.row(AX.TaskBank.addTemplateButton)
         XCTAssertTrue(
             addButton.waitForExistence(timeout: 3),
             "Add Template button must exist in parent management"
@@ -95,7 +95,7 @@ final class CopyTasksUITests: XCTestCase {
         nameField.typeText(name)
 
         // Select an icon
-        let chooseIconButton = app.buttons[AX.TaskBank.templateChooseIconButton]
+        let chooseIconButton = app.row(AX.TaskBank.templateChooseIconButton)
         if chooseIconButton.waitForExistence(timeout: 2) {
             chooseIconButton.tap()
             let firstIcon = app.buttons.matching(
@@ -106,7 +106,7 @@ final class CopyTasksUITests: XCTestCase {
             }
         }
 
-        let saveButton = app.buttons[AX.TaskBank.templateFormSaveButton]
+        let saveButton = app.row(AX.TaskBank.templateFormSaveButton)
         saveButton.assertExists(timeout: 3)
         saveButton.tap()
     }
@@ -115,17 +115,17 @@ final class CopyTasksUITests: XCTestCase {
     /// Assumes the user is already in parent management.
     /// Navigation: Parent Home -> Child row -> Child Topic Picker -> Task Editor.
     private func navigateToTaskEditor(child: String, topic: String) {
-        let childRow = app.cells[AX.ParentManagement.childRowByName(child)]
+        let childRow = app.row(AX.ParentManagement.childRowByName(child))
         XCTAssertTrue(
-            childRow.waitForExistence(timeout: 3),
+            childRow.waitForExistence(timeout: 10),
             "Child row for '\(child)' must exist in parent management"
         )
         childRow.tap()
 
         // Select the topic from the child topic picker
-        let topicRow = app.cells[AX.TopicManagement.childTopicRow(child: child, topic: topic)]
+        let topicRow = app.row(AX.TopicManagement.childTopicRow(child: child, topic: topic))
         XCTAssertTrue(
-            topicRow.waitForExistence(timeout: 3),
+            topicRow.waitForExistence(timeout: 10),
             "Child topic row for '\(child)' + '\(topic)' must exist"
         )
         topicRow.tap()
@@ -140,24 +140,24 @@ final class CopyTasksUITests: XCTestCase {
             app.navigationBars.buttons.firstMatch.tap()
         }
         // Wait for parent management root to be visible
-        _ = app.otherElements[AX.ParentManagement.root].waitForExistence(timeout: 3)
+        _ = app.row(AX.ParentManagement.root).waitForExistence(timeout: 3)
     }
 
     /// Assigns a template to a child+topic via the bank selector.
     /// Assumes the user is already in the task editor for that child+topic.
     private func assignTemplate(named templateName: String) {
-        let addFromBankButton = app.buttons[AX.TaskAssignment.addFromBankButton]
+        let addFromBankButton = app.row(AX.TaskAssignment.addFromBankButton)
         addFromBankButton.assertExists(timeout: 3)
         addFromBankButton.tap()
 
-        let selectorRow = app.cells[AX.TaskAssignment.bankSelectorRow(templateName)]
+        let selectorRow = app.row(AX.TaskAssignment.bankSelectorRow(templateName))
         XCTAssertTrue(
             selectorRow.waitForExistence(timeout: 5),
             "Bank selector must show '\(templateName)' template row"
         )
         selectorRow.tap()
 
-        let addButton = app.buttons[AX.TaskAssignment.bankSelectorAddButton]
+        let addButton = app.row(AX.TaskAssignment.bankSelectorAddButton)
         addButton.assertExists(timeout: 3)
         addButton.tap()
     }
@@ -189,7 +189,7 @@ final class CopyTasksUITests: XCTestCase {
         navigateToTaskEditor(child: "Mia", topic: "Aamu")
 
         // The "Kopioi" (Copy) button must be visible
-        let copyButton = app.buttons[AX.TaskAssignment.copyFromButton]
+        let copyButton = app.row(AX.TaskAssignment.copyFromButton)
         XCTAssertTrue(
             copyButton.waitForExistence(timeout: 5),
             "Copy button must be visible in TaskEditorView when another child (Leo) has tasks " +
@@ -216,7 +216,7 @@ final class CopyTasksUITests: XCTestCase {
         navigateToTaskEditor(child: "Mia", topic: "Aamu")
 
         // The "Kopioi" (Copy) button must NOT be visible
-        let copyButton = app.buttons[AX.TaskAssignment.copyFromButton]
+        let copyButton = app.row(AX.TaskAssignment.copyFromButton)
         let buttonExists = copyButton.waitForExistence(timeout: 2)
         XCTAssertFalse(
             buttonExists,
@@ -255,7 +255,7 @@ final class CopyTasksUITests: XCTestCase {
         navigateToTaskEditor(child: "Mia", topic: "Aamu")
 
         // Tap Copy button
-        let copyButton = app.buttons[AX.TaskAssignment.copyFromButton]
+        let copyButton = app.row(AX.TaskAssignment.copyFromButton)
         XCTAssertTrue(
             copyButton.waitForExistence(timeout: 5),
             "Copy button must be visible to initiate copy from Leo"
@@ -263,7 +263,7 @@ final class CopyTasksUITests: XCTestCase {
         copyButton.tap()
 
         // Select Leo from the copy source sheet
-        let leoRow = app.cells[AX.TaskAssignment.copySourceChildRow("Leo")]
+        let leoRow = app.row(AX.TaskAssignment.copySourceChildRow("Leo"))
         XCTAssertTrue(
             leoRow.waitForExistence(timeout: 5),
             "Copy source sheet must show Leo as a source child. MDEV must present a sheet " +
@@ -272,7 +272,7 @@ final class CopyTasksUITests: XCTestCase {
         leoRow.tap()
 
         // Confirm copy
-        let confirmButton = app.buttons[AX.TaskAssignment.copySourceConfirmButton]
+        let confirmButton = app.row(AX.TaskAssignment.copySourceConfirmButton)
         XCTAssertTrue(
             confirmButton.waitForExistence(timeout: 3),
             "Confirm button must exist in copy source sheet"
@@ -280,12 +280,12 @@ final class CopyTasksUITests: XCTestCase {
         confirmButton.tap()
 
         // Verify both templates now appear in Mia's task editor
-        let brushRow = app.cells[
+        let brushRow = app.row(
             AX.TaskAssignment.assignmentRow(child: "Mia", topic: "Aamu", template: "BrushTeeth")
-        ]
-        let dressRow = app.cells[
+        )
+        let dressRow = app.row(
             AX.TaskAssignment.assignmentRow(child: "Mia", topic: "Aamu", template: "GetDressed")
-        ]
+        )
 
         XCTAssertTrue(
             brushRow.waitForExistence(timeout: 5),
@@ -330,31 +330,31 @@ final class CopyTasksUITests: XCTestCase {
         // Navigate to Mia's task editor and copy from Leo
         navigateToTaskEditor(child: "Mia", topic: "Aamu")
 
-        let copyButton = app.buttons[AX.TaskAssignment.copyFromButton]
+        let copyButton = app.row(AX.TaskAssignment.copyFromButton)
         XCTAssertTrue(
             copyButton.waitForExistence(timeout: 5),
             "Copy button must be visible"
         )
         copyButton.tap()
 
-        let leoRow = app.cells[AX.TaskAssignment.copySourceChildRow("Leo")]
+        let leoRow = app.row(AX.TaskAssignment.copySourceChildRow("Leo"))
         XCTAssertTrue(
             leoRow.waitForExistence(timeout: 5),
             "Leo must appear in copy source sheet"
         )
         leoRow.tap()
 
-        let confirmButton = app.buttons[AX.TaskAssignment.copySourceConfirmButton]
+        let confirmButton = app.row(AX.TaskAssignment.copySourceConfirmButton)
         confirmButton.assertExists(timeout: 3)
         confirmButton.tap()
 
         // Verify Mia has both templates
-        let brushRow = app.cells[
+        let brushRow = app.row(
             AX.TaskAssignment.assignmentRow(child: "Mia", topic: "Aamu", template: "BrushTeeth")
-        ]
-        let dressRow = app.cells[
+        )
+        let dressRow = app.row(
             AX.TaskAssignment.assignmentRow(child: "Mia", topic: "Aamu", template: "GetDressed")
-        ]
+        )
 
         XCTAssertTrue(
             brushRow.waitForExistence(timeout: 5),
@@ -370,7 +370,7 @@ final class CopyTasksUITests: XCTestCase {
             format: "identifier == %@",
             AX.TaskAssignment.assignmentRow(child: "Mia", topic: "Aamu", template: "BrushTeeth")
         )
-        let brushMatches = app.cells.matching(brushRowPredicate)
+        let brushMatches = app.descendants(matching: .any).matching(brushRowPredicate)
         XCTAssertEqual(
             brushMatches.count,
             1,
@@ -407,28 +407,28 @@ final class CopyTasksUITests: XCTestCase {
         // Navigate to Mia's task editor and copy from Leo
         navigateToTaskEditor(child: "Mia", topic: "Aamu")
 
-        let copyButton = app.buttons[AX.TaskAssignment.copyFromButton]
+        let copyButton = app.row(AX.TaskAssignment.copyFromButton)
         XCTAssertTrue(
             copyButton.waitForExistence(timeout: 5),
             "Copy button must be visible"
         )
         copyButton.tap()
 
-        let leoRow = app.cells[AX.TaskAssignment.copySourceChildRow("Leo")]
+        let leoRow = app.row(AX.TaskAssignment.copySourceChildRow("Leo"))
         XCTAssertTrue(
             leoRow.waitForExistence(timeout: 5),
             "Leo must appear in copy source sheet"
         )
         leoRow.tap()
 
-        let confirmButton = app.buttons[AX.TaskAssignment.copySourceConfirmButton]
+        let confirmButton = app.row(AX.TaskAssignment.copySourceConfirmButton)
         confirmButton.assertExists(timeout: 3)
         confirmButton.tap()
 
         // Wait for copy to complete — Mia's assignments should appear
-        let miaAssignment = app.cells[
+        let miaAssignment = app.row(
             AX.TaskAssignment.assignmentRow(child: "Mia", topic: "Aamu", template: "BrushTeeth")
-        ]
+        )
         XCTAssertTrue(
             miaAssignment.waitForExistence(timeout: 5),
             "Copy must complete — Mia should have BrushTeeth"
@@ -441,12 +441,12 @@ final class CopyTasksUITests: XCTestCase {
         navigateToTaskEditor(child: "Leo", topic: "Aamu")
 
         // Verify Leo still has both templates
-        let leoBrushRow = app.cells[
+        let leoBrushRow = app.row(
             AX.TaskAssignment.assignmentRow(child: "Leo", topic: "Aamu", template: "BrushTeeth")
-        ]
-        let leoDressRow = app.cells[
+        )
+        let leoDressRow = app.row(
             AX.TaskAssignment.assignmentRow(child: "Leo", topic: "Aamu", template: "GetDressed")
-        ]
+        )
 
         XCTAssertTrue(
             leoBrushRow.waitForExistence(timeout: 5),

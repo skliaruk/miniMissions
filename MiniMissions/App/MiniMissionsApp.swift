@@ -22,6 +22,9 @@ struct MiniMissionsApp: App {
         )
         let container = try! ModelContainer(for: schema, configurations: [config])
         SeedDataService.seedIfNeeded(context: container.mainContext)
+        if env.clearKeychain {
+            try? KeychainStore.shared.deletePINHash()
+        }
         if let hash = env.presetPINHash {
             try? KeychainStore.shared.savePINHash(hash)
         }

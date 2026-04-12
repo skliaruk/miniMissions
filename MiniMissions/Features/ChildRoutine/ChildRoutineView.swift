@@ -45,6 +45,7 @@ struct ChildRoutineView: View {
                 }
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AX.ChildRoutine.root)
         .ignoresSafeArea(.keyboard)
         .onChange(of: topics) { _, newTopics in
@@ -128,6 +129,7 @@ struct ChildRoutineView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier(AX.ChildManagement.emptyStateView)
     }
 

@@ -442,6 +442,20 @@ enum AX {
 
         /// "Create New Template" shortcut button at the bottom of the Bank Selector.
         static let bankSelectorCreateNewButton = "bankSelectorCreateNewButton"
+
+        // MARK: Copy Tasks Sheet
+
+        /// "Copy From" toolbar button in TaskEditorView.
+        static let copyFromButton = "taskEditor.copyFromButton"
+
+        /// A child row in the Copy Source sheet, identified by child name.
+        static func copySourceChildRow(_ name: String) -> String { "copySource.childRow.\(name)" }
+
+        /// Confirm button in the Copy Source sheet.
+        static let copySourceConfirmButton = "copySource.confirmButton"
+
+        /// Cancel button in the Copy Source sheet.
+        static let copySourceCancelButton = "copySource.cancelButton"
     }
 
     // MARK: - Seed data child names (from ADR-003 SeedDataService.fixedChildren)
