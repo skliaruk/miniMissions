@@ -6,15 +6,25 @@ import SwiftUI
 
 struct ContentRootView: View {
     @Environment(\.appEnvironment) private var appEnvironment
+    @Environment(\.horizontalSizeClass) private var sizeClass
     @State private var isPINSetupRequired = false
     @State private var showParentManagement = false
     @State private var showPINEntry = false
 
     var body: some View {
-        ChildRoutineView(
-            showParentManagement: $showParentManagement,
-            showPINEntry: $showPINEntry
-        )
+        Group {
+            if sizeClass == .compact {
+                ChildRoutineCompactView(
+                    showParentManagement: $showParentManagement,
+                    showPINEntry: $showPINEntry
+                )
+            } else {
+                ChildRoutineView(
+                    showParentManagement: $showParentManagement,
+                    showPINEntry: $showPINEntry
+                )
+            }
+        }
         .fullScreenCover(isPresented: $isPINSetupRequired) {
             PINSetupView(onComplete: {
                 isPINSetupRequired = false

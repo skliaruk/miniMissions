@@ -14,6 +14,7 @@
 - DSGN-005: Dynamic Children UI (Draft, 2026-03-30)
 - DSGN-006: Task Bank UI (Draft, 2026-03-30)
 - DSGN-007: App Icon & Logo (Draft, 2026-04-09)
+- DSGN-008: iPhone Layout Adaptation (Draft, 2026-04-15)
 
 ## Key DSGN-004 Decisions
 - Topic tab bar placed at top of routine view, above child columns, within a card container
@@ -78,6 +79,23 @@
 - Single 1024x1024 asset, iOS handles all size variants
 - No separate dark mode icon asset needed (purple background survives iOS 18 tinting well)
 - Star glow effect omitted at sizes below 180pt
+
+## Key DSGN-008 Decisions (iPhone Layout)
+- Portrait-only, single-child paged view (horizontal swipe between children)
+- No TabBar navigation; single main screen + PIN-gated parent management
+- TabView with .page style for child paging, custom page dots below
+- Topic tab bar: flat (no card background), bottom separator only, scrollable
+- Adaptive sizing: 375pt (SE) to 430pt (Plus) linear interpolation for avatar, icons, fonts
+- Task row min height: 64pt (iPad: 72pt); icon container: 48-56pt (iPad: 60pt)
+- Child name: 24-28pt rounded bold (iPad: 32pt); task labels: 20-24pt (iPad: 24pt)
+- Screen margins: 16-20pt (iPad: 48pt)
+- Celebration confetti: 12 particles (iPad: 20)
+- No card wrapper around child page (full-width tinted background)
+- Compact typography tokens added: type.compact.childTitle (26pt), type.compact.taskLabel (21pt), etc.
+- Minimum child-facing text on iPhone: 17pt (subLabel only); primary interactive >= 20pt
+- Last-viewed child stored in @AppStorage for session restore
+- Parent management unchanged (NavigationStack + List adapts naturally)
+- Implementation via horizontalSizeClass branching (compact = iPhone, regular = iPad)
 
 ## Open Design Issues
 - None currently
