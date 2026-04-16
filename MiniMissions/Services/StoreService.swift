@@ -10,7 +10,7 @@ final class StoreService {
     static let shared = StoreService()
 
     #if DEBUG
-    private(set) var isPremium: Bool = true
+    private(set) var isPremium: Bool = false
     #else
     private(set) var isPremium: Bool = false
     #endif
@@ -36,19 +36,30 @@ final class StoreService {
         }
     }
 
-    func purchase() async throws -> Bool {
-        guard let product else { return false }
+    enum PurchaseResult {
+        case purchased
+        case cancelled
+        case failed
+    }
+
+    func purchase() async throws -> PurchaseResult {
+        guard let product else { return .cancelled }
         let result = try await product.purchase()
         switch result {
         case .success(let verification):
             if case .verified(let tx) = verification {
                 await tx.finish()
                 isPremium = true
-                return true
+                return .purchased
             }
-        default: break
+            return .failed
+        case .userCancelled:
+            return .cancelled
+        case .pending:
+            return .cancelled
+        @unknown default:
+            return .failed
         }
-        return false
     }
 
     func restore() async {

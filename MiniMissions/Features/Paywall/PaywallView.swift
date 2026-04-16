@@ -46,10 +46,13 @@ struct PaywallView: View {
                         Button {
                             Swift.Task {
                                 isPurchasing = true
-                                let ok = (try? await store.purchase()) ?? false
+                                let result = try? await store.purchase()
                                 isPurchasing = false
-                                if ok { onPurchased() }
-                                else { showError = true }
+                                switch result {
+                                case .purchased: onPurchased()
+                                case .cancelled: break
+                                case .failed, nil: showError = true
+                                }
                             }
                         } label: {
                             HStack {
